@@ -28,10 +28,7 @@ namespace CWO
 
         void Update()
         {
-            float newCurrentEnergyAmount = player.getActiveShip().currentEnergyAmount + player.getActiveShip().shipStats[Infrastructure.Core.Ship.ShipStats.EnergyRegen] * Time.deltaTime;
-            player.getActiveShip().currentEnergyAmount = (newCurrentEnergyAmount > player.getActiveShip().shipStats[Infrastructure.Core.Ship.ShipStats.EnergyCapacity]) ? player.getActiveShip().shipStats[Infrastructure.Core.Ship.ShipStats.EnergyCapacity] : newCurrentEnergyAmount;
-            energyBar.maxValue = player.getActiveShip().shipStats[Infrastructure.Core.Ship.ShipStats.EnergyCapacity];
-            energyBar.value = player.getActiveShip().currentEnergyAmount;
+            shipRegen();
         }
             
         protected void OnLoginSuccessful(LoginSuccessfulEvent e)
@@ -42,17 +39,33 @@ namespace CWO
         protected void OnPlayJumpToStar(PlayerJumpedToStarEvent e)
         {
             player.currentNodeId = e.star.id;
-            player.getActiveShip().currentEnergyAmount -= 10;
+            player = e.player;
         }
 
         protected void OnPlayLandOnStar(PlayerLandOnStarEvent e)
         {
-            player.isLanded = true;
+            player = e.player;
         }
 
         protected void OnPlayerDepartFromStar(PlayerDepartFromStarEvent e)
         {
-            player.isLanded = false;
+            player = e.player;
+        }
+
+        protected void shipRegen()
+        {
+            shipEnergyRegen();
+
+        }
+
+        protected void shipEnergyRegen()
+        {
+            float energyRegen = player.getActiveShip().shipStats[Infrastructure.Core.Ship.ShipStats.EnergyRegen];
+            float energyCapacity = player.getActiveShip().shipStats[Infrastructure.Core.Ship.ShipStats.EnergyCapacity];
+            float newCurrentEnergyAmount = player.getActiveShip().currentEnergyAmount + energyRegen * Time.deltaTime;
+            player.getActiveShip().currentEnergyAmount = (newCurrentEnergyAmount > energyCapacity) ? energyCapacity : newCurrentEnergyAmount;
+            energyBar.maxValue = energyCapacity;
+            energyBar.value = player.getActiveShip().currentEnergyAmount;
         }
     }
 }
