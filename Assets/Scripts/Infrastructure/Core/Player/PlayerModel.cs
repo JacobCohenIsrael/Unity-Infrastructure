@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using Infrastructure.Core.Ship;
 
 namespace Infrastructure.Core.Player
 {
@@ -9,6 +9,17 @@ namespace Infrastructure.Core.Player
         public string firstName;
         public string lastName;
         public string sessionId;
+
+		public int currentNodeId;
+        public int activeShipIndex;
+        public ShipModel[] ships;
+        public bool isLanded;
+        public int homePlanetId;
+
+        public ShipModel getActiveShip()
+        {
+            return ships[activeShipIndex];
+        }
     }
 }
 

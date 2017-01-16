@@ -19,7 +19,8 @@ namespace Infrastructure.Base.Application
             {
                 localInstance = new Application();
                 localInstance.serviceManager = new ServiceManager();
-                localInstance.eventManager = new EventManager();
+                localInstance.eventManager = new EventManager(localInstance.serviceManager);
+                localInstance.serviceManager.set<EventManager>(localInstance.eventManager);
             }
             return localInstance;
         }

@@ -2,14 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using Infrastructure.Base.Event.Contracts;
+using Infrastructure.Base.Service;
 
 namespace Infrastructure.Base.Event
 {
-    public class EventManager : Contracts.IEventManager
+    public class EventManager : Contracts.IEventManager, Service.Contracts.IServiceProvider
     {
         protected Dictionary<Type, Delegate> eventTable;
 
-        public EventManager()
+        public EventManager(ServiceManager serviceManager)
         {
             eventTable = new Dictionary<Type, Delegate>();
         }

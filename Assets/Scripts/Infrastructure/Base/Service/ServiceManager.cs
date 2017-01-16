@@ -25,5 +25,10 @@ namespace Infrastructure.Base.Service
 
             return dictonary[typeof(T)];
         }
+
+        public void set<T>(T service) where T : Contracts.IServiceProvider
+        {
+            dictonary[typeof(T)] = service;
+        }
     }
 }
