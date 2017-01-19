@@ -11,7 +11,7 @@ namespace CWO.Star
     public class StarScreenController : BaseUIObject {
 
         public Button jumpButton;
-        public Button starMenuButton;
+        public Button landButton;
 
         protected PlayerService playerService;
 
@@ -20,7 +20,7 @@ namespace CWO.Star
             playerService = application.serviceManager.get<PlayerService>() as PlayerService;
             application.eventManager.AddListener<PlayerOrbitStarEvent>(this.OnPlayerEnterStar);
             jumpButton.onClick.AddListener(() => { this.OnJump(); });
-            starMenuButton.onClick.AddListener(() => { this.OnLand(); });
+            landButton.onClick.AddListener(() => { this.OnLand(); });
             Hide();
         }
 

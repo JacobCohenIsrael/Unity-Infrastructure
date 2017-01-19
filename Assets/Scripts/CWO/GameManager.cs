@@ -8,6 +8,7 @@ using CWO.Hud;
 using CWO.Star;
 using Infrastructure.Core.Star;
 using Infrastructure.Core.Player.Events;
+using CWO.Market;
 
 namespace CWO
 {
@@ -18,6 +19,7 @@ namespace CWO
         public WorldMapController worldMapController;
         public StarScreenController starScreenController;
         public StarMenuController starMenuController;
+        public MarketMenuController marketMenuController;
 
         public GameState currentState;
         public enum GameState
@@ -26,6 +28,7 @@ namespace CWO
             WorldMap,
             StarOrbit,
             StarMenu,
+            MarketMenu,
         }
 
         protected Infrastructure.Base.Application.Application application;
@@ -43,6 +46,7 @@ namespace CWO
             application.eventManager.AddListener<PlayerJumpEvent>(this.OnPlayerJump);
             application.eventManager.AddListener<PlayerLandOnStarEvent>(this.OnPlayerLandOnStar);
             application.eventManager.AddListener<PlayerDepartFromStarEvent>(this.OnPlayerExitStarMenu);
+            application.eventManager.AddListener<PlayerOpenedMarketEvent>(this.OnPlayerOpenMarket);
 
             if ( PlayerPrefs.HasKey("sessionId") )
             {
@@ -73,6 +77,12 @@ namespace CWO
         {
             hudController.Show();
             starMenuController.Show();
+        }
+
+        void MarketMenuState()
+        {
+            hudController.Show();
+            marketMenuController.Show();
         }
 
         public void ChangeState(GameState newState)
@@ -114,6 +124,11 @@ namespace CWO
         void OnPlayerExitStarMenu(PlayerDepartFromStarEvent e)
         {
             ChangeState(GameState.StarOrbit);
+        }
+
+        void OnPlayerOpenMarket(PlayerOpenedMarketEvent e)
+        {
+            ChangeState(GameState.MarketMenu);
         }
 
         void HideAll()

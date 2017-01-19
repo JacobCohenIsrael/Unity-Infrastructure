@@ -64,5 +64,12 @@ namespace Infrastructure.Core.Player
                 eventManager.DispatchEvent<PlayerDepartFromStarEvent>(playerDepartFromStarEvent);
             }
         }
+
+        public void openMarket(PlayerModel player)
+        {
+            StarModel star = starService.getStarById(player.currentNodeId);
+            PlayerOpenedMarketEvent playerOpenedMarketEvent = new PlayerOpenedMarketEvent(player, star);
+            eventManager.DispatchEvent<PlayerOpenedMarketEvent>(playerOpenedMarketEvent);
+        }
     }
 }

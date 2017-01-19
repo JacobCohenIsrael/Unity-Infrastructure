@@ -15,6 +15,7 @@ namespace CWO.Star
         public Text welcomeText;
         public Button departButton;
         public Button hangerButton;
+        public Button marketButton;
 
         protected PlayerService playerService;
         protected StarService starService;
@@ -26,6 +27,7 @@ namespace CWO.Star
             playerService = application.serviceManager.get <PlayerService>() as PlayerService;
             starService = application.serviceManager.get <StarService>() as StarService;
             departButton.onClick.AddListener(() => { this.OnDepart(); });
+            marketButton.onClick.AddListener(() => { this.OpenMarket(); });
             Hide();
         }
 
@@ -40,6 +42,16 @@ namespace CWO.Star
                     throw new UnityException("Player must have an active ship");
                 }
                 playerService.departPlayerFromStar(player);
+            }
+        }
+
+        protected void OpenMarket()
+        {
+            if (PlayerPrefs.HasKey("playerId"))
+            {
+                int playerId = PlayerPrefs.GetInt("PlayerId");
+                PlayerModel player = playerService.getPlayerById(playerId);
+                playerService.openMarket(player);
             }
         }
 

@@ -39,17 +39,16 @@ namespace CWO
         protected void OnPlayJumpToStar(PlayerJumpedToStarEvent e)
         {
             player.currentNodeId = e.star.id;
-            player = e.player;
         }
 
         protected void OnPlayLandOnStar(PlayerLandOnStarEvent e)
         {
-            player = e.player;
+//            player = e.player;
         }
 
         protected void OnPlayerDepartFromStar(PlayerDepartFromStarEvent e)
         {
-            player = e.player;
+//            player = e.player;
         }
 
         protected void shipRegen()

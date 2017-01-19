@@ -8,7 +8,7 @@ namespace Infrastructure.Core.Ship.Part
         {
             AddStat(ShipStats.JumpDistance, 6f);
             AddStat(ShipStats.EnergyCapacity, 40f);
-            AddStat(ShipStats.EnergyRegen, 15f);
+            AddStat(ShipStats.EnergyRegen, 5f);
         }
     }
 }
