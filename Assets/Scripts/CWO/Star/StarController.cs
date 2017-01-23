@@ -44,8 +44,7 @@ namespace CWO.Star
                 PlayerModel player = playerService.getPlayerById(playerId);
                 if (star.id == player.currentNodeId)
                 {
-                    PlayerOrbitStarEvent playerOrbitStarEvent = new PlayerOrbitStarEvent(star);
-                    application.eventManager.DispatchEvent<PlayerOrbitStarEvent>(playerOrbitStarEvent);
+                    playerService.OrbitPlayerOnStar(player, star);
                 }
                 else
                 {

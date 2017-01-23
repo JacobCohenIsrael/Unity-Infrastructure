@@ -11,5 +11,6 @@ namespace Infrastructure.Core.Ship
         ShieldGenerator,
         ShieldCapacitor,
         Weapon,
+        CargoCapacitor,
     }
 }

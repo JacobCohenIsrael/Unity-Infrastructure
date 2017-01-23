@@ -26,7 +26,7 @@ namespace Infrastructure.Core.Player
 
         public void jumpPlayerToStar(PlayerModel player, StarModel star)
         {
-            float distance = starService.calculateDistanceBetweenStars(starService.getStarById(player.currentNodeId), star);
+            float distance = starService.CalculateDistanceBetweenStars(starService.GetStarById(player.currentNodeId), star);
             float engineJumpDistance = player.getActiveShip().shipStats[Infrastructure.Core.Ship.ShipStats.JumpDistance];
             if (distance > engineJumpDistance)
             {
@@ -43,6 +43,7 @@ namespace Infrastructure.Core.Player
             {
                 PlayerJumpedToStarEvent playerJumpedToStarEvent = new PlayerJumpedToStarEvent(player, star);
                 eventManager.DispatchEvent<PlayerJumpedToStarEvent>(playerJumpedToStarEvent);
+                OrbitPlayerOnStar(player, star);
             }
 
         }
@@ -67,9 +68,21 @@ namespace Infrastructure.Core.Player
 
         public void openMarket(PlayerModel player)
         {
-            StarModel star = starService.getStarById(player.currentNodeId);
+            StarModel star = starService.GetStarById(player.currentNodeId);
             PlayerOpenedMarketEvent playerOpenedMarketEvent = new PlayerOpenedMarketEvent(player, star);
             eventManager.DispatchEvent<PlayerOpenedMarketEvent>(playerOpenedMarketEvent);
+        }
+
+        public void exitMarket(PlayerModel player)
+        {
+            PlayerExitMarketEvent playerExitMarketEvent = new PlayerExitMarketEvent(player);
+            eventManager.DispatchEvent<PlayerExitMarketEvent>(playerExitMarketEvent);
+        }
+
+        public void OrbitPlayerOnStar(PlayerModel player, StarModel star)
+        {
+            PlayerOrbitStarEvent playerOrbitStarEvent = new PlayerOrbitStarEvent(star);
+            eventManager.DispatchEvent<PlayerOrbitStarEvent>(playerOrbitStarEvent);
         }
     }
 }

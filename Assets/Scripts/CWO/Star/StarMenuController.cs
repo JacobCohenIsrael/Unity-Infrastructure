@@ -58,13 +58,13 @@ namespace CWO.Star
         protected void OnLoginSuccessful(LoginSuccessfulEvent e)
         {
             StarService starService = application.serviceManager.get<StarService>() as StarService;
-            StarModel currentStar = starService.getStarById(e.player.currentNodeId);
+            StarModel currentStar = starService.GetStarById(e.player.currentNodeId);
             welcomeText.text = "Welcome to " + currentStar.name;
         }
 
         protected void OnPlayerLandOnStar(PlayerLandOnStarEvent e)
         {
-            StarModel star = starService.getStarById(e.player.currentNodeId);
+            StarModel star = starService.GetStarById(e.player.currentNodeId);
             welcomeText.text = "Welcome to " + star.name;
             if (e.player.homePlanetId == star.id)
             {

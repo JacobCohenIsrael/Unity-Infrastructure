@@ -15,10 +15,26 @@ namespace Infrastructure.Core.Player
         public ShipModel[] ships;
         public bool isLanded;
         public int homePlanetId;
+        public int credits;
 
         public ShipModel getActiveShip()
         {
             return ships[activeShipIndex];
+        }
+
+
+        public bool hasActiveShip()
+        {
+            if (null == ships[activeShipIndex])
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public float getJumpDistance()
+        {
+            return getActiveShip().shipStats[ShipStats.JumpDistance];
         }
     }
 }

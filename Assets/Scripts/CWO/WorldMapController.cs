@@ -17,13 +17,13 @@ namespace CWO
 		{
 			StarService starService = Infrastructure.Base.Application.Application.getInstance ().serviceManager.get<StarService> () as StarService;
 			application.eventManager.AddListener<LoginSuccessfulEvent>(this.OnLoginSuccessful);
-			stars = starService.getStarsList ();
+			stars = starService.GetStarsList ();
 			Hide ();
 		}
 
 		void OnLoginSuccessful(LoginSuccessfulEvent e)
 		{
-			Debug.Log("Login Successful, Populating WorldMap");
+//			Debug.Log("Login Successful, Populating WorldMap");
 			foreach (StarModel star in stars) 
 			{
                 GameObject instantiatedStar = Instantiate(starPrefab, starSpawn);

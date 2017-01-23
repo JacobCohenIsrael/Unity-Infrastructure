@@ -12,6 +12,7 @@ namespace CWO
 
         public PlayerModel player;
         public Slider energyBar;
+        public Text creditsText;
         protected PlayerService playerService;
 
         protected float lastRegen;
@@ -28,7 +29,11 @@ namespace CWO
 
         void Update()
         {
-            shipRegen();
+            if (PlayerPrefs.HasKey("playerId"))
+            {
+                ShipRegen();
+                UpdateCredits();
+            }
         }
             
         protected void OnLoginSuccessful(LoginSuccessfulEvent e)
@@ -51,13 +56,13 @@ namespace CWO
 //            player = e.player;
         }
 
-        protected void shipRegen()
+        protected void ShipRegen()
         {
-            shipEnergyRegen();
+            ShipEnergyRegen();
 
         }
 
-        protected void shipEnergyRegen()
+        protected void ShipEnergyRegen()
         {
             float energyRegen = player.getActiveShip().shipStats[Infrastructure.Core.Ship.ShipStats.EnergyRegen];
             float energyCapacity = player.getActiveShip().shipStats[Infrastructure.Core.Ship.ShipStats.EnergyCapacity];
@@ -65,6 +70,11 @@ namespace CWO
             player.getActiveShip().currentEnergyAmount = (newCurrentEnergyAmount > energyCapacity) ? energyCapacity : newCurrentEnergyAmount;
             energyBar.maxValue = energyCapacity;
             energyBar.value = player.getActiveShip().currentEnergyAmount;
+        }
+
+        protected void UpdateCredits()
+        {
+            creditsText.text = "Credits: " + player.credits.ToString("C0");
         }
     }
 }

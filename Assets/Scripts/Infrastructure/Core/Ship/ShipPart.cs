@@ -5,15 +5,15 @@ namespace Infrastructure.Core.Ship
 {
     public abstract class ShipPart
     {
-        public Dictionary<ShipStats, float> stats;
+        public Dictionary<ShipStats, int> stats;
 
         public ShipPart()
         {
-            stats = new Dictionary<ShipStats, float>();
+            stats = new Dictionary<ShipStats, int>();
             AddStats();
         }
 
-        public void AddStat(ShipStats statName, float value)
+        public void AddStat(ShipStats statName, int value)
         {
             stats.Add(statName, value);
         }

@@ -36,7 +36,7 @@ namespace CWO
 
         void Start () 
         {
-            Debug.Log("Game Manager Starting");
+//            Debug.Log("Game Manager Starting");
             ChangeState(GameState.EntryMenu);
             application = Infrastructure.Base.Application.Application.getInstance();
             eventManager = application.eventManager;
@@ -47,10 +47,11 @@ namespace CWO
             application.eventManager.AddListener<PlayerLandOnStarEvent>(this.OnPlayerLandOnStar);
             application.eventManager.AddListener<PlayerDepartFromStarEvent>(this.OnPlayerExitStarMenu);
             application.eventManager.AddListener<PlayerOpenedMarketEvent>(this.OnPlayerOpenMarket);
+            application.eventManager.AddListener<PlayerExitMarketEvent>(this.OnPlayerExitMarket);
 
             if ( PlayerPrefs.HasKey("sessionId") )
             {
-                Debug.Log("Session Id Found");
+//                Debug.Log("Session Id Found");
                 LoginService loginService =  Infrastructure.Base.Application.Application.getInstance().serviceManager.get<LoginService>() as LoginService;
                 loginService.LoginAsGuest(PlayerPrefs.GetString("sessionId"));
             }
@@ -94,7 +95,7 @@ namespace CWO
 
         void OnLoginSuccessful(LoginSuccessfulEvent e)
         {
-            Debug.Log("Login Successful, Changing to Star Menu state");
+//            Debug.Log("Login Successful, Changing to Star Menu state");
             PlayerPrefs.SetString("sessionId", e.player.sessionId);
             PlayerPrefs.SetInt("playerId", e.player.id);
             PlayerPrefs.Save();
@@ -131,6 +132,11 @@ namespace CWO
             ChangeState(GameState.MarketMenu);
         }
 
+        void OnPlayerExitMarket(PlayerExitMarketEvent e)
+        {
+            ChangeState(GameState.StarMenu);
+        }
+
         void HideAll()
         {
             loginController.Hide();
@@ -138,6 +144,7 @@ namespace CWO
             hudController.Hide();
             starScreenController.Hide();
             starMenuController.Hide();
+            marketMenuController.Hide();
         }
     }
 }

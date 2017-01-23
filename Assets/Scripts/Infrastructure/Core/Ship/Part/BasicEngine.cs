@@ -6,9 +6,9 @@ namespace Infrastructure.Core.Ship.Part
     {
         protected override void AddStats()
         {
-            AddStat(ShipStats.JumpDistance, 6f);
-            AddStat(ShipStats.EnergyCapacity, 40f);
-            AddStat(ShipStats.EnergyRegen, 5f);
+            AddStat(ShipStats.JumpDistance, 6);
+            AddStat(ShipStats.EnergyCapacity, 40);
+            AddStat(ShipStats.EnergyRegen, 5);
         }
     }
 }

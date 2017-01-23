@@ -10,5 +10,6 @@ namespace Infrastructure.Core.Ship
         EnergyRegen,
         EnergyCapacity,
         JumpDistance,
+        CargoCapacity,
     }
 }

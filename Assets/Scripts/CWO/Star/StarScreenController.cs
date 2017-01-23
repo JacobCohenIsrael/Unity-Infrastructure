@@ -26,8 +26,8 @@ namespace CWO.Star
 
         void OnPlayerEnterStar(PlayerOrbitStarEvent e)
         {
-            Debug.Log("Player entered star, showing star screen");
-            Debug.Log("Welcome to " + e.star.name + " star");
+//            Debug.Log("Player entered star, showing star screen");
+//            Debug.Log("Welcome to " + e.star.name + " star");
         }
 
         void OnJump()

@@ -18,7 +18,7 @@ namespace CWO
 
         void Start()
         {
-            Debug.Log("Running Application");
+//            Debug.Log("Running Application");
             Infrastructure.Base.Application.Application.getInstance().run();
         }
     }

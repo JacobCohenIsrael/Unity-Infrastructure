@@ -3,6 +3,7 @@ using Infrastructure.Base.Service;
 using Infrastructure.Base.Service.Contracts;
 using Infrastructure.Core.Star;
 using Infrastructure.Core.Ship.Part;
+
 namespace Infrastructure.Core.Player
 {
     public class PlayerAdapter : IServiceProvider
@@ -23,6 +24,7 @@ namespace Infrastructure.Core.Player
             player.ships[player.activeShipIndex] = ship;
             player.isLanded = true;
             player.homePlanetId = 1;
+            player.credits = 50000;
             this.player = player;
         }
 

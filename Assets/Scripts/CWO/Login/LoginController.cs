@@ -15,7 +15,7 @@ namespace CWO.Login
 
         void Awake()
         {
-            Debug.Log("Login Controller is Hiding");
+//            Debug.Log("Login Controller is Hiding");
             application.eventManager.AddListener<LoginSuccessfulEvent>(this.OnLoginSuccessful);
             loginSubmitButton.onClick.AddListener(() => { this.onSubmit(); });
             loginService = application.serviceManager.get<LoginService>() as LoginService;
