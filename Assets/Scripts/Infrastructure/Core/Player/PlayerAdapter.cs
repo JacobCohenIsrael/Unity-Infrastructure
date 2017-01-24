@@ -67,9 +67,9 @@ namespace Infrastructure.Core.Player
         {
             if (resourceSlot.amount > 0)
             {
-                player.credits -= resourceSlot.buyPrice;
                 if (player.getActiveShip().AddResource(resourceSlot.resouce.name, 1))
                 {
+                    player.credits -= resourceSlot.buyPrice;
                     resourceSlot.amount--;
                     return true;
                 }
@@ -79,9 +79,13 @@ namespace Infrastructure.Core.Player
 
         public bool SellResource(PlayerModel player, ResourceSlotModel resourceSlot)
         {
-            player.credits += resourceSlot.sellPrice;
-            resourceSlot.amount++;
-            return true;
+            if (player.getActiveShip().RemoveResource(resourceSlot.resouce.name, 1))
+            {
+                player.credits += resourceSlot.sellPrice;
+                resourceSlot.amount++;
+                return true;
+            }
+            return false;
         }
     }
 }

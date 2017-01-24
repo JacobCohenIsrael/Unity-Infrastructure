@@ -47,6 +47,8 @@ namespace CWO.Market
         {
             application.eventManager.RemoveListener<LogoutSuccessfulEvent>(this.OnLogoutSuccessful);
             application.eventManager.RemoveListener<PlayerExitMarketEvent>(this.OnPlayerExitMarket);
+            application.eventManager.RemoveListener<PlayerBoughtResourceEvent>(this.OnPlayerBoughtResource);
+            application.eventManager.RemoveListener<PlayerSoldResourceEvent>(this.OnPlayerSoldResource);
             Destroy (gameObject);
         }
 

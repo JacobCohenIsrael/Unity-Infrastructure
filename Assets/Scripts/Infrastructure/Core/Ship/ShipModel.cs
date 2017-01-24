@@ -52,6 +52,16 @@ namespace Infrastructure.Core.Ship
             }
             return false;
         }
+
+        public bool RemoveResource(Resources resourceName, int amount)
+        {
+            if (shipCargo.ContainsKey(resourceName) && shipCargo[resourceName] >= amount )
+            {
+                shipCargo[resourceName]--;
+                return true;
+            }
+            return false;
+        }
     }
 }
 
