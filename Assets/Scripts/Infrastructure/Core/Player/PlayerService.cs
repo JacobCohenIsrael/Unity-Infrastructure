@@ -3,6 +3,7 @@ using Infrastructure.Base.Service.Contracts;
 using Infrastructure.Base.Event;
 using Infrastructure.Core.Player.Events;
 using Infrastructure.Core.Star;
+using Infrastructure.Core.Resource;
 
 namespace Infrastructure.Core.Player
 {
@@ -83,6 +84,31 @@ namespace Infrastructure.Core.Player
         {
             PlayerOrbitStarEvent playerOrbitStarEvent = new PlayerOrbitStarEvent(star);
             eventManager.DispatchEvent<PlayerOrbitStarEvent>(playerOrbitStarEvent);
+        }
+
+        public void BuyResource(PlayerModel player, ResourceModel resource)
+        {
+            StarModel star = starService.GetStarById(player.currentNodeId);
+            ResourceSlotModel resourceSlot = star.resourceList[resource.name];
+            if (player.credits >= resourceSlot.buyPrice)
+            {
+                if (playerAdapter.BuyResource(player, resourceSlot))
+                {
+                    PlayerBoughtResourceEvent playerBoughtResourceEvent = new PlayerBoughtResourceEvent(player, resourceSlot);
+                    eventManager.DispatchEvent<PlayerBoughtResourceEvent>(playerBoughtResourceEvent);
+                }
+            }
+        }
+
+        public void SellResource(PlayerModel player, ResourceModel resource)
+        {
+            StarModel star = starService.GetStarById(player.currentNodeId);
+            ResourceSlotModel resourceSlot = star.resourceList[resource.name];
+            if (playerAdapter.SellResource(player, resourceSlot))
+            {
+                PlayerSoldResourceEvent playerSoldResourceEvent = new PlayerSoldResourceEvent(player, resourceSlot);
+                eventManager.DispatchEvent<PlayerSoldResourceEvent>(playerSoldResourceEvent);
+            }
         }
     }
 }

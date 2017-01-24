@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Infrastructure.Core.Resource;
+using System.Linq;
 
 namespace Infrastructure.Core.Ship
 {
@@ -15,10 +17,13 @@ namespace Infrastructure.Core.Ship
 
         protected Dictionary<ShipParts, ShipPart> shipParts;
 
+        public Dictionary<Resources, int> shipCargo;
+
         public ShipModel()
         {
             shipParts = new Dictionary<ShipParts, ShipPart>();
             shipStats = new Dictionary<ShipStats, int>();
+            shipCargo = new Dictionary<Resources, int>();
         }
 
         public void AddPart(ShipParts partName, ShipPart part)
@@ -28,6 +33,24 @@ namespace Infrastructure.Core.Ship
             {
                 shipStats.Add(stat.Key, stat.Value);
             }
+        }
+
+        public bool AddResource(Resources resourceName, int amount)
+        {
+            int cargoHold = shipCargo.Sum (x => x.Value);
+            if (cargoHold < shipStats[ShipStats.CargoCapacity])
+            {
+                if (!shipCargo.ContainsKey(resourceName))
+                {
+                    shipCargo.Add(resourceName, amount);
+                }
+                else
+                {
+                    shipCargo[resourceName] += amount;
+                }
+                return true;
+            }
+            return false;
         }
     }
 }
