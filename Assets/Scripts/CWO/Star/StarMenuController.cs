@@ -7,6 +7,7 @@ using Infrastructure.Core.Player.Events;
 using Infrastructure.Core.Player;
 using Infrastructure.Core.Login.Events;
 using Infrastructure.Core.Star;
+using Infrastructure.Base.Application.Events;
 
 namespace CWO.Star
 {
@@ -22,13 +23,17 @@ namespace CWO.Star
 
         void Start () 
         {
-            application.eventManager.AddListener<PlayerLandOnStarEvent>(this.OnPlayerLandOnStar);
-            application.eventManager.AddListener<LoginSuccessfulEvent>(this.OnLoginSuccessful);
             playerService = application.serviceManager.get <PlayerService>() as PlayerService;
             starService = application.serviceManager.get <StarService>() as StarService;
+            Hide();
+        }
+
+        protected override void SubscribeToEvents(SubscribeEvent e)
+        {
+            eventManager.AddListener<PlayerLandOnStarEvent>(this.OnPlayerLandOnStar);
+            eventManager.AddListener<LoginSuccessfulEvent>(this.OnLoginSuccessful);
             departButton.onClick.AddListener(() => { this.OnDepart(); });
             marketButton.onClick.AddListener(() => { this.OpenMarket(); });
-            Hide();
         }
 
         protected void OnDepart()

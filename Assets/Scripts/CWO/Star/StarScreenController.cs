@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Infrastructure.Core.Login;
 using Infrastructure.Core.Player.Events;
 using Infrastructure.Core.Player;
+using Infrastructure.Base.Application.Events;
 
 namespace CWO.Star
 {
@@ -15,13 +16,17 @@ namespace CWO.Star
 
         protected PlayerService playerService;
 
-        void Awake ()
+        void Start()
         {
             playerService = application.serviceManager.get<PlayerService>() as PlayerService;
-            application.eventManager.AddListener<PlayerOrbitStarEvent>(this.OnPlayerEnterStar);
+            Hide();
+        }
+
+        protected override void SubscribeToEvents(SubscribeEvent e)
+        {
+            eventManager.AddListener<PlayerOrbitStarEvent>(this.OnPlayerEnterStar);
             jumpButton.onClick.AddListener(() => { this.OnJump(); });
             landButton.onClick.AddListener(() => { this.OnLand(); });
-            Hide();
         }
 
         void OnPlayerEnterStar(PlayerOrbitStarEvent e)

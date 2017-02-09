@@ -13,16 +13,20 @@ namespace CWO.Login
 
         protected LoginService loginService;
 
-        void Awake()
+        void Start()
         {
-//            Debug.Log("Login Controller is Hiding");
+
+        }
+
+        protected override void SubscribeToEvents(SubscribeEvent e)
+        {
             application.eventManager.AddListener<LoginSuccessfulEvent>(this.OnLoginSuccessful);
-            loginSubmitButton.onClick.AddListener(() => { this.onSubmit(); });
+            loginSubmitButton.onClick.AddListener(() => { this.OnSubmit(); });
             loginService = application.serviceManager.get<LoginService>() as LoginService;
             Hide();
         }
 
-        void onSubmit()
+        public void OnSubmit()
         {
             loginService.LoginAsGuest();
         }

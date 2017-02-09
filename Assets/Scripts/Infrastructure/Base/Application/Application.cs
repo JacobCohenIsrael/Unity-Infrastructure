@@ -2,7 +2,7 @@
 using Infrastructure.Base.Service;
 using Infrastructure.Base.Event;
 using Infrastructure.Base.Application.Events;
-
+using Infrastructure.Base.Config;
 
 
 namespace Infrastructure.Base.Application
@@ -27,8 +27,10 @@ namespace Infrastructure.Base.Application
 
         public void run()
         {
-            ApplicationStartedEvent e = new ApplicationStartedEvent(this);
-            eventManager.DispatchEvent(e);
+            eventManager.DispatchEvent(new ApplicationStartedEvent(this));
+            eventManager.DispatchEvent(new SetAppConfigEvent());
+            eventManager.DispatchEvent(new SubscribeEvent());
+            eventManager.DispatchEvent(new ApplicationFinishedLoadingEvent(this));
         }
     }
 }

@@ -6,6 +6,7 @@ using Infrastructure.Core.Player.Events;
 using Infrastructure.Core.Resource;
 using UnityEngine.UI;
 using Infrastructure.Core.Player;
+using Infrastructure.Base.Application.Events;
 
 namespace CWO.Market 
 {
@@ -14,17 +15,26 @@ namespace CWO.Market
         public GameObject resourceSlotPrefab;
         public Transform resourcesPanel;
         public Button exitButton;
+        public Button buyButton;
+        public Button sellButton;
 
-
+        protected ResourceSlotController selectedResourceSlotRef; 
         protected PlayerService playerService;
 
-    	void Start () 
+    	void Start() 
+        {
+            Hide();
+            DisableMarketButtons();
+    	}
+
+        protected override void SubscribeToEvents(SubscribeEvent e)
         {
             application.eventManager.AddListener<PlayerOpenedMarketEvent>(this.OnMarketOpen);
             exitButton.onClick.AddListener(() => { this.OnExit(); });
+            buyButton.onClick.AddListener(() => { this.OnBuyResourceClicked(); });
+            sellButton.onClick.AddListener(() => { this.OnSellResourceClicked(); });
             playerService = application.serviceManager.get<PlayerService>() as PlayerService;
-            Hide();
-    	}
+        }
 
         protected void OnMarketOpen(PlayerOpenedMarketEvent e)
         {
@@ -37,11 +47,9 @@ namespace CWO.Market
                 resourceSlotController.resourceSlot = resourceSlot.Value;
                 resourceSlotController.nameText.text = resourceSlot.Value.resouce.name.ToString();
                 resourceSlotController.amountText.text = resourceSlot.Value.amount.ToString();
-                resourceSlotController.buyButton.GetComponentInChildren<Text>().text = "Buy for " + resourceSlot.Value.buyPrice.ToString("C0");
-                resourceSlotController.sellButton.GetComponentInChildren<Text>().text = "Sell for " + resourceSlot.Value.sellPrice.ToString("C0");
                 resourceSlotController.resourceImage.color = Color.white;
                 resourceSlotController.resourceImage.sprite = sprite;
-
+                resourceSlotController.marketMenuController = this;
             }
         }
 
@@ -53,6 +61,59 @@ namespace CWO.Market
                 PlayerModel player = playerService.getPlayerById(playerId);
                 playerService.exitMarket(player);
             }
+        }
+
+
+        protected void OnBuyResourceClicked()
+        {
+            if (PlayerPrefs.HasKey("playerId"))
+            {
+                int playerId = PlayerPrefs.GetInt("PlayerId");
+                PlayerModel player = playerService.getPlayerById(playerId);
+                playerService.BuyResource(player, selectedResourceSlotRef.resourceSlot.resouce);
+            }
+        }
+
+        protected void OnSellResourceClicked()
+        {
+            if (PlayerPrefs.HasKey("playerId"))
+            {
+                int playerId = PlayerPrefs.GetInt("PlayerId");
+                PlayerModel player = playerService.getPlayerById(playerId);
+                playerService.SellResource(player, selectedResourceSlotRef.resourceSlot.resouce);
+            }
+        }
+
+        public void SetSelectedResourceSlot(ResourceSlotController resourceSlotRef)
+        {
+            resourceSlotRef.backgroundImage.color = Color.blue;
+            if (selectedResourceSlotRef != null)
+            {
+                selectedResourceSlotRef.backgroundImage.color = Color.white;
+            }
+            if (selectedResourceSlotRef == resourceSlotRef)
+            {
+                selectedResourceSlotRef = null;
+                DisableMarketButtons();
+                return;
+            }
+            selectedResourceSlotRef = resourceSlotRef;
+            buyButton.GetComponentInChildren<Text>().text = "Buy for " + resourceSlotRef.resourceSlot.buyPrice.ToString("C0");
+            sellButton.GetComponentInChildren<Text>().text = "Sell for " + resourceSlotRef.resourceSlot.sellPrice.ToString("C0");
+            EnableMarketButtons();
+
+        }
+
+        private void EnableMarketButtons()
+        {
+            buyButton.gameObject.SetActive(true);
+            sellButton.gameObject.SetActive(true);
+        }
+
+        private void DisableMarketButtons()
+        {
+            buyButton.gameObject.SetActive(false);
+            sellButton.gameObject.SetActive(false);
         }
     }
 }

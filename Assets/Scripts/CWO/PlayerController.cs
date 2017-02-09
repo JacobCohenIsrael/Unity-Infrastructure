@@ -5,6 +5,8 @@ using Infrastructure.Core.Player;
 using Infrastructure.Core.Login.Events;
 using Infrastructure.Core.Player.Events;
 using UnityEngine.UI;
+using App = Infrastructure.Base.Application.Application;
+using Infrastructure.Base.Event;
 
 namespace CWO
 {
@@ -14,17 +16,22 @@ namespace CWO
         public Slider energyBar;
         public Text creditsText;
         protected PlayerService playerService;
-
+        protected App application;
         protected float lastRegen;
 
-        void Start () 
+        void Awake () 
         {
-            Infrastructure.Base.Application.Application application = Infrastructure.Base.Application.Application.getInstance();
+            application = App.getInstance();
+            EventManager eventManager = application.eventManager;
+            eventManager.AddListener<LoginSuccessfulEvent>(this.OnLoginSuccessful);
+            eventManager.AddListener<PlayerJumpedToStarEvent>(this.OnPlayJumpToStar);
+            eventManager.AddListener<PlayerLandOnStarEvent>(this.OnPlayLandOnStar);
+            eventManager.AddListener<PlayerDepartFromStarEvent>(this.OnPlayerDepartFromStar);
+        }
+
+        void Start()
+        {
             playerService = application.serviceManager.get<PlayerService>() as PlayerService;
-            application.eventManager.AddListener<LoginSuccessfulEvent>(this.OnLoginSuccessful);
-            application.eventManager.AddListener<PlayerJumpedToStarEvent>(this.OnPlayJumpToStar);
-            application.eventManager.AddListener<PlayerLandOnStarEvent>(this.OnPlayLandOnStar);
-            application.eventManager.AddListener<PlayerDepartFromStarEvent>(this.OnPlayerDepartFromStar);
         }
 
         void Update()

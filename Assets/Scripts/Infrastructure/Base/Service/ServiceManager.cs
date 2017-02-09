@@ -2,13 +2,15 @@
 using Infrastructure.Base.Service;
 using System;
 using System.Collections.Generic;
-using Infrastructure.Base.Config;
+using Configuration = Infrastructure.Base.Config.Config;
 
 namespace Infrastructure.Base.Service
 {
     public class ServiceManager : Contracts.IServiceManager
     {
         Dictionary<Type, Contracts.IServiceProvider> dictonary;
+
+        Configuration config;
 
         public ServiceManager()
         {
@@ -29,6 +31,16 @@ namespace Infrastructure.Base.Service
         public void set<T>(T service) where T : Contracts.IServiceProvider
         {
             dictonary[typeof(T)] = service;
+        }
+
+        public void setConfig(Configuration config)
+        {
+            this.config = config;
+        }
+
+        public Configuration getConfig()
+        {
+            return config;
         }
     }
 }

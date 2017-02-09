@@ -1,11 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
+using App = Infrastructure.Base.Application.Application;
+using Infrastructure.Base.Event;
+using Infrastructure.Base.Application.Events;
 
 namespace Implementation.Views.Screen
 {
     public abstract class BaseUIObject : MonoBehaviour
     {
-        public Infrastructure.Base.Application.Application application = Infrastructure.Base.Application.Application.getInstance();
+        protected App application = App.getInstance();
+
+        protected EventManager eventManager = App.getInstance().eventManager;
+
+        void Awake()
+        {
+            application.eventManager.AddListener<SubscribeEvent>(this.SubscribeToEvents);
+        }
 
         public virtual void Show()
         {
@@ -16,5 +26,7 @@ namespace Implementation.Views.Screen
         {
             gameObject.SetActive(false);
         }
+
+        protected abstract void SubscribeToEvents(SubscribeEvent e);
     }
 }

@@ -5,6 +5,10 @@ using Infrastructure.Core.Star;
 using Implementation.Views.Screen;
 using Infrastructure.Core.Login.Events;
 using System;
+using Infrastructure.Base.Application.Events;
+using CWO.Star;
+
+
 namespace CWO
 {
 	public class WorldMapController : BaseUIObject 
@@ -13,13 +17,17 @@ namespace CWO
         public Transform starSpawn;
 		private Infrastructure.Core.Star.StarModel[] stars;
 
-		void Awake() 
+		void Start() 
 		{
 			StarService starService = Infrastructure.Base.Application.Application.getInstance ().serviceManager.get<StarService> () as StarService;
-			application.eventManager.AddListener<LoginSuccessfulEvent>(this.OnLoginSuccessful);
 			stars = starService.GetStarsList ();
 			Hide ();
 		}
+
+        protected override void SubscribeToEvents(SubscribeEvent e)
+        {
+            eventManager.AddListener<LoginSuccessfulEvent>(this.OnLoginSuccessful);
+        }
 
 		void OnLoginSuccessful(LoginSuccessfulEvent e)
 		{
@@ -28,7 +36,7 @@ namespace CWO
 			{
                 GameObject instantiatedStar = Instantiate(starPrefab, starSpawn);
 				Vector3 starPosition = new Vector3(star.coordX, star.coordY, 0);
-				var starData = instantiatedStar.GetComponent ("StarController") as CWO.Star.StarController;
+                StarController starData = instantiatedStar.GetComponent<StarController>();
 				starData.star = star;
 				instantiatedStar.transform.position = starPosition;
 			}

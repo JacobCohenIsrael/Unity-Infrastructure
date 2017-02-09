@@ -9,6 +9,10 @@ using CWO.Star;
 using Infrastructure.Core.Star;
 using Infrastructure.Core.Player.Events;
 using CWO.Market;
+using Infrastructure.Base.Application.Events;
+using App = Infrastructure.Base.Application.Application;
+using Infrastructure.Core.Network;
+using SocketIO;
 
 namespace CWO
 {
@@ -31,28 +35,31 @@ namespace CWO
             MarketMenu,
         }
 
-        protected Infrastructure.Base.Application.Application application;
+        protected App application;
         protected EventManager eventManager;
 
-        void Start () 
+        void Awake()
         {
-//            Debug.Log("Game Manager Starting");
-            ChangeState(GameState.EntryMenu);
-            application = Infrastructure.Base.Application.Application.getInstance();
+            application = App.getInstance();
             eventManager = application.eventManager;
-            application.eventManager.AddListener<LoginSuccessfulEvent>(this.OnLoginSuccessful);
-            application.eventManager.AddListener<LogoutSuccessfulEvent>(this.OnLogoutSuccessful);
-            application.eventManager.AddListener<PlayerOrbitStarEvent>(this.OnPlayerOrbitStar);
-            application.eventManager.AddListener<PlayerJumpEvent>(this.OnPlayerJump);
-            application.eventManager.AddListener<PlayerLandOnStarEvent>(this.OnPlayerLandOnStar);
-            application.eventManager.AddListener<PlayerDepartFromStarEvent>(this.OnPlayerExitStarMenu);
-            application.eventManager.AddListener<PlayerOpenedMarketEvent>(this.OnPlayerOpenMarket);
-            application.eventManager.AddListener<PlayerExitMarketEvent>(this.OnPlayerExitMarket);
+            eventManager.AddListener<ApplicationFinishedLoadingEvent>(this.OnApplicationReady);
+            eventManager.AddListener<LoginSuccessfulEvent>(this.OnLoginSuccessful);
+            eventManager.AddListener<LogoutSuccessfulEvent>(this.OnLogoutSuccessful);
+            eventManager.AddListener<PlayerOrbitStarEvent>(this.OnPlayerOrbitStar);
+            eventManager.AddListener<PlayerJumpEvent>(this.OnPlayerJump);
+            eventManager.AddListener<PlayerLandOnStarEvent>(this.OnPlayerLandOnStar);
+            eventManager.AddListener<PlayerDepartFromStarEvent>(this.OnPlayerExitStarMenu);
+            eventManager.AddListener<PlayerOpenedMarketEvent>(this.OnPlayerOpenMarket);
+            eventManager.AddListener<PlayerExitMarketEvent>(this.OnPlayerExitMarket);
+        }
 
+        void OnApplicationReady(ApplicationFinishedLoadingEvent e) 
+        {
+            ChangeState(GameState.EntryMenu);
             if ( PlayerPrefs.HasKey("sessionId") )
             {
-//                Debug.Log("Session Id Found");
-                LoginService loginService =  Infrastructure.Base.Application.Application.getInstance().serviceManager.get<LoginService>() as LoginService;
+                Debug.Log("Session Id Found");
+                LoginService loginService =  application.serviceManager.get<LoginService>() as LoginService;
                 loginService.LoginAsGuest(PlayerPrefs.GetString("sessionId"));
             }
         }

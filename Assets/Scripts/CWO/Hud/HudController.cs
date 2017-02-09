@@ -3,6 +3,7 @@ using Infrastructure.Core.Login.Events;
 using Implementation.Views.Screen;
 using UnityEngine.UI;
 using Infrastructure.Core.Login;
+using Infrastructure.Base.Application.Events;
 
 namespace CWO.Hud
 {
@@ -10,10 +11,14 @@ namespace CWO.Hud
 
         public Button logoutButton; 
 
-        void Awake ()
+        void Start ()
+        {
+            Hide();
+        }
+
+        protected override void SubscribeToEvents(SubscribeEvent e)
         {
             logoutButton.onClick.AddListener(() => { this.OnLogout(); });
-            Hide();
         }
 
         public void OnLogout()

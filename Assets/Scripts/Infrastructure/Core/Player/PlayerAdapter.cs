@@ -4,15 +4,20 @@ using Infrastructure.Base.Service.Contracts;
 using Infrastructure.Core.Star;
 using Infrastructure.Core.Ship.Part;
 using Infrastructure.Core.Resource;
+using Infrastructure.Base.Connection.Socket;
+using SocketIO;
+using Infrastructure.Core.Network;
 
 namespace Infrastructure.Core.Player
 {
     public class PlayerAdapter : IServiceProvider
     {
         protected PlayerModel player;
+        protected NetworkService networkService;
 
         public PlayerAdapter(ServiceManager serviceManager)
         {
+            networkService = serviceManager.get<NetworkService>() as NetworkService;
             PlayerModel player = new PlayerModel();
             player.id = 123;
             player.currentNodeId = 1;
@@ -29,9 +34,10 @@ namespace Infrastructure.Core.Player
             player.credits = 50000;
             this.player = player;
         }
-
+            
         public PlayerModel getById(int id)
         {
+            networkService.Emit("login", new JSONObject("{}"));
             return player;
         }
 

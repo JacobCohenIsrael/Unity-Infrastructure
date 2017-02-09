@@ -6,6 +6,7 @@ using Implementation.Views.Screen;
 using Infrastructure.Core.Login.Events;
 using Infrastructure.Core.Player.Events;
 using Infrastructure.Core.Player;
+using Infrastructure.Base.Application.Events;
 
 namespace CWO.Market
 {
@@ -15,8 +16,9 @@ namespace CWO.Market
         public Text nameText;
         public ResourceSlotModel resourceSlot;
         public Image resourceImage;
-        public Button buyButton;
-        public Button sellButton;
+        public Image backgroundImage;
+        public Button selectResource;
+        public MarketMenuController marketMenuController;
 
         protected PlayerService playerService;
          
@@ -27,8 +29,17 @@ namespace CWO.Market
             application.eventManager.AddListener<PlayerExitMarketEvent>(this.OnPlayerExitMarket);
             application.eventManager.AddListener<PlayerBoughtResourceEvent>(this.OnPlayerBoughtResource);
             application.eventManager.AddListener<PlayerSoldResourceEvent>(this.OnPlayerSoldResource);
-            buyButton.onClick.AddListener(() => { this.OnBuyResourceClicked(); });
-            sellButton.onClick.AddListener(() => { this.OnSellResourceClicked(); });
+            selectResource.onClick.AddListener(() => { this.OnResourceSelected(); });
+        }
+
+        protected override void SubscribeToEvents(SubscribeEvent e)
+        {
+
+        }
+
+        void OnResourceSelected()
+        {
+            marketMenuController.SetSelectedResourceSlot(this);
         }
             
         void OnLogoutSuccessful(LogoutSuccessfulEvent e)
@@ -50,26 +61,6 @@ namespace CWO.Market
             application.eventManager.RemoveListener<PlayerBoughtResourceEvent>(this.OnPlayerBoughtResource);
             application.eventManager.RemoveListener<PlayerSoldResourceEvent>(this.OnPlayerSoldResource);
             Destroy (gameObject);
-        }
-
-        protected void OnBuyResourceClicked()
-        {
-            if (PlayerPrefs.HasKey("playerId"))
-            {
-                int playerId = PlayerPrefs.GetInt("PlayerId");
-                PlayerModel player = playerService.getPlayerById(playerId);
-                playerService.BuyResource(player, resourceSlot.resouce);
-            }
-        }
-
-        protected void OnSellResourceClicked()
-        {
-            if (PlayerPrefs.HasKey("playerId"))
-            {
-                int playerId = PlayerPrefs.GetInt("PlayerId");
-                PlayerModel player = playerService.getPlayerById(playerId);
-                playerService.SellResource(player, resourceSlot.resouce);
-            }
         }
 
         protected void OnPlayerBoughtResource(PlayerBoughtResourceEvent e)

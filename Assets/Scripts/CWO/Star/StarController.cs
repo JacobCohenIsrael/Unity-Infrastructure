@@ -5,6 +5,7 @@ using Implementation.Views.Screen;
 using Infrastructure.Core.Login.Events;
 using Infrastructure.Core.Player;
 using Infrastructure.Core.Player.Events;
+using Infrastructure.Base.Application.Events;
 
 namespace CWO.Star
 {
@@ -16,13 +17,21 @@ namespace CWO.Star
 
         protected PlayerService playerService;
 	
+        void Awake()
+        {
+            eventManager.AddListener<LogoutSuccessfulEvent>(this.OnLogoutSuccessful);
+        }
+
 		void Start()
 		{
-			application.eventManager.AddListener<LogoutSuccessfulEvent>(this.OnLogoutSuccessful);
             playerService = application.serviceManager.get<PlayerService>() as PlayerService;
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             playerController = player.GetComponent("PlayerController") as PlayerController;
 		}
+
+        protected override void SubscribeToEvents(SubscribeEvent e)
+        {
+        }
 
         void Update()
         {
