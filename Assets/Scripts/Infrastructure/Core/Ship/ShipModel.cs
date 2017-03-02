@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace Infrastructure.Core.Ship
 {
+    [Serializable]
     public class ShipModel : Infrastructure.Base.Model.Model
     {
         public int id;

@@ -13,6 +13,7 @@ namespace CWO.Star
 
         public Button jumpButton;
         public Button landButton;
+        public PlayerController playerController;
 
         protected PlayerService playerService;
 
@@ -37,33 +38,26 @@ namespace CWO.Star
 
         void OnJump()
         {
-            if (PlayerPrefs.HasKey("playerId"))
+            PlayerModel player = playerController.player;
+            if (null == player.getActiveShip())
             {
-                int playerId = PlayerPrefs.GetInt("PlayerId");
-                PlayerModel player = playerService.getPlayerById(playerId);
-                if (null == player.getActiveShip())
-                {
-                    throw new UnityException("Player must have a ship to jump");
-                }
-                if (player.getActiveShip().currentHullAmount > 0)
-                {
-                    PlayerJumpEvent playerJumpEvent = new PlayerJumpEvent(player);
-                    application.eventManager.DispatchEvent<PlayerJumpEvent>(playerJumpEvent);
-                }
-                else
-                {
-                    throw new UnityException("Player ship must be repaired");
-                }
+                throw new UnityException("Player must have a ship to jump");
+            }
+            if (player.getActiveShip().currentHullAmount > 0)
+            {
+                PlayerJumpEvent playerJumpEvent = new PlayerJumpEvent(player);
+                application.eventManager.DispatchEvent<PlayerJumpEvent>(playerJumpEvent);
+            }
+            else
+            {
+                throw new UnityException("Player ship must be repaired");
             }
         }
 
         void OnLand()
         {
-            if (PlayerPrefs.HasKey("playerId"))
-            {
-                int playerId = PlayerPrefs.GetInt("PlayerId");
-                playerService.landPlayerOnStar(playerService.getPlayerById(playerId));
-            }
+            PlayerModel player = playerController.player;
+            playerService.landPlayerOnStar(player);
         }
 
 

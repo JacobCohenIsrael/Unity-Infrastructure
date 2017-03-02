@@ -13,11 +13,6 @@ namespace CWO.Login
 
         protected LoginService loginService;
 
-        void Start()
-        {
-
-        }
-
         protected override void SubscribeToEvents(SubscribeEvent e)
         {
             application.eventManager.AddListener<LoginSuccessfulEvent>(this.OnLoginSuccessful);

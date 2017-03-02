@@ -4,6 +4,7 @@ using System;
 
 namespace Infrastructure.Core.Player
 {
+    [Serializable]
     public class PlayerModel : Infrastructure.Base.Model.Model
     {
         public int id;
@@ -11,11 +12,11 @@ namespace Infrastructure.Core.Player
         public string lastName;
         public string sessionId;
 
-		public int currentNodeId;
+		public string currentNodeName;
         public int activeShipIndex;
         public ShipModel[] ships;
         public bool isLanded;
-        public int homePlanetId;
+        public string homePlanetName;
         public int credits;
 
         public ShipModel getActiveShip()
@@ -39,4 +40,3 @@ namespace Infrastructure.Core.Player
         }
     }
 }
-

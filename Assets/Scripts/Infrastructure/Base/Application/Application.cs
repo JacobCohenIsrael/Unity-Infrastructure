@@ -12,6 +12,7 @@ namespace Infrastructure.Base.Application
         public ServiceManager serviceManager;
         public EventManager eventManager;
         private static Application localInstance;
+        public bool hasStarted = false;
 
         public static Application getInstance()
         {
@@ -31,6 +32,7 @@ namespace Infrastructure.Base.Application
             eventManager.DispatchEvent(new SetAppConfigEvent());
             eventManager.DispatchEvent(new SubscribeEvent());
             eventManager.DispatchEvent(new ApplicationFinishedLoadingEvent(this));
+            hasStarted = true;
         }
     }
 }

@@ -4,6 +4,9 @@ using Infrastructure.Base.Event;
 using Infrastructure.Core.Player.Events;
 using Infrastructure.Core.Star;
 using Infrastructure.Core.Resource;
+using Infrastructure.Core.Network;
+using SocketIO;
+using UnityEngine;
 
 namespace Infrastructure.Core.Player
 {
@@ -12,22 +15,37 @@ namespace Infrastructure.Core.Player
         StarService starService;
         PlayerAdapter playerAdapter;
         EventManager eventManager;
+        MainServer mainServer;
 
         public PlayerService(ServiceManager serviceManager)
+        {
+            getDependencies(serviceManager);
+            subscribeListeners();
+
+
+        }
+
+        protected void getDependencies(ServiceManager serviceManager)
         {
             starService = serviceManager.get<StarService>() as StarService;
             playerAdapter = serviceManager.get<PlayerAdapter>() as PlayerAdapter;
             eventManager = serviceManager.get<EventManager>() as EventManager;
+            mainServer = serviceManager.get<MainServer>() as MainServer;
         }
 
-        public PlayerModel getPlayerById(int playerId)
+        protected void subscribeListeners()
         {
-            return playerAdapter.getById(playerId);
+            mainServer.On("playerBoughtResource", this.OnPlayerBoughtResource);
+        }
+            
+        public void LoginAsGuest(string sessionId)
+        {
+            playerAdapter.LoginAsGuest(sessionId);
         }
 
         public void jumpPlayerToStar(PlayerModel player, StarModel star)
         {
-            float distance = starService.CalculateDistanceBetweenStars(starService.GetStarById(player.currentNodeId), star);
+            float distance = starService.CalculateDistanceBetweenStars(starService.GetStarByName(player.currentNodeName), star);
             float engineJumpDistance = player.getActiveShip().shipStats[Infrastructure.Core.Ship.ShipStats.JumpDistance];
             if (distance > engineJumpDistance)
             {
@@ -42,6 +60,7 @@ namespace Infrastructure.Core.Player
 
             if (playerAdapter.jumpPlayerToStar(player, star))
             {
+                player.currentNodeName = star.name;
                 PlayerJumpedToStarEvent playerJumpedToStarEvent = new PlayerJumpedToStarEvent(player, star);
                 eventManager.DispatchEvent<PlayerJumpedToStarEvent>(playerJumpedToStarEvent);
                 OrbitPlayerOnStar(player, star);
@@ -60,7 +79,7 @@ namespace Infrastructure.Core.Player
 
         public void departPlayerFromStar(PlayerModel player)
         {
-            if (playerAdapter.landPlayerOnStar(player))
+            if (playerAdapter.departPlayerFromStar(player))
             {
                 PlayerDepartFromStarEvent playerDepartFromStarEvent = new PlayerDepartFromStarEvent(player);
                 eventManager.DispatchEvent<PlayerDepartFromStarEvent>(playerDepartFromStarEvent);
@@ -69,7 +88,7 @@ namespace Infrastructure.Core.Player
 
         public void openMarket(PlayerModel player)
         {
-            StarModel star = starService.GetStarById(player.currentNodeId);
+            StarModel star = starService.GetStarByName(player.currentNodeName);
             PlayerOpenedMarketEvent playerOpenedMarketEvent = new PlayerOpenedMarketEvent(player, star);
             eventManager.DispatchEvent<PlayerOpenedMarketEvent>(playerOpenedMarketEvent);
         }
@@ -88,21 +107,17 @@ namespace Infrastructure.Core.Player
 
         public void BuyResource(PlayerModel player, ResourceModel resource)
         {
-            StarModel star = starService.GetStarById(player.currentNodeId);
+            StarModel star = starService.GetStarByName(player.currentNodeName);
             ResourceSlotModel resourceSlot = star.resourceList[resource.name];
             if (player.credits >= resourceSlot.buyPrice)
             {
-                if (playerAdapter.BuyResource(player, resourceSlot))
-                {
-                    PlayerBoughtResourceEvent playerBoughtResourceEvent = new PlayerBoughtResourceEvent(player, resourceSlot);
-                    eventManager.DispatchEvent<PlayerBoughtResourceEvent>(playerBoughtResourceEvent);
-                }
+                playerAdapter.BuyResource(player, resourceSlot);
             }
         }
 
         public void SellResource(PlayerModel player, ResourceModel resource)
         {
-            StarModel star = starService.GetStarById(player.currentNodeId);
+            StarModel star = starService.GetStarByName(player.currentNodeName);
             ResourceSlotModel resourceSlot = star.resourceList[resource.name];
             if (playerAdapter.SellResource(player, resourceSlot))
             {
@@ -110,5 +125,12 @@ namespace Infrastructure.Core.Player
                 eventManager.DispatchEvent<PlayerSoldResourceEvent>(playerSoldResourceEvent);
             }
         }
+
+        protected void OnPlayerBoughtResource(SocketIOEvent e)
+        {
+            PlayerModel player = JsonUtility.FromJson<PlayerModel>(e.data.GetField("player").ToString());
+            BuyResourceModel resource = JsonUtility.FromJson<BuyResourceModel>(e.data.GetField("resource").ToString());
+            eventManager.DispatchEvent<PlayerBoughtResourceEvent>(new PlayerBoughtResourceEvent(player, resource));
+        }       
     }
 }

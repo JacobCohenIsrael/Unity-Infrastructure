@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Infrastructure.Core.Ship
 {
+    [Serializable]
     public abstract class ShipPart
     {
         public Dictionary<ShipStats, int> stats;

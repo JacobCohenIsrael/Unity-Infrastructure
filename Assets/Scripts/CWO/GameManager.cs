@@ -14,6 +14,7 @@ using App = Infrastructure.Base.Application.Application;
 using Infrastructure.Core.Network;
 using SocketIO;
 
+
 namespace CWO
 {
     public class GameManager : MonoBehaviour {
@@ -37,6 +38,7 @@ namespace CWO
 
         protected App application;
         protected EventManager eventManager;
+        protected MainServer mainServer;
 
         void Awake()
         {
@@ -102,10 +104,6 @@ namespace CWO
 
         void OnLoginSuccessful(LoginSuccessfulEvent e)
         {
-//            Debug.Log("Login Successful, Changing to Star Menu state");
-            PlayerPrefs.SetString("sessionId", e.player.sessionId);
-            PlayerPrefs.SetInt("playerId", e.player.id);
-            PlayerPrefs.Save();
             ChangeState(GameState.StarMenu);
         }
 

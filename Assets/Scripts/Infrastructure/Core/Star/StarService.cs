@@ -19,9 +19,9 @@ namespace Infrastructure.Core.Star
             return starAdapter.GetStarsList();
 		}
 
-        public StarModel GetStarById(int id)
+        public StarModel GetStarByName(string name)
         {
-            return starAdapter.GetStarById(id);
+            return starAdapter.GetStarByName(name);
         }
 
         public float CalculateDistanceBetweenStars(StarModel a, StarModel b)

@@ -17,6 +17,7 @@ namespace CWO.Market
         public Button exitButton;
         public Button buyButton;
         public Button sellButton;
+        public PlayerController playerController;
 
         protected ResourceSlotController selectedResourceSlotRef; 
         protected PlayerService playerService;
@@ -55,33 +56,18 @@ namespace CWO.Market
 
         protected void OnExit()
         {
-            if (PlayerPrefs.HasKey("playerId"))
-            {
-                int playerId = PlayerPrefs.GetInt("PlayerId");
-                PlayerModel player = playerService.getPlayerById(playerId);
-                playerService.exitMarket(player);
-            }
+            playerService.exitMarket(playerController.player);
         }
 
 
         protected void OnBuyResourceClicked()
         {
-            if (PlayerPrefs.HasKey("playerId"))
-            {
-                int playerId = PlayerPrefs.GetInt("PlayerId");
-                PlayerModel player = playerService.getPlayerById(playerId);
-                playerService.BuyResource(player, selectedResourceSlotRef.resourceSlot.resouce);
-            }
+            playerService.BuyResource(playerController.player, selectedResourceSlotRef.resourceSlot.resouce);
         }
 
         protected void OnSellResourceClicked()
         {
-            if (PlayerPrefs.HasKey("playerId"))
-            {
-                int playerId = PlayerPrefs.GetInt("PlayerId");
-                PlayerModel player = playerService.getPlayerById(playerId);
-                playerService.SellResource(player, selectedResourceSlotRef.resourceSlot.resouce);
-            }
+            playerService.SellResource(playerController.player, selectedResourceSlotRef.resourceSlot.resouce);
         }
 
         public void SetSelectedResourceSlot(ResourceSlotController resourceSlotRef)

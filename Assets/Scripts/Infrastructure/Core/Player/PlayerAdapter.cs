@@ -7,65 +7,54 @@ using Infrastructure.Core.Resource;
 using Infrastructure.Base.Connection.Socket;
 using SocketIO;
 using Infrastructure.Core.Network;
+using System.Threading;
+using UnityEngine;
 
 namespace Infrastructure.Core.Player
 {
     public class PlayerAdapter : IServiceProvider
     {
-        protected PlayerModel player;
-        protected NetworkService networkService;
+        //public PlayerModel player;
+        protected MainServer mainServer;
 
         public PlayerAdapter(ServiceManager serviceManager)
         {
-            networkService = serviceManager.get<NetworkService>() as NetworkService;
-            PlayerModel player = new PlayerModel();
-            player.id = 123;
-            player.currentNodeId = 1;
-            player.sessionId = "test";
-            player.ships = new Ship.ShipModel[3];
-            Ship.ShipModel ship = new Ship.ShipModel();
-            ship.AddPart(Infrastructure.Core.Ship.ShipParts.Engine, new BasicEngine());
-            ship.AddPart(Infrastructure.Core.Ship.ShipParts.CargoCapacitor, new BasicCargoCapacitor());
-            ship.currentHullAmount = 1;
-            player.activeShipIndex = 0;
-            player.ships[player.activeShipIndex] = ship;
-            player.isLanded = true;
-            player.homePlanetId = 1;
-            player.credits = 50000;
-            this.player = player;
+            mainServer = serviceManager.get<MainServer>() as MainServer;
         }
-            
-        public PlayerModel getById(int id)
+
+        public void LoginAsGuest(string sessionId)
         {
-            networkService.Emit("login", new JSONObject("{}"));
-            return player;
+            Message msg = new Message();
+            msg.body.Add("player", new PlayerModel(){sessionId = sessionId});
+            mainServer.Emit("login", msg.ToJson());
         }
 
         public bool jumpPlayerToStar(PlayerModel player, StarModel star)
         {
-            if (this.player.currentNodeId == star.id)
+            if (player.currentNodeName == star.name)
             {
                 return false;
             }
-            this.player.currentNodeId = star.id;
-            this.player.getActiveShip().currentEnergyAmount -= 10;
+            Message msg = new Message();
+            msg.body.Add("player", player);
+            msg.body.Add("star", star);
+            mainServer.Emit("jumpPlayerToStar", msg.ToJson());
             return true;
         }
 
         public bool landPlayerOnStar(PlayerModel player)
         {
-            this.player.isLanded = true;
+            mainServer.Emit("landPlayerOnStar", new JSONObject(JsonUtility.ToJson(player)));
             return true;
         }
 
         public bool departPlayerFromStar(PlayerModel player)
         {
-            if (this.player.getActiveShip() == null)
+            if (player.getActiveShip() == null)
             {
                 return false;
             }
-            
-            this.player.isLanded = false;
+            mainServer.Emit("departPlayerFromStar", new JSONObject(JsonUtility.ToJson(player)));
             return true;
         }
 
@@ -75,8 +64,10 @@ namespace Infrastructure.Core.Player
             {
                 if (player.getActiveShip().AddResource(resourceSlot.resouce.name, 1))
                 {
-                    player.credits -= resourceSlot.buyPrice;
-                    resourceSlot.amount--;
+                    Message msg = new Message();
+                    msg.body.Add("player", player);
+                    msg.body.Add("resource", new BuyResourceModel(){name = resourceSlot.resouce.name.ToString(), amount = 1});
+                    mainServer.Emit("playerBuyResource", msg.ToJson());
                     return true;
                 }
             }

@@ -17,6 +17,7 @@ namespace CWO.Star
         public Button departButton;
         public Button hangerButton;
         public Button marketButton;
+        public PlayerController playerController;
 
         protected PlayerService playerService;
         protected StarService starService;
@@ -38,40 +39,32 @@ namespace CWO.Star
 
         protected void OnDepart()
         {
-            if (PlayerPrefs.HasKey("playerId"))
+            PlayerModel player = playerController.player;
+            if (null == player.getActiveShip())
             {
-                int playerId = PlayerPrefs.GetInt("PlayerId");
-                PlayerModel player = playerService.getPlayerById(playerId);
-                if (null == player.getActiveShip())
-                {
-                    throw new UnityException("Player must have an active ship");
-                }
-                playerService.departPlayerFromStar(player);
+                throw new UnityException("Player must have an active ship");
             }
+            playerService.departPlayerFromStar(player);
         }
 
         protected void OpenMarket()
         {
-            if (PlayerPrefs.HasKey("playerId"))
-            {
-                int playerId = PlayerPrefs.GetInt("PlayerId");
-                PlayerModel player = playerService.getPlayerById(playerId);
-                playerService.openMarket(player);
-            }
+            PlayerModel player = playerController.player;
+            playerService.openMarket(player);
         }
 
         protected void OnLoginSuccessful(LoginSuccessfulEvent e)
         {
             StarService starService = application.serviceManager.get<StarService>() as StarService;
-            StarModel currentStar = starService.GetStarById(e.player.currentNodeId);
+            StarModel currentStar = starService.GetStarByName(e.player.currentNodeName);
             welcomeText.text = "Welcome to " + currentStar.name;
         }
 
         protected void OnPlayerLandOnStar(PlayerLandOnStarEvent e)
         {
-            StarModel star = starService.GetStarById(e.player.currentNodeId);
+            StarModel star = starService.GetStarByName(e.player.currentNodeName);
             welcomeText.text = "Welcome to " + star.name;
-            if (e.player.homePlanetId == star.id)
+            if (e.player.homePlanetName == star.name)
             {
                 hangerButton.gameObject.SetActive(true);
             }

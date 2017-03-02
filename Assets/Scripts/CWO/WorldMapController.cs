@@ -31,7 +31,7 @@ namespace CWO
 
 		void OnLoginSuccessful(LoginSuccessfulEvent e)
 		{
-//			Debug.Log("Login Successful, Populating WorldMap");
+			Debug.Log("Login Successful, Populating WorldMap");
 			foreach (StarModel star in stars) 
 			{
                 GameObject instantiatedStar = Instantiate(starPrefab, starSpawn);

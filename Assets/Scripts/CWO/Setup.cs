@@ -5,12 +5,14 @@ using Infrastructure.Base.Event;
 using Infrastructure.Base.Config;
 using App = Infrastructure.Base.Application.Application;
 using Infrastructure.Core.Network;
+using SocketIO;
 
 namespace CWO
 {
     public class Setup : MonoBehaviour
     {
         protected App application;
+        protected MainServer mainServer;
 
         void Awake()
         {
@@ -23,9 +25,19 @@ namespace CWO
 
         void Start()
         {
+            mainServer = application.serviceManager.get<MainServer>() as MainServer;
+            mainServer.Connect();
+            mainServer.On("connect", this.OnConnect);
+        }
+
+        void Update()
+        {
+            mainServer.Update();
+        }
+
+        void OnConnect(SocketIOEvent e)
+        {
             Debug.Log("Running Application");
-            NetworkService ns = application.serviceManager.get<NetworkService>() as NetworkService;
-            ns.Connect();
             application.run();
         }
     }

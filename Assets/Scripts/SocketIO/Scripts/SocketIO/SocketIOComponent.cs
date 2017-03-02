@@ -156,13 +156,11 @@ namespace SocketIO
                 // GC expired acks
                 if (ackList.Count == 0)
                 {
-                    Thread.Sleep(100);
-                    continue;
+                    return;
                 }
                 if (DateTime.Now.Subtract(ackList[0].time).TotalSeconds < ackExpirationTime)
                 {
-                    Thread.Sleep(100);
-                    continue;
+                    return;
                 }
                 ackList.RemoveAt(0);
             }

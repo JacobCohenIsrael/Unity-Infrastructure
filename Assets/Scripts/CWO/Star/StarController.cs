@@ -35,7 +35,7 @@ namespace CWO.Star
 
         void Update()
         {
-            if (playerController.player.currentNodeId == star.id)
+            if (playerController.player.currentNodeName == star.name)
             {
                 ((Behaviour)gameObject.GetComponent("Halo")).enabled = true;
             }
@@ -47,18 +47,14 @@ namespace CWO.Star
 
 		void OnMouseUp()
 		{
-            if (PlayerPrefs.HasKey("playerId"))
+            PlayerModel player = playerController.player;
+            if (star.name == player.currentNodeName)
             {
-                int playerId = PlayerPrefs.GetInt("PlayerId");
-                PlayerModel player = playerService.getPlayerById(playerId);
-                if (star.id == player.currentNodeId)
-                {
-                    playerService.OrbitPlayerOnStar(player, star);
-                }
-                else
-                {
-                    playerService.jumpPlayerToStar(player, star);
-                }
+                playerService.OrbitPlayerOnStar(player, star);
+            }
+            else
+            {
+                playerService.jumpPlayerToStar(player, star);
             }
 		}
 

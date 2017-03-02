@@ -65,8 +65,9 @@ namespace CWO.Market
 
         protected void OnPlayerBoughtResource(PlayerBoughtResourceEvent e)
         {
-            if (e.resouceSlot.resouce == resourceSlot.resouce)
+            if (e.resource.name == resourceSlot.resouce.name.ToString())
             {
+                resourceSlot.amount -= e.resource.amount;
                 amountText.text = resourceSlot.amount.ToString();
             }
         }

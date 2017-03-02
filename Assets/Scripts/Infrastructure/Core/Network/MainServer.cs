@@ -7,23 +7,23 @@ using Infrastructure.Core.Network.Events;
 
 namespace Infrastructure.Core.Network
 {
-    public class NetworkService : IServiceProvider
+    public class MainServer : IServiceProvider
     {
-        SocketIOComponent socketIO;
-        protected Thread socketThread;
-        EventManager eventManager;
+        public SocketIOComponent socketIO;
 
-        public NetworkService(ServiceManager serviceManager)
+        public MainServer(ServiceManager serviceManager)
         {
             socketIO = new SocketIOComponent(serviceManager.getConfig().get("servers.main") as string);
-            eventManager = serviceManager.get<EventManager>() as EventManager;
         }
 
         public void Connect()
         {
             socketIO.Connect();
-            socketThread = new Thread(socketIO.Update);
-            socketThread.Start();
+        }
+
+        public void Update()
+        {
+            socketIO.Update();
         }
 
         public void Emit(string eventName, JSONObject json)
@@ -34,6 +34,11 @@ namespace Infrastructure.Core.Network
         public void On(string eventName, System.Action<SocketIOEvent> callback)
         {
             socketIO.On(eventName, callback);
+        }
+
+        public bool isConnected()
+        {
+            return socketIO.IsConnected;
         }
     }
 }

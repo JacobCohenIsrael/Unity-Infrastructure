@@ -18,6 +18,7 @@ namespace CWO
         protected PlayerService playerService;
         protected App application;
         protected float lastRegen;
+        protected bool playerLoaded;
 
         void Awake () 
         {
@@ -27,6 +28,7 @@ namespace CWO
             eventManager.AddListener<PlayerJumpedToStarEvent>(this.OnPlayJumpToStar);
             eventManager.AddListener<PlayerLandOnStarEvent>(this.OnPlayLandOnStar);
             eventManager.AddListener<PlayerDepartFromStarEvent>(this.OnPlayerDepartFromStar);
+            eventManager.AddListener<PlayerBoughtResourceEvent>(this.OnPlayerBoughtResource);
         }
 
         void Start()
@@ -36,7 +38,7 @@ namespace CWO
 
         void Update()
         {
-            if (PlayerPrefs.HasKey("playerId"))
+            if (application.hasStarted && playerLoaded)
             {
                 ShipRegen();
                 UpdateCredits();
@@ -46,21 +48,22 @@ namespace CWO
         protected void OnLoginSuccessful(LoginSuccessfulEvent e)
         {
             player = e.player;
+            playerLoaded = true;
         }
 
         protected void OnPlayJumpToStar(PlayerJumpedToStarEvent e)
         {
-            player.currentNodeId = e.star.id;
+            player.currentNodeName = e.star.name;
         }
 
         protected void OnPlayLandOnStar(PlayerLandOnStarEvent e)
         {
-//            player = e.player;
+            player = e.player;
         }
 
         protected void OnPlayerDepartFromStar(PlayerDepartFromStarEvent e)
         {
-//            player = e.player;
+            player = e.player;
         }
 
         protected void ShipRegen()
@@ -82,6 +85,11 @@ namespace CWO
         protected void UpdateCredits()
         {
             creditsText.text = "Credits: " + player.credits.ToString("C0");
+        }
+
+        protected void OnPlayerBoughtResource(PlayerBoughtResourceEvent e)
+        {
+            this.player.credits = e.player.credits;
         }
     }
 }
