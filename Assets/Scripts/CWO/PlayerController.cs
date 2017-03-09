@@ -29,6 +29,7 @@ namespace CWO
             eventManager.AddListener<PlayerLandOnStarEvent>(this.OnPlayLandOnStar);
             eventManager.AddListener<PlayerDepartFromStarEvent>(this.OnPlayerDepartFromStar);
             eventManager.AddListener<PlayerBoughtResourceEvent>(this.OnPlayerBoughtResource);
+            eventManager.AddListener<PlayerSoldResourceEvent>(this.OnPlayerSoldResource);
         }
 
         void Start()
@@ -88,6 +89,11 @@ namespace CWO
         }
 
         protected void OnPlayerBoughtResource(PlayerBoughtResourceEvent e)
+        {
+            this.player.credits = e.player.credits;
+        }
+
+        protected void OnPlayerSoldResource(PlayerSoldResourceEvent e)
         {
             this.player.credits = e.player.credits;
         }

@@ -78,8 +78,10 @@ namespace Infrastructure.Core.Player
         {
             if (player.getActiveShip().RemoveResource(resourceSlot.resouce.name, 1))
             {
-                player.credits += resourceSlot.sellPrice;
-                resourceSlot.amount++;
+                Message msg = new Message();
+                msg.body.Add("player", player);
+                msg.body.Add("resource", new SellResourceModel() { name = resourceSlot.resouce.name.ToString(), amount = 1 });
+                mainServer.Emit("playerSellResource", msg.ToJson());
                 return true;
             }
             return false;

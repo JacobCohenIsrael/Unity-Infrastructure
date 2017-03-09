@@ -36,6 +36,7 @@ namespace Infrastructure.Core.Player
         protected void subscribeListeners()
         {
             mainServer.On("playerBoughtResource", this.OnPlayerBoughtResource);
+            mainServer.On("playerSoldResource", this.OnPlayerSoldResource);
         }
             
         public void LoginAsGuest(string sessionId)
@@ -119,11 +120,7 @@ namespace Infrastructure.Core.Player
         {
             StarModel star = starService.GetStarByName(player.currentNodeName);
             ResourceSlotModel resourceSlot = star.resourceList[resource.name];
-            if (playerAdapter.SellResource(player, resourceSlot))
-            {
-                PlayerSoldResourceEvent playerSoldResourceEvent = new PlayerSoldResourceEvent(player, resourceSlot);
-                eventManager.DispatchEvent<PlayerSoldResourceEvent>(playerSoldResourceEvent);
-            }
+            playerAdapter.SellResource(player, resourceSlot);
         }
 
         protected void OnPlayerBoughtResource(SocketIOEvent e)
@@ -131,6 +128,13 @@ namespace Infrastructure.Core.Player
             PlayerModel player = JsonUtility.FromJson<PlayerModel>(e.data.GetField("player").ToString());
             BuyResourceModel resource = JsonUtility.FromJson<BuyResourceModel>(e.data.GetField("resource").ToString());
             eventManager.DispatchEvent<PlayerBoughtResourceEvent>(new PlayerBoughtResourceEvent(player, resource));
-        }       
+        } 
+
+        protected void OnPlayerSoldResource(SocketIOEvent e)
+        {
+            PlayerModel player = JsonUtility.FromJson<PlayerModel>(e.data.GetField("player").ToString());
+            SellResourceModel resource = JsonUtility.FromJson<SellResourceModel>(e.data.GetField("resource").ToString());
+            eventManager.DispatchEvent<PlayerSoldResourceEvent>(new PlayerSoldResourceEvent(player, resource));
+        }  
     }
 }
