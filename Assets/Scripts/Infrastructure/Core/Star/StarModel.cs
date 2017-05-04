@@ -1,20 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Infrastructure.Core.Resource;
+using System;
 
 namespace Infrastructure.Core.Star
 {
-	public class StarModel : Infrastructure.Base.Model.Model
+    [Serializable]
+    public class StarModel : NodeModel
 	{
-		public string name;
-		public float coordX;
-		public float coordY;
-
-        public Dictionary<Resources, ResourceSlotModel> resourceList;
+        public Dictionary<string, ResourceSlotModel> resourceList;
 
         public StarModel()
         {
-            resourceList = new Dictionary<Resources, ResourceSlotModel>();
+            resourceList = new Dictionary<string, ResourceSlotModel>();
         }
 	}
 }

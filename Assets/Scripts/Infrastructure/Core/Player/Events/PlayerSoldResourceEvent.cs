@@ -6,11 +6,9 @@ namespace Infrastructure.Core.Player.Events
     public class PlayerSoldResourceEvent
     {
         public Player.PlayerModel player;
-        public SellResourceModel resource;
-        public PlayerSoldResourceEvent(Player.PlayerModel player, SellResourceModel resource)
+        public PlayerSoldResourceEvent(Player.PlayerModel player)
         {
             this.player = player;
-            this.resource = resource;
         }
     }
 }

@@ -18,13 +18,13 @@ namespace Infrastructure.Core.Ship
 
         protected Dictionary<ShipParts, ShipPart> shipParts;
 
-        public Dictionary<Resources, int> shipCargo;
+        public Dictionary<string, int> shipCargo;
 
         public ShipModel()
         {
             shipParts = new Dictionary<ShipParts, ShipPart>();
             shipStats = new Dictionary<ShipStats, int>();
-            shipCargo = new Dictionary<Resources, int>();
+            shipCargo = new Dictionary<string, int>();
         }
 
         public void AddPart(ShipParts partName, ShipPart part)
@@ -36,7 +36,7 @@ namespace Infrastructure.Core.Ship
             }
         }
 
-        public bool AddResource(Resources resourceName, int amount)
+        public bool AddResource(string resourceName, int amount)
         {
             int cargoHold = shipCargo.Sum (x => x.Value);
             if (cargoHold < shipStats[ShipStats.CargoCapacity])
@@ -54,7 +54,7 @@ namespace Infrastructure.Core.Ship
             return false;
         }
 
-        public bool RemoveResource(Resources resourceName, int amount)
+        public bool RemoveResource(string resourceName, int amount)
         {
             if (shipCargo.ContainsKey(resourceName) && shipCargo[resourceName] >= amount )
             {

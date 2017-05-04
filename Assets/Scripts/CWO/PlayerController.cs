@@ -7,6 +7,7 @@ using Infrastructure.Core.Player.Events;
 using UnityEngine.UI;
 using App = Infrastructure.Base.Application.Application;
 using Infrastructure.Base.Event;
+using Newtonsoft.Json;
 
 namespace CWO
 {
@@ -15,6 +16,7 @@ namespace CWO
         public PlayerModel player;
         public Slider energyBar;
         public Text creditsText;
+        public Text cargo;
         protected PlayerService playerService;
         protected App application;
         protected float lastRegen;
@@ -43,6 +45,7 @@ namespace CWO
             {
                 ShipRegen();
                 UpdateCredits();
+                UpdateCargo();
             }
         }
             
@@ -86,6 +89,11 @@ namespace CWO
         protected void UpdateCredits()
         {
             creditsText.text = "Credits: " + player.credits.ToString("C0");
+        }
+
+        protected void UpdateCargo()
+        {
+            cargo.text = "Cagro: " + JsonConvert.SerializeObject(player.getActiveShip().shipCargo);
         }
 
         protected void OnPlayerBoughtResource(PlayerBoughtResourceEvent e)

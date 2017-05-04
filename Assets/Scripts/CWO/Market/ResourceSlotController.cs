@@ -7,6 +7,7 @@ using Infrastructure.Core.Login.Events;
 using Infrastructure.Core.Player.Events;
 using Infrastructure.Core.Player;
 using Infrastructure.Base.Application.Events;
+using Infrastructure.Core.Star.Events;
 
 namespace CWO.Market
 {
@@ -27,8 +28,7 @@ namespace CWO.Market
             playerService = application.serviceManager.get<PlayerService>() as PlayerService;
             application.eventManager.AddListener<LogoutSuccessfulEvent>(this.OnLogoutSuccessful);
             application.eventManager.AddListener<PlayerExitMarketEvent>(this.OnPlayerExitMarket);
-            application.eventManager.AddListener<PlayerBoughtResourceEvent>(this.OnPlayerBoughtResource);
-            application.eventManager.AddListener<PlayerSoldResourceEvent>(this.OnPlayerSoldResource);
+            application.eventManager.AddListener<UpdateResourceAmountEvent>(this.OnUpdateResourceAmount);
             selectResource.onClick.AddListener(() => { this.OnResourceSelected(); });
         }
 
@@ -58,26 +58,16 @@ namespace CWO.Market
         {
             application.eventManager.RemoveListener<LogoutSuccessfulEvent>(this.OnLogoutSuccessful);
             application.eventManager.RemoveListener<PlayerExitMarketEvent>(this.OnPlayerExitMarket);
-            application.eventManager.RemoveListener<PlayerBoughtResourceEvent>(this.OnPlayerBoughtResource);
-            application.eventManager.RemoveListener<PlayerSoldResourceEvent>(this.OnPlayerSoldResource);
+            application.eventManager.RemoveListener<UpdateResourceAmountEvent>(this.OnUpdateResourceAmount);
             Destroy (gameObject);
         }
 
-        protected void OnPlayerBoughtResource(PlayerBoughtResourceEvent e)
+        protected void OnUpdateResourceAmount(UpdateResourceAmountEvent e)
         {
-            if (e.resource.name == resourceSlot.resouce.name.ToString())
+            if (e.resourceName == resourceSlot.name)
             {
-                resourceSlot.amount -= e.resource.amount;
-                amountText.text = resourceSlot.amount.ToString();
-            }
-        }
-
-        protected void OnPlayerSoldResource(PlayerSoldResourceEvent e)
-        {
-            if (e.resource.name == resourceSlot.resouce.name.ToString())
-            {
-                resourceSlot.amount += e.resource.amount;
-                amountText.text = resourceSlot.amount.ToString();
+                resourceSlot.amount = e.newAmount;
+                amountText.text = e.newAmount.ToString();
             }
         }
     }

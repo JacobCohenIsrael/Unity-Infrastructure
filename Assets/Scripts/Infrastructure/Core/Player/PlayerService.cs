@@ -106,35 +106,33 @@ namespace Infrastructure.Core.Player
             eventManager.DispatchEvent<PlayerOrbitStarEvent>(playerOrbitStarEvent);
         }
 
-        public void BuyResource(PlayerModel player, ResourceModel resource)
+        public void BuyResource(PlayerModel player, string resourceName)
         {
             StarModel star = starService.GetStarByName(player.currentNodeName);
-            ResourceSlotModel resourceSlot = star.resourceList[resource.name];
+            ResourceSlotModel resourceSlot = star.resourceList[resourceName];
             if (player.credits >= resourceSlot.buyPrice)
             {
                 playerAdapter.BuyResource(player, resourceSlot);
             }
         }
 
-        public void SellResource(PlayerModel player, ResourceModel resource)
+        public void SellResource(PlayerModel player, string resourceName)
         {
             StarModel star = starService.GetStarByName(player.currentNodeName);
-            ResourceSlotModel resourceSlot = star.resourceList[resource.name];
+            ResourceSlotModel resourceSlot = star.resourceList[resourceName];
             playerAdapter.SellResource(player, resourceSlot);
         }
 
         protected void OnPlayerBoughtResource(SocketIOEvent e)
         {
             PlayerModel player = JsonUtility.FromJson<PlayerModel>(e.data.GetField("player").ToString());
-            BuyResourceModel resource = JsonUtility.FromJson<BuyResourceModel>(e.data.GetField("resource").ToString());
-            eventManager.DispatchEvent<PlayerBoughtResourceEvent>(new PlayerBoughtResourceEvent(player, resource));
+            eventManager.DispatchEvent<PlayerBoughtResourceEvent>(new PlayerBoughtResourceEvent(player));
         } 
 
         protected void OnPlayerSoldResource(SocketIOEvent e)
         {
             PlayerModel player = JsonUtility.FromJson<PlayerModel>(e.data.GetField("player").ToString());
-            SellResourceModel resource = JsonUtility.FromJson<SellResourceModel>(e.data.GetField("resource").ToString());
-            eventManager.DispatchEvent<PlayerSoldResourceEvent>(new PlayerSoldResourceEvent(player, resource));
+            eventManager.DispatchEvent<PlayerSoldResourceEvent>(new PlayerSoldResourceEvent(player));
         }  
     }
 }

@@ -39,14 +39,14 @@ namespace CWO.Market
 
         protected void OnMarketOpen(PlayerOpenedMarketEvent e)
         {
-            foreach (KeyValuePair<Infrastructure.Core.Resource.Resources, ResourceSlotModel> resourceSlot in e.star.resourceList)
+            foreach (KeyValuePair<string, ResourceSlotModel> resourceSlot in e.star.resourceList)
             {
-                Texture2D texture = UnityEngine.Resources.Load("Sprites/" + resourceSlot.Value.resouce.image) as Texture2D;
+                Texture2D texture = UnityEngine.Resources.Load("Sprites/" + resourceSlot.Value.name) as Texture2D;
                 Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
                 GameObject instantiatedResourceSlot = Instantiate(resourceSlotPrefab, resourcesPanel) as GameObject;
                 ResourceSlotController resourceSlotController = instantiatedResourceSlot.GetComponent<ResourceSlotController>();
                 resourceSlotController.resourceSlot = resourceSlot.Value;
-                resourceSlotController.nameText.text = resourceSlot.Value.resouce.name.ToString();
+                resourceSlotController.nameText.text = resourceSlot.Value.name;
                 resourceSlotController.amountText.text = resourceSlot.Value.amount.ToString();
                 resourceSlotController.resourceImage.color = Color.white;
                 resourceSlotController.resourceImage.sprite = sprite;
@@ -62,12 +62,12 @@ namespace CWO.Market
 
         protected void OnBuyResourceClicked()
         {
-            playerService.BuyResource(playerController.player, selectedResourceSlotRef.resourceSlot.resouce);
+            playerService.BuyResource(playerController.player, selectedResourceSlotRef.resourceSlot.name);
         }
 
         protected void OnSellResourceClicked()
         {
-            playerService.SellResource(playerController.player, selectedResourceSlotRef.resourceSlot.resouce);
+            playerService.SellResource(playerController.player, selectedResourceSlotRef.resourceSlot.name);
         }
 
         public void SetSelectedResourceSlot(ResourceSlotController resourceSlotRef)

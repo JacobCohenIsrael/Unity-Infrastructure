@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 
 namespace Infrastructure.Core.Resource
 {
+    [Serializable]
     public class ResourceModel : Infrastructure.Base.Model.Model
     {
-        public Resources name;
-        public string image;
+        public string name;
     }
 }
