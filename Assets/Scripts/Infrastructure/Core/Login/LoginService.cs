@@ -7,6 +7,9 @@ using SocketIO;
 using UnityEngine;
 using Infrastructure.Core.Ship.Part;
 using System;
+using System.Collections.Generic;
+using Infrastructure.Core.Star;
+using Newtonsoft.Json;
 
 namespace Infrastructure.Core.Login
 {
@@ -48,8 +51,9 @@ namespace Infrastructure.Core.Login
 //            Ship.ShipModel ship = new Ship.ShipModel();
             player.ships[player.activeShipIndex].AddPart(Infrastructure.Core.Ship.ShipParts.Engine, new BasicEngine());
             player.ships[player.activeShipIndex].AddPart(Infrastructure.Core.Ship.ShipParts.CargoCapacitor, new BasicCargoCapacitor());
-//            player.ships[player.activeShipIndex] = ship;
-            eventManager.DispatchEvent<Events.LoginSuccessfulEvent>(new Events.LoginSuccessfulEvent(player));
+            //            player.ships[player.activeShipIndex] = ship;
+            Dictionary<string, StarModel> starsList = JsonConvert.DeserializeObject<Dictionary<string, StarModel>>(e.data.GetField("starsList").ToString());
+            eventManager.DispatchEvent<Events.LoginSuccessfulEvent>(new Events.LoginSuccessfulEvent(player, starsList));
         }
     }
 }
