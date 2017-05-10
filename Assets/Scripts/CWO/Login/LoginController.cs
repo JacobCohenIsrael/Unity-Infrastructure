@@ -9,6 +9,11 @@ namespace CWO.Login
 {
     public class LoginController : BaseUIObject
     {
+        #if UNITY_EDITOR 
+        public const string loginSessionId = "editorSessionId";
+        #else
+        public const string loginSessionId = "sessionId";
+        #endif
         public Button loginSubmitButton;
 
         protected LoginService loginService;
@@ -28,7 +33,7 @@ namespace CWO.Login
 
         void OnLoginSuccessful(LoginSuccessfulEvent e)
         {
-            PlayerPrefs.SetString("sessionId", e.player.sessionId);
+            PlayerPrefs.SetString(loginSessionId, e.player.sessionId);
             PlayerPrefs.SetInt("playerId", e.player.id);
             PlayerPrefs.Save();
         }

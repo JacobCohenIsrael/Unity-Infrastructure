@@ -58,11 +58,11 @@ namespace CWO
         void OnApplicationReady(ApplicationFinishedLoadingEvent e) 
         {
             ChangeState(GameState.EntryMenu);
-            if ( PlayerPrefs.HasKey("sessionId") )
+            if ( PlayerPrefs.HasKey(LoginController.loginSessionId) )
             {
                 Debug.Log("Session Id Found");
                 LoginService loginService =  application.serviceManager.get<LoginService>() as LoginService;
-                loginService.LoginAsGuest(PlayerPrefs.GetString("sessionId"));
+                loginService.LoginAsGuest(PlayerPrefs.GetString(LoginController.loginSessionId));
             }
         }
 

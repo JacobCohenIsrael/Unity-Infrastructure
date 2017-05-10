@@ -79,6 +79,7 @@ namespace Infrastructure.Core.Star
         protected void OnUpdateStarsList(SocketIOEvent e)
         {
             UpdateStarsListEvent updateStarsListEvent = JsonConvert.DeserializeObject<UpdateStarsListEvent>(e.data.ToString());
+            this.starsList = updateStarsListEvent.starsList;
         }
 
         protected void OnLogin(SocketIOEvent e)

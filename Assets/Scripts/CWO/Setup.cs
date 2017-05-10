@@ -21,6 +21,7 @@ namespace CWO
             config.set("servers.main", "ws://127.0.0.1:4567/socket.io/?EIO=4&transport=websocket");
             application = App.getInstance();
             application.serviceManager.setConfig(config);
+            UnityEngine.Application.runInBackground = true;
         }
 
         void Start()
