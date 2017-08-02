@@ -31,15 +31,15 @@ namespace CWO
 		void OnLoginSuccessful(LoginSuccessfulEvent e)
 		{
             
-			Debug.Log("Login Successful, Populating WorldMap");
-			foreach (KeyValuePair<string, StarModel> starEntry in e.starsList) 
-			{
-                GameObject instantiatedStar = Instantiate(starPrefab, starSpawn);
-				Vector3 starPosition = new Vector3(starEntry.Value.coordX, starEntry.Value.coordY, 0);
-                StarController starController = instantiatedStar.GetComponent<StarController>();
-                starController.star = starEntry.Value;
-				instantiatedStar.transform.position = starPosition;
-			}
+//			Debug.Log("Login Successful, Populating WorldMap");
+//			foreach (KeyValuePair<string, StarModel> starEntry in e.starsList) 
+//			{
+//                GameObject instantiatedStar = Instantiate(starPrefab, starSpawn);
+//				Vector3 starPosition = new Vector3(starEntry.Value.coordX, starEntry.Value.coordY, 0);
+//                StarController starController = instantiatedStar.GetComponent<StarController>();
+//                starController.star = starEntry.Value;
+//				instantiatedStar.transform.position = starPosition;
+//			}
 		}
 	}
 }

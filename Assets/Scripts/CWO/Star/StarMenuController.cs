@@ -56,8 +56,8 @@ namespace CWO.Star
         protected void OnLoginSuccessful(LoginSuccessfulEvent e)
         {
             StarService starService = application.serviceManager.get<StarService>() as StarService;
-            StarModel currentStar = starService.GetStarByName(e.player.currentNodeName);
-            welcomeText.text = "Welcome to " + currentStar.name;
+            //StarModel currentStar = starService.GetStarByName(e.player.currentNodeName);
+            //welcomeText.text = "Welcome to " + currentStar.name;
         }
 
         protected void OnPlayerLandOnStar(PlayerLandOnStarEvent e)

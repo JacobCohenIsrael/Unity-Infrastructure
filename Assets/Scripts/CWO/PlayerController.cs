@@ -43,9 +43,9 @@ namespace CWO
         {
             if (application.hasStarted && playerLoaded)
             {
-                ShipRegen();
-                UpdateCredits();
-                UpdateCargo();
+                //ShipRegen();
+                //UpdateCredits();
+                //UpdateCargo();
             }
         }
             

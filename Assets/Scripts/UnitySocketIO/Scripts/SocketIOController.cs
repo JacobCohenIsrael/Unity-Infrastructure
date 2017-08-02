@@ -16,9 +16,11 @@ namespace UnitySocketIO {
 
         void Awake() {
             if(Application.platform == RuntimePlatform.WebGLPlayer) {
+                Debug.Log("Using WebGL SocketIO");
                 socketIO = gameObject.AddComponent<WebGLSocketIO>();
             }
             else {
+                Debug.Log("Using Navtive SocketIO");
                 socketIO = gameObject.AddComponent<NativeSocketIO>();
             }
             

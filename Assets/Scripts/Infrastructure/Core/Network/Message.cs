@@ -16,7 +16,10 @@ namespace Infrastructure.Core.Network
 
         public JSONObject ToJson()
         {
-            return new JSONObject(JsonConvert.SerializeObject(body));
+            //string json = JsonConvert.SerializeObject(body);
+            string json = "{\"player\":{\"id\":0,\"firstName\":null,\"lastName\":null,\"sessionId\":\"ce076e21-0b09-4e4e-bb88-5bf4ef44f6ec\",\"currentNodeName\":null,\"activeShipIndex\":0,\"ships\":null,\"isLanded\":false,\"homePlanetName\":null,\"credits\":0}}";
+            Debug.Log("Message:ToJson() - Here's the json: " + json);
+            return new JSONObject(json);
         }
     }
 }

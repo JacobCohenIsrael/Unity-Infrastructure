@@ -26,6 +26,10 @@ namespace CWO
             UnityEngine.Application.runInBackground = true;
             mainServer = application.serviceManager.get<MainServer>() as MainServer;
             mainServer.SetSocketIO(socketIO);
+        }
+
+        void Start()
+        {
             mainServer.Connect();
             mainServer.On("connect", this.OnConnect);
         }
