@@ -48,9 +48,8 @@ namespace Infrastructure.Core.Login
 
         public void OnLogin(SocketIOEvent e)
         {
-            Debug.Log("LoginService: OnLogin() - Invoked");
-            LoginSuccessfulEvent loginSuccessfulEvent = JsonUtility.FromJson<LoginSuccessfulEvent>(e.data);
-            //LoginSuccessfulEvent loginSuccessfulEvent = JsonConvert.DeserializeObject<LoginSuccessfulEvent>(e.data);
+            //Debug.Log("LoginService: OnLogin() - Invoked");
+            LoginSuccessfulEvent loginSuccessfulEvent = JsonConvert.DeserializeObject<LoginSuccessfulEvent>(e.data);
             PlayerModel player = loginSuccessfulEvent.player;
             //            player.ships = new Ship.ShipModel[3];
             //            Ship.ShipModel ship = new Ship.ShipModel();

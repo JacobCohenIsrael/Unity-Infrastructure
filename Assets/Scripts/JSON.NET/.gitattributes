@@ -1,0 +1,31 @@
+# Set default behaviour, in case users don't have core.autocrlf set.
+* text=auto
+
+# These files are text and should be normalized (convert crlf =&gt; lf)
+*.txt     text
+*.cs      text diff=csharp
+*.java    text
+*.xml     text
+*.js      text
+*.css     text
+*meta     text
+*.xaml    text
+*.csproj  text
+*.sln     text
+*.tt      text
+*.ps1     text
+*.cmd     text
+*.msbuild text
+*.md      text
+
+# Images should be treated as binary
+# (binary is a macro for -text -diff)
+*.png     binary
+*.jepg    binary
+*.jpg     binary
+*.tga     binary
+*.jar     binary
+
+# Sounds should be treated as binary
+*.wav     binary
+*.ogg     binary
