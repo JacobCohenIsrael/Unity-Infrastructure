@@ -46,8 +46,8 @@ var starsDb = {
 }
 
 //setInterval(logStuff, 5000);
-server.listen(4567);
-console.log('CWO Server is listening on port 4567');
+server.listen(3000);
+console.log('CWO Server is listening on port 3000');
 io.on('connection', function(socket) {
     console.log('Connectin Established');
     socket.emit('connectionResponse', {'success' : true });

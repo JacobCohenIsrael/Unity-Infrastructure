@@ -5,8 +5,10 @@ using Infrastructure.Core.Player.Events;
 using Infrastructure.Core.Star;
 using Infrastructure.Core.Resource;
 using Infrastructure.Core.Network;
-using SocketIO;
+using UnitySocketIO;
 using UnityEngine;
+using Newtonsoft.Json;
+using UnitySocketIO.Events;
 
 namespace Infrastructure.Core.Player
 {
@@ -21,8 +23,6 @@ namespace Infrastructure.Core.Player
         {
             getDependencies(serviceManager);
             subscribeListeners();
-
-
         }
 
         protected void getDependencies(ServiceManager serviceManager)
@@ -125,14 +125,14 @@ namespace Infrastructure.Core.Player
 
         protected void OnPlayerBoughtResource(SocketIOEvent e)
         {
-            PlayerModel player = JsonUtility.FromJson<PlayerModel>(e.data.GetField("player").ToString());
-            eventManager.DispatchEvent<PlayerBoughtResourceEvent>(new PlayerBoughtResourceEvent(player));
-        } 
+            PlayerBoughtResourceEvent pbre = JsonConvert.DeserializeObject<PlayerBoughtResourceEvent>(e.data);
+            eventManager.DispatchEvent<PlayerBoughtResourceEvent>(pbre);
+        }
 
         protected void OnPlayerSoldResource(SocketIOEvent e)
         {
-            PlayerModel player = JsonUtility.FromJson<PlayerModel>(e.data.GetField("player").ToString());
-            eventManager.DispatchEvent<PlayerSoldResourceEvent>(new PlayerSoldResourceEvent(player));
-        }  
+            PlayerSoldResourceEvent psre = JsonConvert.DeserializeObject<PlayerSoldResourceEvent>(e.data);
+            eventManager.DispatchEvent<PlayerSoldResourceEvent>(psre);
+        }
     }
 }

@@ -1,32 +1,34 @@
-﻿using SocketIO;
+﻿using UnitySocketIO;
 using System.Threading;
+using UnitySocketIO.SocketIO;
 
 namespace Infrastructure.Base.Connection.Socket
 {
     public class SocketIOAdapter {
 
-        SocketIOComponent socketIO;
-        protected Thread socketThread;
-        public SocketIOAdapter(string url)
-        {
-            socketIO = new SocketIOComponent(url);
-        }
+        //BaseSocketIO socketIO;
 
-        public void Connect()
-        {
-            socketIO.Connect();
-            socketThread = new Thread(socketIO.Update);
-            socketThread.Start();
-        }
+        //public SocketIOAdapter(string url)
+        //{
+        //    socketIO = new WebGLSocketIO();
+        //    socketIO.Init();
+        //}
 
-        public void Emit(string eventName, JSONObject json)
-        {
-            socketIO.Emit(eventName, json);
-        }
+        //public void Connect()
+        //{
+        //    socketIO.Connect();
+        //    socketThread = new Thread(socketIO.Update);
+        //    socketThread.Start();
+        //}
 
-        public void On(string eventName, System.Action<SocketIOEvent> callback)
-        {
-            socketIO.On(eventName, callback);
-        }
+        //public void Emit(string eventName, JSONObject json)
+        //{
+        //    socketIO.Emit(eventName, json);
+        //}
+
+        //public void On(string eventName, System.Action<SocketIOEvent> callback)
+        //{
+        //    socketIO.On(eventName, callback);
+        //}
     }
 }

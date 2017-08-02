@@ -12,7 +12,6 @@ using CWO.Market;
 using Infrastructure.Base.Application.Events;
 using App = Infrastructure.Base.Application.Application;
 using Infrastructure.Core.Network;
-using SocketIO;
 
 
 namespace CWO
