@@ -9,10 +9,11 @@ using UnitySocketIO;
 using UnityEngine;
 using Newtonsoft.Json;
 using UnitySocketIO.Events;
+using System;
 
 namespace Infrastructure.Core.Player
 {
-    public class PlayerService : IServiceProvider
+    public class PlayerService : Base.Service.Contracts.IServiceProvider
     {
         StarService starService;
         PlayerAdapter playerAdapter;
@@ -37,8 +38,9 @@ namespace Infrastructure.Core.Player
         {
             mainServer.On("playerBoughtResource", this.OnPlayerBoughtResource);
             mainServer.On("playerSoldResource", this.OnPlayerSoldResource);
+            mainServer.On("playerEnteredLounge", this.OnPlayerEnteredLounge);
         }
-            
+
         public void LoginAsGuest(string sessionId)
         {
             playerAdapter.LoginAsGuest(sessionId);
@@ -67,6 +69,15 @@ namespace Infrastructure.Core.Player
                 OrbitPlayerOnStar(player, star);
             }
 
+        }
+
+        public void enterLounge(PlayerModel player)
+        {
+            if (playerAdapter.enterLounge(player))
+            {
+                //PlayerLandOnStarEvent playerLandedOnStar = new PlayerLandOnStarEvent(player);
+                //eventManager.DispatchEvent<PlayerLandOnStarEvent>(playerLandedOnStar);
+            }
         }
 
         public void landPlayerOnStar(PlayerModel player)
@@ -133,6 +144,13 @@ namespace Infrastructure.Core.Player
         {
             PlayerSoldResourceEvent psre = JsonConvert.DeserializeObject<PlayerSoldResourceEvent>(e.data);
             eventManager.DispatchEvent<PlayerSoldResourceEvent>(psre);
+        }
+
+
+        protected void OnPlayerEnteredLounge(SocketIOEvent e)
+        {
+            PlayerEnteredLoungeEvent pele = JsonConvert.DeserializeObject<PlayerEnteredLoungeEvent>(e.data);
+            eventManager.DispatchEvent<PlayerEnteredLoungeEvent>(pele);
         }
     }
 }

@@ -24,6 +24,7 @@ namespace CWO
         public StarScreenController starScreenController;
         public StarMenuController starMenuController;
         public MarketMenuController marketMenuController;
+        public LoungeController loungeController;
 
         public GameState currentState;
         public enum GameState
@@ -33,6 +34,7 @@ namespace CWO
             StarOrbit,
             StarMenu,
             MarketMenu,
+            Lounge,
         }
 
         protected App application;
@@ -52,6 +54,7 @@ namespace CWO
             eventManager.AddListener<PlayerDepartFromStarEvent>(this.OnPlayerExitStarMenu);
             eventManager.AddListener<PlayerOpenedMarketEvent>(this.OnPlayerOpenMarket);
             eventManager.AddListener<PlayerExitMarketEvent>(this.OnPlayerExitMarket);
+            eventManager.AddListener<PlayerEnteredLoungeEvent>(this.OnPlayerEnteredLounge);
         }
 
         void OnApplicationReady(ApplicationFinishedLoadingEvent e) 
@@ -82,7 +85,7 @@ namespace CWO
             starScreenController.Show();
         }
 
-        void StarMenuState()
+        public void StarMenuState()
         {
             hudController.Show();
             starMenuController.Show();
@@ -92,6 +95,12 @@ namespace CWO
         {
             hudController.Show();
             marketMenuController.Show();
+        }
+
+        void LoungeState()
+        {
+            hudController.Show();
+            loungeController.Show();
         }
 
         public void ChangeState(GameState newState)
@@ -139,6 +148,11 @@ namespace CWO
         void OnPlayerExitMarket(PlayerExitMarketEvent e)
         {
             ChangeState(GameState.StarMenu);
+        }
+
+        void OnPlayerEnteredLounge(PlayerEnteredLoungeEvent e)
+        {
+            ChangeState(GameState.Lounge);
         }
 
         void HideAll()

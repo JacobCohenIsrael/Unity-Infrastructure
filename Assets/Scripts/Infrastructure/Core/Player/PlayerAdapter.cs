@@ -8,10 +8,11 @@ using UnitySocketIO;
 using Infrastructure.Core.Network;
 using System.Threading;
 using UnityEngine;
+using System;
 
 namespace Infrastructure.Core.Player
 {
-    public class PlayerAdapter : IServiceProvider
+    public class PlayerAdapter : Base.Service.Contracts.IServiceProvider
     {
         //public PlayerModel player;
         protected MainServer mainServer;
@@ -84,6 +85,14 @@ namespace Infrastructure.Core.Player
                 return true;
             }
             return false;
+        }
+
+        public bool enterLounge(PlayerModel player)
+        {
+            Message msg = new Message();
+            msg.body.Add("player", player);
+            mainServer.Emit("playerEnterLounge", msg.ToJson());
+            return true;
         }
     }
 }
