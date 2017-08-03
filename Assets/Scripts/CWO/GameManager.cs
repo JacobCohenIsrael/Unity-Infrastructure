@@ -163,6 +163,7 @@ namespace CWO
             starScreenController.Hide();
             starMenuController.Hide();
             marketMenuController.Hide();
+            loungeController.Hide();
         }
     }
 }

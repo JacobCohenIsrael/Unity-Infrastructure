@@ -2,7 +2,6 @@
 <linker>
   <assembly fullname="System">
     <type fullname="System.ComponentModel.TypeConverter" preserve="all" />
-    <type fullname="System.ComponentModel.ReferenceConverter" preserve="all" />
     <!-- <namespace fullname="System.ComponentModel" preserve="all" /> -->
   </assembly>
 </linker>
