@@ -2,7 +2,6 @@
 using Infrastructure.Base.Service;
 using Infrastructure.Base.Service.Contracts;
 using Infrastructure.Core.Star;
-using Infrastructure.Core.Ship.Part;
 using Infrastructure.Core.Resource;
 using UnitySocketIO;
 using Infrastructure.Core.Network;

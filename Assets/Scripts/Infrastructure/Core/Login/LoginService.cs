@@ -5,7 +5,6 @@ using Infrastructure.Base.Event;
 using Infrastructure.Core.Network;
 using UnitySocketIO;
 using UnityEngine;
-using Infrastructure.Core.Ship.Part;
 using System;
 using System.Collections.Generic;
 using Infrastructure.Core.Star;
@@ -51,11 +50,6 @@ namespace Infrastructure.Core.Login
             //Debug.Log("LoginService: OnLogin() - Invoked");
             LoginSuccessfulEvent loginSuccessfulEvent = JsonConvert.DeserializeObject<LoginSuccessfulEvent>(e.data);
             PlayerModel player = loginSuccessfulEvent.player;
-            //            player.ships = new Ship.ShipModel[3];
-            //            Ship.ShipModel ship = new Ship.ShipModel();
-            player.ships[player.activeShipIndex].AddPart(Infrastructure.Core.Ship.ShipParts.Engine, new BasicEngine());
-            player.ships[player.activeShipIndex].AddPart(Infrastructure.Core.Ship.ShipParts.CargoCapacitor, new BasicCargoCapacitor());
-            //            player.ships[player.activeShipIndex] = ship;
             Dictionary<string, StarModel> starsList = loginSuccessfulEvent.starsList;
             eventManager.DispatchEvent<Events.LoginSuccessfulEvent>(new Events.LoginSuccessfulEvent(player, starsList));
         }

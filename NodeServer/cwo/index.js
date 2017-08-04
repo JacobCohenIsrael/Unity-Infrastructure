@@ -18,7 +18,28 @@ var playersDb = {
                 currentHullAmount: 1,
                 currentShieldAmount : 1,
                 currentEnergyAmount : 1,
-                shipCargo : {}
+                shipCargo : {},
+				shipParts : [
+					{
+						"name": "BasicEngine",
+						"partStats" : {
+							"hull": 50,
+							"shieldRegen" : 0,
+							"shieldCapacity" : 0,
+							"energyRegen" : 0,
+							"energyCapacity" : 0,
+							"jumpDistance" : 10,
+							"cargoCapacity" : 0
+
+						}
+					},
+					{
+						"name": "BasicCargo",
+						"partStats" : {
+							"cargoCapacity": 50
+						}
+					}
+				]
             }
         ]
     }
@@ -29,7 +50,11 @@ var starsDb = {
         "name" : "TestStar",
         "coordX" : -5.0,
         "coordY" : 0.0,
-        "resourceList" : {"Holmium" : { "name" : "Holmium", "amount" : 50, "buyPrice" : 5, "sellPrice" : 4 }}
+        "resourceList" : 
+		{
+			"Holmium" : { "name" : "Holmium", "amount" : 50, "buyPrice" : 5, "sellPrice" : 4 },
+			"Cerium" : { "name" : "Cerium", "amount" : 25, "buyPrice" : 15, "sellPrice" : 8 }
+		}
     },
     "TestStar2" : {
         "name" : "TestStar2",
@@ -76,6 +101,11 @@ io.on('connection', function(socket) {
             idCounter++;
         }
         var player = playersDb[data.player.sessionId];
+		player.ships[0].cachedShipStats = {
+			"hull" : 50,
+			"cargoCapacity": 50,
+			"jumpDistance" : 10
+		};
         players[player.id] = player;
         socket.emit('loginResponse', {'success' : true, player : player, starsList : starsDb });
     });

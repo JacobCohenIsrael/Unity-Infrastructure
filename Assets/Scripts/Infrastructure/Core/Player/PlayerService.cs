@@ -60,11 +60,10 @@ namespace Infrastructure.Core.Player
         public void jumpPlayerToStar(PlayerModel player, StarModel star)
         {
             float distance = starService.CalculateDistanceBetweenStars(starService.GetStarByName(player.currentNodeName), star);
-            float engineJumpDistance = player.getActiveShip().shipStats[Infrastructure.Core.Ship.ShipStats.JumpDistance];
+            float engineJumpDistance = player.getActiveShip().getShipJumpDistance();
             if (distance > engineJumpDistance)
             {
                 throw new UnityEngine.UnityException("Player Engines are not strong enough to jump there directly");
-
             }
 
             if (player.getActiveShip().currentEnergyAmount < 10)

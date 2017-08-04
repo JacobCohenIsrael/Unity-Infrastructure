@@ -76,8 +76,8 @@ namespace CWO
 
         protected void ShipEnergyRegen()
         {
-            float energyRegen = player.getActiveShip().shipStats[Infrastructure.Core.Ship.ShipStats.EnergyRegen];
-            float energyCapacity = player.getActiveShip().shipStats[Infrastructure.Core.Ship.ShipStats.EnergyCapacity];
+            float energyRegen = player.getActiveShip().getMaxEnergyRegen();
+            float energyCapacity = player.getActiveShip().getMaxEnergyCapacity();
             float newCurrentEnergyAmount = player.getActiveShip().currentEnergyAmount + energyRegen * Time.deltaTime;
             player.getActiveShip().currentEnergyAmount = (newCurrentEnergyAmount > energyCapacity) ? energyCapacity : newCurrentEnergyAmount;
             energyBar.maxValue = energyCapacity;

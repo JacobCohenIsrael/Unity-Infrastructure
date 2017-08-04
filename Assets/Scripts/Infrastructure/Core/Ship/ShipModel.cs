@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Infrastructure.Core.Resource;
 using System.Linq;
+using System.Collections;
 
 namespace Infrastructure.Core.Ship
 {
@@ -14,32 +15,22 @@ namespace Infrastructure.Core.Ship
         public int currentShieldAmount;
         public float currentEnergyAmount;
 
-        public Dictionary<ShipStats, int> shipStats;
+        public ShipStats cachedShipStats;
 
-        protected Dictionary<ShipParts, ShipPart> shipParts;
+        public ShipPart[] shipParts;
 
         public Dictionary<string, int> shipCargo;
 
         public ShipModel()
         {
-            shipParts = new Dictionary<ShipParts, ShipPart>();
-            shipStats = new Dictionary<ShipStats, int>();
-            shipCargo = new Dictionary<string, int>();
-        }
-
-        public void AddPart(ShipParts partName, ShipPart part)
-        {
-            shipParts.Add(partName, part);
-            foreach(KeyValuePair<ShipStats, int> stat in part.stats)
-            {
-                shipStats.Add(stat.Key, stat.Value);
-            }
+            cachedShipStats = new ShipStats();
+            shipParts = new ShipPart[4];
         }
 
         public bool AddResource(string resourceName, int amount)
         {
             int cargoHold = shipCargo.Sum (x => x.Value);
-            if (cargoHold < shipStats[ShipStats.CargoCapacity])
+            if (cargoHold < cachedShipStats.CargoCapacity)
             {
                 if (!shipCargo.ContainsKey(resourceName))
                 {
@@ -62,6 +53,21 @@ namespace Infrastructure.Core.Ship
                 return true;
             }
             return false;
+        }
+
+        public int getMaxEnergyCapacity()
+        {
+            return cachedShipStats.EnergyCapacity;
+        }
+
+        public int getMaxEnergyRegen()
+        {
+            return cachedShipStats.EnergyRegen;
+        }
+
+        public int getShipJumpDistance()
+        {
+            return  cachedShipStats.JumpDistance;
         }
     }
 }

@@ -19,7 +19,6 @@ namespace CWO
 
 		void Start() 
 		{
-			StarService starService = Infrastructure.Base.Application.Application.getInstance ().serviceManager.get<StarService> () as StarService;
 			Hide ();
 		}
 
