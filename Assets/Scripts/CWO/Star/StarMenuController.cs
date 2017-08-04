@@ -46,19 +46,19 @@ namespace CWO.Star
             {
                 throw new UnityException("Player must have an active ship");
             }
-            playerService.departPlayerFromStar(player);
+            playerService.DepartPlayerFromStar(player);
         }
 
         protected void OpenMarket()
         {
             PlayerModel player = playerController.player;
-            playerService.openMarket(player);
+            playerService.OpenMarket(player);
         }
 
         protected void EnterLounge()
         {
             PlayerModel player = playerController.player;
-            playerService.enterLounge(player);
+            playerService.EnterLounge(player);
         }
 
         protected void OnLoginSuccessful(LoginSuccessfulEvent e)

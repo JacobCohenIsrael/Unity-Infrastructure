@@ -89,12 +89,17 @@ io.on('connection', function(socket) {
     socket.on('departPlayerFromStar', function(data) {
         console.log("Departing player " + data.id + " From Star");
         players[data.id].isLanded = false;
-        socket.emit('playerLanded', {'success' : true, player : players[data.id] });
+        socket.emit('playerDeparted', {'success' : true, player : players[data.id] });
     });
 
-	socket.on('playerEnterLounge', function(data) {
+	socket.on('playerEnteredLounge', function(data) {
         console.log("Player " + data.player.id + " Entered Lounge");
         socket.emit('playerEnteredLounge', {'success' : true, player : players[data.id] });
+    });
+
+	socket.on('playerLeftLounge', function(data) {
+        console.log("Player " + data.player.id + " Left Lounge");
+        socket.emit('playerLeftLounge', {'success' : true, player : players[data.id] });
     });
 
     socket.on('playerBuyResource', function(data) {

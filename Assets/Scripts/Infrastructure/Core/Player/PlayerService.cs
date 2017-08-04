@@ -26,6 +26,14 @@ namespace Infrastructure.Core.Player
             subscribeListeners();
         }
 
+        public void LeaveLounge(PlayerModel player)
+        {
+            if (playerAdapter.LeaveLounge(player))
+            {
+
+            }
+        }
+
         protected void getDependencies(ServiceManager serviceManager)
         {
             starService = serviceManager.get<StarService>() as StarService;
@@ -39,6 +47,7 @@ namespace Infrastructure.Core.Player
             mainServer.On("playerBoughtResource", this.OnPlayerBoughtResource);
             mainServer.On("playerSoldResource", this.OnPlayerSoldResource);
             mainServer.On("playerEnteredLounge", this.OnPlayerEnteredLounge);
+            mainServer.On("playerLeftLounge", this.OnPlayerLeftLounge);
         }
 
         public void LoginAsGuest(string sessionId)
@@ -61,7 +70,7 @@ namespace Infrastructure.Core.Player
                 throw new UnityEngine.UnityException("Insufficient Energy for a jump");
             }
 
-            if (playerAdapter.jumpPlayerToStar(player, star))
+            if (playerAdapter.JumpPlayerToStar(player, star))
             {
                 player.currentNodeName = star.name;
                 PlayerJumpedToStarEvent playerJumpedToStarEvent = new PlayerJumpedToStarEvent(player, star);
@@ -71,41 +80,39 @@ namespace Infrastructure.Core.Player
 
         }
 
-        public void enterLounge(PlayerModel player)
+        public void EnterLounge(PlayerModel player)
         {
-            if (playerAdapter.enterLounge(player))
+            if (playerAdapter.EnterLounge(player))
             {
-                //PlayerLandOnStarEvent playerLandedOnStar = new PlayerLandOnStarEvent(player);
-                //eventManager.DispatchEvent<PlayerLandOnStarEvent>(playerLandedOnStar);
             }
         }
 
         public void landPlayerOnStar(PlayerModel player)
         {
-            if (playerAdapter.landPlayerOnStar(player))
+            if (playerAdapter.LandPlayerOnStar(player))
             {
                 PlayerLandOnStarEvent playerLandedOnStar = new PlayerLandOnStarEvent(player);
                 eventManager.DispatchEvent<PlayerLandOnStarEvent>(playerLandedOnStar);
             }
         }
 
-        public void departPlayerFromStar(PlayerModel player)
+        public void DepartPlayerFromStar(PlayerModel player)
         {
-            if (playerAdapter.departPlayerFromStar(player))
+            if (playerAdapter.DepartPlayerFromStar(player))
             {
                 PlayerDepartFromStarEvent playerDepartFromStarEvent = new PlayerDepartFromStarEvent(player);
                 eventManager.DispatchEvent<PlayerDepartFromStarEvent>(playerDepartFromStarEvent);
             }
         }
 
-        public void openMarket(PlayerModel player)
+        public void OpenMarket(PlayerModel player)
         {
             StarModel star = starService.GetStarByName(player.currentNodeName);
             PlayerOpenedMarketEvent playerOpenedMarketEvent = new PlayerOpenedMarketEvent(player, star);
             eventManager.DispatchEvent<PlayerOpenedMarketEvent>(playerOpenedMarketEvent);
         }
 
-        public void exitMarket(PlayerModel player)
+        public void ExitMarket(PlayerModel player)
         {
             PlayerExitMarketEvent playerExitMarketEvent = new PlayerExitMarketEvent(player);
             eventManager.DispatchEvent<PlayerExitMarketEvent>(playerExitMarketEvent);
@@ -151,6 +158,12 @@ namespace Infrastructure.Core.Player
         {
             PlayerEnteredLoungeEvent pele = JsonConvert.DeserializeObject<PlayerEnteredLoungeEvent>(e.data);
             eventManager.DispatchEvent<PlayerEnteredLoungeEvent>(pele);
+        }
+
+        protected void OnPlayerLeftLounge(SocketIOEvent e)
+        {
+            PlayerLeftLoungeEvent plle = JsonConvert.DeserializeObject<PlayerLeftLoungeEvent>(e.data);
+            eventManager.DispatchEvent<PlayerLeftLoungeEvent>(plle);
         }
     }
 }

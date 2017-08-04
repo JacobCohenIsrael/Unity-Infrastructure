@@ -56,7 +56,7 @@ namespace CWO.Market
 
         protected void OnExit()
         {
-            playerService.exitMarket(playerController.player);
+            playerService.ExitMarket(playerController.player);
         }
 
 

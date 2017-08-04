@@ -14,7 +14,6 @@ namespace Infrastructure.Core.Player
 {
     public class PlayerAdapter : Base.Service.Contracts.IServiceProvider
     {
-        //public PlayerModel player;
         protected MainServer mainServer;
 
         public PlayerAdapter(ServiceManager serviceManager)
@@ -29,7 +28,7 @@ namespace Infrastructure.Core.Player
             mainServer.Emit("login", msg.ToJson());
         }
 
-        public bool jumpPlayerToStar(PlayerModel player, StarModel star)
+        public bool JumpPlayerToStar(PlayerModel player, StarModel star)
         {
             if (player.currentNodeName == star.name)
             {
@@ -42,13 +41,13 @@ namespace Infrastructure.Core.Player
             return true;
         }
 
-        public bool landPlayerOnStar(PlayerModel player)
+        public bool LandPlayerOnStar(PlayerModel player)
         {
             mainServer.Emit("landPlayerOnStar", new JSONObject(JsonUtility.ToJson(player)));
             return true;
         }
 
-        public bool departPlayerFromStar(PlayerModel player)
+        public bool DepartPlayerFromStar(PlayerModel player)
         {
             if (player.getActiveShip() == null)
             {
@@ -87,11 +86,19 @@ namespace Infrastructure.Core.Player
             return false;
         }
 
-        public bool enterLounge(PlayerModel player)
+        public bool EnterLounge(PlayerModel player)
         {
             Message msg = new Message();
             msg.body.Add("player", player);
-            mainServer.Emit("playerEnterLounge", msg.ToJson());
+            mainServer.Emit("playerEnteredLounge", msg.ToJson());
+            return true;
+        }
+
+        public bool LeaveLounge(PlayerModel player)
+        {
+            Message msg = new Message();
+            msg.body.Add("player", player);
+            mainServer.Emit("playerLeftLounge", msg.ToJson());
             return true;
         }
     }

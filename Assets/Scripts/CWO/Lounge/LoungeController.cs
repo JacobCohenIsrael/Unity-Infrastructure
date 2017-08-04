@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Implementation.Views.Screen;
+﻿using Implementation.Views.Screen;
 using Infrastructure.Base.Application.Events;
+using Infrastructure.Base.Event;
+using Infrastructure.Core.Player;
 using UnityEngine.UI;
 
 namespace CWO.Market 
@@ -10,12 +9,14 @@ namespace CWO.Market
     public class LoungeController : BaseUIObject 
     {
         public Button exitButton;
-        public GameManager gameManager;
+        public PlayerController playerController;
+        protected PlayerService playerService;
 
     	void Start() 
         {
             Hide();
-    	}
+            playerService = application.serviceManager.get<PlayerService>() as PlayerService;
+        }
 
         protected override void SubscribeToEvents(SubscribeEvent e)
         {
@@ -24,7 +25,7 @@ namespace CWO.Market
 
         protected void OnExitLounge()
         {
-            gameManager.ChangeState(GameManager.GameState.StarMenu);
+            playerService.LeaveLounge(playerController.player);
         }
     }
 }

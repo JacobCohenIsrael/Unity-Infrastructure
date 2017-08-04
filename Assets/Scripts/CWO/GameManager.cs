@@ -55,6 +55,7 @@ namespace CWO
             eventManager.AddListener<PlayerOpenedMarketEvent>(this.OnPlayerOpenMarket);
             eventManager.AddListener<PlayerExitMarketEvent>(this.OnPlayerExitMarket);
             eventManager.AddListener<PlayerEnteredLoungeEvent>(this.OnPlayerEnteredLounge);
+            eventManager.AddListener<PlayerLeftLoungeEvent>(this.OnPlayerLeftLounge);
         }
 
         void OnApplicationReady(ApplicationFinishedLoadingEvent e) 
@@ -153,6 +154,11 @@ namespace CWO
         void OnPlayerEnteredLounge(PlayerEnteredLoungeEvent e)
         {
             ChangeState(GameState.Lounge);
+        }
+
+        void OnPlayerLeftLounge(PlayerLeftLoungeEvent e)
+        {
+            ChangeState(GameState.StarMenu);
         }
 
         void HideAll()
