@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Infrastructure.Core.Player;
 using Infrastructure.Core.Login.Events;
 using Infrastructure.Core.Player.Events;
@@ -62,12 +60,12 @@ namespace CWO
 
         protected void OnPlayLandOnStar(PlayerLandOnStarEvent e)
         {
-            player = e.player;
+            player.isLanded = e.player.isLanded;
         }
 
         protected void OnPlayerDepartFromStar(PlayerDepartFromStarEvent e)
         {
-            player = e.player;
+            player.isLanded = e.player.isLanded;
         }
 
         protected void ShipRegen()

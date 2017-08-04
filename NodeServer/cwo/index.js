@@ -87,9 +87,9 @@ io.on('connection', function(socket) {
     });
 
     socket.on('departPlayerFromStar', function(data) {
-        console.log("Departing player " + data.id + " From Star");
-        players[data.id].isLanded = false;
-        socket.emit('playerDeparted', {'success' : true, player : players[data.id] });
+        console.log("Departing player " + data.player.id + " From Star");
+        players[data.player.id].isLanded = false;
+        socket.emit('playerDeparted', {'success' : true, player : players[data.player.id] });
     });
 
 	socket.on('playerEnteredLounge', function(data) {

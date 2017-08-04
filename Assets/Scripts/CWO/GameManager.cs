@@ -1,12 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections;
 using Infrastructure.Core.Login;
 using Infrastructure.Core.Login.Events;
 using Infrastructure.Base.Event;
 using CWO.Login;
 using CWO.Hud;
 using CWO.Star;
-using Infrastructure.Core.Star;
 using Infrastructure.Core.Player.Events;
 using CWO.Market;
 using Infrastructure.Base.Application.Events;

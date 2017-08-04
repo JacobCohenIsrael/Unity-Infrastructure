@@ -53,7 +53,9 @@ namespace Infrastructure.Core.Player
             {
                 return false;
             }
-            mainServer.Emit("departPlayerFromStar", new JSONObject(JsonUtility.ToJson(player)));
+            Message msg = new Message();
+            msg.body.Add("player", player);
+            mainServer.Emit("departPlayerFromStar", msg.ToJson());
             return true;
         }
 

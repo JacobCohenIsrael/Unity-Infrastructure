@@ -44,6 +44,8 @@ namespace Infrastructure.Core.Player
 
         protected void subscribeListeners()
         {
+            mainServer.On("playerDeparted", this.OnPlayerDepart);
+            mainServer.On("playerLanded", this.OnPlayerLanded);
             mainServer.On("playerBoughtResource", this.OnPlayerBoughtResource);
             mainServer.On("playerSoldResource", this.OnPlayerSoldResource);
             mainServer.On("playerEnteredLounge", this.OnPlayerEnteredLounge);
@@ -87,12 +89,10 @@ namespace Infrastructure.Core.Player
             }
         }
 
-        public void landPlayerOnStar(PlayerModel player)
+        public void LandPlayerOnStar(PlayerModel player)
         {
             if (playerAdapter.LandPlayerOnStar(player))
             {
-                PlayerLandOnStarEvent playerLandedOnStar = new PlayerLandOnStarEvent(player);
-                eventManager.DispatchEvent<PlayerLandOnStarEvent>(playerLandedOnStar);
             }
         }
 
@@ -100,8 +100,6 @@ namespace Infrastructure.Core.Player
         {
             if (playerAdapter.DepartPlayerFromStar(player))
             {
-                PlayerDepartFromStarEvent playerDepartFromStarEvent = new PlayerDepartFromStarEvent(player);
-                eventManager.DispatchEvent<PlayerDepartFromStarEvent>(playerDepartFromStarEvent);
             }
         }
 
@@ -164,6 +162,18 @@ namespace Infrastructure.Core.Player
         {
             PlayerLeftLoungeEvent plle = JsonConvert.DeserializeObject<PlayerLeftLoungeEvent>(e.data);
             eventManager.DispatchEvent<PlayerLeftLoungeEvent>(plle);
+        }
+
+        protected void OnPlayerLanded(SocketIOEvent e)
+        {
+            PlayerLandOnStarEvent plose = JsonConvert.DeserializeObject<PlayerLandOnStarEvent>(e.data);
+            eventManager.DispatchEvent<PlayerLandOnStarEvent>(plose);
+        }
+
+        protected void OnPlayerDepart(SocketIOEvent e)
+        {
+            PlayerDepartFromStarEvent pde = JsonConvert.DeserializeObject<PlayerDepartFromStarEvent>(e.data);
+            eventManager.DispatchEvent<PlayerDepartFromStarEvent>(pde);
         }
     }
 }
