@@ -15,6 +15,7 @@ namespace Infrastructure.Core.Player
     public class PlayerAdapter : Base.Service.Contracts.IServiceProvider
     {
         protected MainServer mainServer;
+        protected PlayerModel player;
 
         public PlayerAdapter(ServiceManager serviceManager)
         {
@@ -104,11 +105,11 @@ namespace Infrastructure.Core.Player
             return true;
         }
 
-        public void LoungeChatSent(PlayerModel player, string chatMessage)
+        public void LoungeChatSent(PlayerModel player, ChatMessageModel chatMessage)
         {
             Message msg = new Message();
             msg.body.Add("player", player);
-            msg.body.Add("message", new ChatMessageModel { Message = chatMessage });
+            msg.body.Add("message", chatMessage);
             mainServer.Emit("loungeChatSent", msg.ToJson());
         }
     }
