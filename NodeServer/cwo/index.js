@@ -149,11 +149,13 @@ io.on('connection', function(socket) {
 
 	socket.on('playerEnteredLounge', function(data) {
         console.log("Player " + data.player.id + " Entered Lounge");
+		socket.join('lounge' + data.player.currentNodeName);
         socket.emit('playerEnteredLounge', {'success' : true, player : players[data.id] });
     });
 
 	socket.on('playerLeftLounge', function(data) {
         console.log("Player " + data.player.id + " Left Lounge");
+		socket.leave('lounge' + data.player.currentNodeName);
         socket.emit('playerLeftLounge', {'success' : true, player : players[data.id] });
     });
 
