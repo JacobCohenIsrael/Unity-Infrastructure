@@ -1,8 +1,87 @@
-var app = require('express')();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
+const  app = require('express')();
+const  server = require('http').Server(app);
+const  io = require('socket.io')(server);
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/cwo');
+const Schema = mongoose.Schema;
+
+
+// the schema is useless so far
+// we need to create a model using it
+
 var idCounter = 2;
 var players = {};
+
+const playerSchema = new Schema({
+    id: String,
+    currentNodeName: String,
+    isLanded: Boolean,
+    homePlanetId: String,
+    credits: Number,
+    activeShipIndex: Number,
+    sessionId: String,
+    ships: [{
+        id : Number,
+        currentHullAmount: Number,
+        currentShieldAmount : Number,
+        currentEnergyAmount : Number,
+        shipCargo : Object,
+        shipParts : [{
+                name: String,
+                partStats : {
+                    hull: Number,
+                    jumpDistance : Number
+                }
+            }
+        ]
+    }]
+});
+const Player = mongoose.model('Player', playerSchema);
+var newUser = Player({
+    id : 1,
+    currentNodeName : "TestStar",
+    isLanded : true,
+    homePlanetId : "TestStar",
+    credits : 10,
+    activeShipIndex : 0,
+    sessionId : "1ec6c968-63af-408b-9ce2-931631c0bbed",
+    ships : [
+        {
+            id : 1,
+            currentHullAmount: 1,
+            currentShieldAmount : 1,
+            currentEnergyAmount : 1,
+            shipCargo : {},
+            shipParts : [
+                {
+                    "name": "BasicEngine",
+                    "partStats" : {
+                        "hull": 50,
+                        "jumpDistance" : 10
+                    }
+                },
+                {
+                    "name": "BasicCargo",
+                    "partStats" : {
+                        "cargoCapacity": 50
+                    }
+                },
+                {
+                    "name": "BasicGenerator",
+                    "partStats" : {
+                        "energyRegen": 2,
+                        "energyCapacity": 10
+                    }
+                }
+            ]
+        }
+    ]
+});
+newUser.save(function(err) {
+    if (err) throw err;
+
+    console.log('User created!');
+});
 var playersDb = {
     "1ec6c968-63af-408b-9ce2-931631c0bbed" : {
         id : 1,
