@@ -8,6 +8,7 @@ using Infrastructure.Core.Network;
 using System.Threading;
 using UnityEngine;
 using System;
+using Infrastructure.Core.Chat;
 
 namespace Infrastructure.Core.Player
 {
@@ -101,6 +102,14 @@ namespace Infrastructure.Core.Player
             msg.body.Add("player", player);
             mainServer.Emit("playerLeftLounge", msg.ToJson());
             return true;
+        }
+
+        public void LoungeChatSent(PlayerModel player, string chatMessage)
+        {
+            Message msg = new Message();
+            msg.body.Add("player", player);
+            msg.body.Add("message", new ChatMessageModel { Message = chatMessage });
+            mainServer.Emit("loungeChatSent", msg.ToJson());
         }
     }
 }

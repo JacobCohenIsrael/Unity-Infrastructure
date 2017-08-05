@@ -81,6 +81,11 @@ namespace Infrastructure.Core.Player
 
         }
 
+        public void LoungeChatSent(PlayerModel player, string chatMessage)
+        {
+            playerAdapter.LoungeChatSent(player, chatMessage);
+        }
+
         public void EnterLounge(PlayerModel player)
         {
             if (playerAdapter.EnterLounge(player))
