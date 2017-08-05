@@ -24,7 +24,6 @@ namespace Infrastructure.Core.Ship
         public ShipModel()
         {
             cachedShipStats = new ShipStats();
-            shipParts = new ShipPart[4];
         }
 
         public bool AddResource(string resourceName, int amount)

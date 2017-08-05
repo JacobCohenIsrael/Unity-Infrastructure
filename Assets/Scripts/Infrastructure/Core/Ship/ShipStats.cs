@@ -12,7 +12,11 @@ namespace Infrastructure.Core.Ship
 
         public int ShieldRegen  = 0;
         public int ShieldCapacity = 0;
+
+        [JsonProperty("energyRegen")]
         public int EnergyRegen = 0;
+
+        [JsonProperty("energyCapacity")]
         public int EnergyCapacity = 0;
 
         [JsonProperty("jumpDistance")]

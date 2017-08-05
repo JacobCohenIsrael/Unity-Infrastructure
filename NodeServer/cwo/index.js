@@ -24,19 +24,20 @@ var playersDb = {
 						"name": "BasicEngine",
 						"partStats" : {
 							"hull": 50,
-							"shieldRegen" : 0,
-							"shieldCapacity" : 0,
-							"energyRegen" : 0,
-							"energyCapacity" : 0,
-							"jumpDistance" : 10,
-							"cargoCapacity" : 0
-
+							"jumpDistance" : 10
 						}
 					},
 					{
 						"name": "BasicCargo",
 						"partStats" : {
 							"cargoCapacity": 50
+						}
+					},
+					{
+						"name": "BasicGenerator",
+						"partStats" : {
+							"energyRegen": 2,
+							"energyCapacity": 10
 						}
 					}
 				]
@@ -82,21 +83,43 @@ io.on('connection', function(socket) {
         {
             playersDb[data.player.sessionId] = {
                 id : idCounter,
-                currentNodeName : "TestStar",
-                isLanded : true,
-                homePlanetName : "TestStar",
-                credits : 10,
-                activeShipIndex : 0,
-                sessionId : data.player.sessionId,
-                ships : [
-                    {
-                        id : 1,
-                        currentHullAmount: 1,
-                        currentShieldAmount : 1,
-                        currentEnergyAmount : 1,
-                        shipCargo : {}
-                    }
-                ]
+				currentNodeName : "TestStar",
+				isLanded : true,
+				homePlanetId : "TestStar",
+				credits : 10,
+				activeShipIndex : 0,
+				sessionId : "1ec6c968-63af-408b-9ce2-931631c0bbed",
+				ships : [
+					{
+						id : 1,
+						currentHullAmount: 1,
+						currentShieldAmount : 1,
+						currentEnergyAmount : 1,
+						shipCargo : {},
+						shipParts : [
+							{
+								"name": "BasicEngine",
+								"partStats" : {
+									"hull": 50,
+									"jumpDistance" : 10
+								}
+							},
+							{
+								"name": "BasicCargo",
+								"partStats" : {
+									"cargoCapacity": 50
+								}
+							},
+							{
+								"name": "BasicGenerator",
+								"partStats" : {
+									"energyRegen": 2,
+									"energyCapacity": 10
+								}
+							}
+						]
+					}
+				]
             };
             idCounter++;
         }
@@ -104,7 +127,9 @@ io.on('connection', function(socket) {
 		player.ships[0].cachedShipStats = {
 			"hull" : 50,
 			"cargoCapacity": 50,
-			"jumpDistance" : 10
+			"jumpDistance": 10,
+			"energyRegen": 2,
+			"energyCapacity": 10
 		};
         players[player.id] = player;
         socket.emit('loginResponse', {'success' : true, player : player, starsList : starsDb });
