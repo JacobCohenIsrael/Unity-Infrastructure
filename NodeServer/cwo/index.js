@@ -159,6 +159,10 @@ io.on('connection', function(socket) {
         socket.emit('playerLeftLounge', {'success' : true, player : players[data.id] });
     });
 
+	socket.on('loungeChatSent', (data) => {
+        console.log("Player " + data.player.id + " Sent Chat", data);
+    });
+
     socket.on('playerBuyResource', function(data) {
         console.log("Player is buying resource ", data);
         if (!starsDb[data.player.currentNodeName].resourceList.hasOwnProperty([data.resource.name])) {
