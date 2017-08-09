@@ -28,3 +28,6 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+Assets/Scripts/JsonDotNet/*
+Assets/Scripts/JSONObject/*
+Assets/Scripts/UnitySocketIO/*

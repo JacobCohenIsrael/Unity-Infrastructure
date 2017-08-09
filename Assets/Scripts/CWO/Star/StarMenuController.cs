@@ -16,6 +16,7 @@ namespace CWO.Star
         public Text welcomeText;
         public Button departButton;
         public Button hangerButton;
+        public Button loungeButton;
         public Button marketButton;
         public PlayerController playerController;
 
@@ -35,6 +36,7 @@ namespace CWO.Star
             eventManager.AddListener<LoginSuccessfulEvent>(this.OnLoginSuccessful);
             departButton.onClick.AddListener(() => { this.OnDepart(); });
             marketButton.onClick.AddListener(() => { this.OpenMarket(); });
+            loungeButton.onClick.AddListener(() => { this.EnterLounge(); });
         }
 
         protected void OnDepart()
@@ -44,13 +46,19 @@ namespace CWO.Star
             {
                 throw new UnityException("Player must have an active ship");
             }
-            playerService.departPlayerFromStar(player);
+            playerService.DepartPlayerFromStar(player);
         }
 
         protected void OpenMarket()
         {
             PlayerModel player = playerController.player;
-            playerService.openMarket(player);
+            playerService.OpenMarket(player);
+        }
+
+        protected void EnterLounge()
+        {
+            PlayerModel player = playerController.player;
+            playerService.EnterLounge(player);
         }
 
         protected void OnLoginSuccessful(LoginSuccessfulEvent e)

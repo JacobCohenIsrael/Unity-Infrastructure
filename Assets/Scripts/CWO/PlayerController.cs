@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Infrastructure.Core.Player;
 using Infrastructure.Core.Login.Events;
 using Infrastructure.Core.Player.Events;
@@ -62,12 +60,12 @@ namespace CWO
 
         protected void OnPlayLandOnStar(PlayerLandOnStarEvent e)
         {
-            player = e.player;
+            player.isLanded = e.player.isLanded;
         }
 
         protected void OnPlayerDepartFromStar(PlayerDepartFromStarEvent e)
         {
-            player = e.player;
+            player.isLanded = e.player.isLanded;
         }
 
         protected void ShipRegen()
@@ -78,8 +76,8 @@ namespace CWO
 
         protected void ShipEnergyRegen()
         {
-            float energyRegen = player.getActiveShip().shipStats[Infrastructure.Core.Ship.ShipStats.EnergyRegen];
-            float energyCapacity = player.getActiveShip().shipStats[Infrastructure.Core.Ship.ShipStats.EnergyCapacity];
+            float energyRegen = player.getActiveShip().getMaxEnergyRegen();
+            float energyCapacity = player.getActiveShip().getMaxEnergyCapacity();
             float newCurrentEnergyAmount = player.getActiveShip().currentEnergyAmount + energyRegen * Time.deltaTime;
             player.getActiveShip().currentEnergyAmount = (newCurrentEnergyAmount > energyCapacity) ? energyCapacity : newCurrentEnergyAmount;
             energyBar.maxValue = energyCapacity;

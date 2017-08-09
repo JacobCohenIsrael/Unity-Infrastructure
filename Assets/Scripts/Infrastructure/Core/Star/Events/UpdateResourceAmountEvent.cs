@@ -1,9 +1,4 @@
-﻿using System;
-using Infrastructure.Core.Resource;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-
-namespace Infrastructure.Core.Star.Events
+﻿namespace Infrastructure.Core.Star.Events
 {
     public class UpdateResourceAmountEvent
     {

@@ -5,12 +5,16 @@ using Infrastructure.Core.Player.Events;
 using Infrastructure.Core.Star;
 using Infrastructure.Core.Resource;
 using Infrastructure.Core.Network;
-using SocketIO;
+using UnitySocketIO;
 using UnityEngine;
+using Newtonsoft.Json;
+using UnitySocketIO.Events;
+using System;
+using Infrastructure.Core.Chat;
 
 namespace Infrastructure.Core.Player
 {
-    public class PlayerService : IServiceProvider
+    public class PlayerService : Base.Service.Contracts.IServiceProvider
     {
         StarService starService;
         PlayerAdapter playerAdapter;
@@ -21,8 +25,14 @@ namespace Infrastructure.Core.Player
         {
             getDependencies(serviceManager);
             subscribeListeners();
+        }
 
+        public void LeaveLounge(PlayerModel player)
+        {
+            if (playerAdapter.LeaveLounge(player))
+            {
 
+            }
         }
 
         protected void getDependencies(ServiceManager serviceManager)
@@ -35,10 +45,14 @@ namespace Infrastructure.Core.Player
 
         protected void subscribeListeners()
         {
+            mainServer.On("playerDeparted", this.OnPlayerDepart);
+            mainServer.On("playerLanded", this.OnPlayerLanded);
             mainServer.On("playerBoughtResource", this.OnPlayerBoughtResource);
             mainServer.On("playerSoldResource", this.OnPlayerSoldResource);
+            mainServer.On("playerEnteredLounge", this.OnPlayerEnteredLounge);
+            mainServer.On("playerLeftLounge", this.OnPlayerLeftLounge);
         }
-            
+
         public void LoginAsGuest(string sessionId)
         {
             playerAdapter.LoginAsGuest(sessionId);
@@ -47,11 +61,10 @@ namespace Infrastructure.Core.Player
         public void jumpPlayerToStar(PlayerModel player, StarModel star)
         {
             float distance = starService.CalculateDistanceBetweenStars(starService.GetStarByName(player.currentNodeName), star);
-            float engineJumpDistance = player.getActiveShip().shipStats[Infrastructure.Core.Ship.ShipStats.JumpDistance];
+            float engineJumpDistance = player.getActiveShip().getShipJumpDistance();
             if (distance > engineJumpDistance)
             {
                 throw new UnityEngine.UnityException("Player Engines are not strong enough to jump there directly");
-
             }
 
             if (player.getActiveShip().currentEnergyAmount < 10)
@@ -59,7 +72,7 @@ namespace Infrastructure.Core.Player
                 throw new UnityEngine.UnityException("Insufficient Energy for a jump");
             }
 
-            if (playerAdapter.jumpPlayerToStar(player, star))
+            if (playerAdapter.JumpPlayerToStar(player, star))
             {
                 player.currentNodeName = star.name;
                 PlayerJumpedToStarEvent playerJumpedToStarEvent = new PlayerJumpedToStarEvent(player, star);
@@ -69,32 +82,41 @@ namespace Infrastructure.Core.Player
 
         }
 
-        public void landPlayerOnStar(PlayerModel player)
+        public void LoungeChatSent(PlayerModel player, string chatMessage)
         {
-            if (playerAdapter.landPlayerOnStar(player))
+            ChatMessageModel chatMessageModel = new ChatMessageModel { Message = chatMessage };
+            playerAdapter.LoungeChatSent(player, chatMessageModel);
+        }
+
+        public void EnterLounge(PlayerModel player)
+        {
+            if (playerAdapter.EnterLounge(player))
             {
-                PlayerLandOnStarEvent playerLandedOnStar = new PlayerLandOnStarEvent(player);
-                eventManager.DispatchEvent<PlayerLandOnStarEvent>(playerLandedOnStar);
             }
         }
 
-        public void departPlayerFromStar(PlayerModel player)
+        public void LandPlayerOnStar(PlayerModel player)
         {
-            if (playerAdapter.departPlayerFromStar(player))
+            if (playerAdapter.LandPlayerOnStar(player))
             {
-                PlayerDepartFromStarEvent playerDepartFromStarEvent = new PlayerDepartFromStarEvent(player);
-                eventManager.DispatchEvent<PlayerDepartFromStarEvent>(playerDepartFromStarEvent);
             }
         }
 
-        public void openMarket(PlayerModel player)
+        public void DepartPlayerFromStar(PlayerModel player)
+        {
+            if (playerAdapter.DepartPlayerFromStar(player))
+            {
+            }
+        }
+
+        public void OpenMarket(PlayerModel player)
         {
             StarModel star = starService.GetStarByName(player.currentNodeName);
             PlayerOpenedMarketEvent playerOpenedMarketEvent = new PlayerOpenedMarketEvent(player, star);
             eventManager.DispatchEvent<PlayerOpenedMarketEvent>(playerOpenedMarketEvent);
         }
 
-        public void exitMarket(PlayerModel player)
+        public void ExitMarket(PlayerModel player)
         {
             PlayerExitMarketEvent playerExitMarketEvent = new PlayerExitMarketEvent(player);
             eventManager.DispatchEvent<PlayerExitMarketEvent>(playerExitMarketEvent);
@@ -125,14 +147,39 @@ namespace Infrastructure.Core.Player
 
         protected void OnPlayerBoughtResource(SocketIOEvent e)
         {
-            PlayerModel player = JsonUtility.FromJson<PlayerModel>(e.data.GetField("player").ToString());
-            eventManager.DispatchEvent<PlayerBoughtResourceEvent>(new PlayerBoughtResourceEvent(player));
-        } 
+            PlayerBoughtResourceEvent pbre = JsonConvert.DeserializeObject<PlayerBoughtResourceEvent>(e.data);
+            eventManager.DispatchEvent<PlayerBoughtResourceEvent>(pbre);
+        }
 
         protected void OnPlayerSoldResource(SocketIOEvent e)
         {
-            PlayerModel player = JsonUtility.FromJson<PlayerModel>(e.data.GetField("player").ToString());
-            eventManager.DispatchEvent<PlayerSoldResourceEvent>(new PlayerSoldResourceEvent(player));
-        }  
+            PlayerSoldResourceEvent psre = JsonConvert.DeserializeObject<PlayerSoldResourceEvent>(e.data);
+            eventManager.DispatchEvent<PlayerSoldResourceEvent>(psre);
+        }
+
+
+        protected void OnPlayerEnteredLounge(SocketIOEvent e)
+        {
+            PlayerEnteredLoungeEvent pele = JsonConvert.DeserializeObject<PlayerEnteredLoungeEvent>(e.data);
+            eventManager.DispatchEvent<PlayerEnteredLoungeEvent>(pele);
+        }
+
+        protected void OnPlayerLeftLounge(SocketIOEvent e)
+        {
+            PlayerLeftLoungeEvent plle = JsonConvert.DeserializeObject<PlayerLeftLoungeEvent>(e.data);
+            eventManager.DispatchEvent<PlayerLeftLoungeEvent>(plle);
+        }
+
+        protected void OnPlayerLanded(SocketIOEvent e)
+        {
+            PlayerLandOnStarEvent plose = JsonConvert.DeserializeObject<PlayerLandOnStarEvent>(e.data);
+            eventManager.DispatchEvent<PlayerLandOnStarEvent>(plose);
+        }
+
+        protected void OnPlayerDepart(SocketIOEvent e)
+        {
+            PlayerDepartFromStarEvent pde = JsonConvert.DeserializeObject<PlayerDepartFromStarEvent>(e.data);
+            eventManager.DispatchEvent<PlayerDepartFromStarEvent>(pde);
+        }
     }
 }

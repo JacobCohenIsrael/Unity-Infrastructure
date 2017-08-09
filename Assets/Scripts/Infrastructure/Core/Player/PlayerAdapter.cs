@@ -1,20 +1,16 @@
-﻿using System.Collections;
-using Infrastructure.Base.Service;
-using Infrastructure.Base.Service.Contracts;
+﻿using Infrastructure.Base.Service;
 using Infrastructure.Core.Star;
-using Infrastructure.Core.Ship.Part;
 using Infrastructure.Core.Resource;
-using SocketIO;
 using Infrastructure.Core.Network;
-using System.Threading;
 using UnityEngine;
+using Infrastructure.Core.Chat;
 
 namespace Infrastructure.Core.Player
 {
-    public class PlayerAdapter : IServiceProvider
+    public class PlayerAdapter : Base.Service.Contracts.IServiceProvider
     {
-        //public PlayerModel player;
         protected MainServer mainServer;
+        protected PlayerModel player;
 
         public PlayerAdapter(ServiceManager serviceManager)
         {
@@ -28,7 +24,7 @@ namespace Infrastructure.Core.Player
             mainServer.Emit("login", msg.ToJson());
         }
 
-        public bool jumpPlayerToStar(PlayerModel player, StarModel star)
+        public bool JumpPlayerToStar(PlayerModel player, StarModel star)
         {
             if (player.currentNodeName == star.name)
             {
@@ -41,19 +37,21 @@ namespace Infrastructure.Core.Player
             return true;
         }
 
-        public bool landPlayerOnStar(PlayerModel player)
+        public bool LandPlayerOnStar(PlayerModel player)
         {
             mainServer.Emit("landPlayerOnStar", new JSONObject(JsonUtility.ToJson(player)));
             return true;
         }
 
-        public bool departPlayerFromStar(PlayerModel player)
+        public bool DepartPlayerFromStar(PlayerModel player)
         {
             if (player.getActiveShip() == null)
             {
                 return false;
             }
-            mainServer.Emit("departPlayerFromStar", new JSONObject(JsonUtility.ToJson(player)));
+            Message msg = new Message();
+            msg.body.Add("player", player);
+            mainServer.Emit("departPlayerFromStar", msg.ToJson());
             return true;
         }
 
@@ -84,6 +82,30 @@ namespace Infrastructure.Core.Player
                 return true;
             }
             return false;
+        }
+
+        public bool EnterLounge(PlayerModel player)
+        {
+            Message msg = new Message();
+            msg.body.Add("player", player);
+            mainServer.Emit("playerEnteredLounge", msg.ToJson());
+            return true;
+        }
+
+        public bool LeaveLounge(PlayerModel player)
+        {
+            Message msg = new Message();
+            msg.body.Add("player", player);
+            mainServer.Emit("playerLeftLounge", msg.ToJson());
+            return true;
+        }
+
+        public void LoungeChatSent(PlayerModel player, ChatMessageModel chatMessage)
+        {
+            Message msg = new Message();
+            msg.body.Add("player", player);
+            msg.body.Add("message", chatMessage);
+            mainServer.Emit("loungeChatSent", msg.ToJson());
         }
     }
 }

@@ -1,19 +1,22 @@
 ﻿using Infrastructure.Base.Service;
 using Infrastructure.Base.Service.Contracts;
-using SocketIO;
-using System.Threading;
 using Infrastructure.Base.Event;
 using Infrastructure.Core.Network.Events;
+using UnitySocketIO.Events;
 
 namespace Infrastructure.Core.Network
 {
     public class MainServer : IServiceProvider
     {
-        public SocketIOComponent socketIO;
+        public ISocketIO socketIO;
 
         public MainServer(ServiceManager serviceManager)
         {
-            socketIO = new SocketIOComponent(serviceManager.getConfig().get("servers.main") as string);
+        }
+
+        public void SetSocketIO(ISocketIO socketIO)
+        {
+            this.socketIO = socketIO;
         }
 
         public void Connect()
@@ -21,10 +24,6 @@ namespace Infrastructure.Core.Network
             socketIO.Connect();
         }
 
-        public void Update()
-        {
-            socketIO.Update();
-        }
 
         public void Emit(string eventName, JSONObject json)
         {
@@ -38,7 +37,7 @@ namespace Infrastructure.Core.Network
 
         public bool isConnected()
         {
-            return socketIO.IsConnected;
+            return socketIO.isConnected();
         }
     }
 }

@@ -1,18 +1,15 @@
 ﻿using UnityEngine;
-using System.Collections;
 using Infrastructure.Core.Login;
 using Infrastructure.Core.Login.Events;
 using Infrastructure.Base.Event;
 using CWO.Login;
 using CWO.Hud;
 using CWO.Star;
-using Infrastructure.Core.Star;
 using Infrastructure.Core.Player.Events;
 using CWO.Market;
 using Infrastructure.Base.Application.Events;
 using App = Infrastructure.Base.Application.Application;
 using Infrastructure.Core.Network;
-using SocketIO;
 
 
 namespace CWO
@@ -25,6 +22,7 @@ namespace CWO
         public StarScreenController starScreenController;
         public StarMenuController starMenuController;
         public MarketMenuController marketMenuController;
+        public LoungeController loungeController;
 
         public GameState currentState;
         public enum GameState
@@ -34,6 +32,7 @@ namespace CWO
             StarOrbit,
             StarMenu,
             MarketMenu,
+            Lounge,
         }
 
         protected App application;
@@ -53,6 +52,8 @@ namespace CWO
             eventManager.AddListener<PlayerDepartFromStarEvent>(this.OnPlayerExitStarMenu);
             eventManager.AddListener<PlayerOpenedMarketEvent>(this.OnPlayerOpenMarket);
             eventManager.AddListener<PlayerExitMarketEvent>(this.OnPlayerExitMarket);
+            eventManager.AddListener<PlayerEnteredLoungeEvent>(this.OnPlayerEnteredLounge);
+            eventManager.AddListener<PlayerLeftLoungeEvent>(this.OnPlayerLeftLounge);
         }
 
         void OnApplicationReady(ApplicationFinishedLoadingEvent e) 
@@ -83,7 +84,7 @@ namespace CWO
             starScreenController.Show();
         }
 
-        void StarMenuState()
+        public void StarMenuState()
         {
             hudController.Show();
             starMenuController.Show();
@@ -93,6 +94,12 @@ namespace CWO
         {
             hudController.Show();
             marketMenuController.Show();
+        }
+
+        void LoungeState()
+        {
+            hudController.Show();
+            loungeController.Show();
         }
 
         public void ChangeState(GameState newState)
@@ -142,6 +149,16 @@ namespace CWO
             ChangeState(GameState.StarMenu);
         }
 
+        void OnPlayerEnteredLounge(PlayerEnteredLoungeEvent e)
+        {
+            ChangeState(GameState.Lounge);
+        }
+
+        void OnPlayerLeftLounge(PlayerLeftLoungeEvent e)
+        {
+            ChangeState(GameState.StarMenu);
+        }
+
         void HideAll()
         {
             loginController.Hide();
@@ -150,6 +167,7 @@ namespace CWO
             starScreenController.Hide();
             starMenuController.Hide();
             marketMenuController.Hide();
+            loungeController.Hide();
         }
     }
 }

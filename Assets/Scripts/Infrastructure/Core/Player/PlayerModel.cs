@@ -25,7 +25,7 @@ namespace Infrastructure.Core.Player
         }
 
 
-        public bool hasActiveShip()
+        public bool HasActiveShip()
         {
             if (null == ships[activeShipIndex])
             {
@@ -34,9 +34,9 @@ namespace Infrastructure.Core.Player
             return true;
         }
 
-        public float getJumpDistance()
+        public float GetJumpDistance()
         {
-            return getActiveShip().shipStats[ShipStats.JumpDistance];
+            return getActiveShip().getShipJumpDistance();
         }
     }
 }

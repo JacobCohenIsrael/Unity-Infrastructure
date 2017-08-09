@@ -1,25 +1,17 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace Infrastructure.Core.Ship
 {
     [Serializable]
-    public abstract class ShipPart
+    public class ShipPart
     {
-        public Dictionary<ShipStats, int> stats;
+        [JsonProperty("name")]
+        public string Name;
 
-        public ShipPart()
-        {
-            stats = new Dictionary<ShipStats, int>();
-            AddStats();
-        }
-
-        public void AddStat(ShipStats statName, int value)
-        {
-            stats.Add(statName, value);
-        }
-
-        protected abstract void AddStats();
+        [JsonProperty("partStats")]
+        public ShipStats PartStats;
     }
 }
 

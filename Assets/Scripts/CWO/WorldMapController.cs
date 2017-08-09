@@ -19,7 +19,6 @@ namespace CWO
 
 		void Start() 
 		{
-			StarService starService = Infrastructure.Base.Application.Application.getInstance ().serviceManager.get<StarService> () as StarService;
 			Hide ();
 		}
 
@@ -29,8 +28,7 @@ namespace CWO
         }
 
 		void OnLoginSuccessful(LoginSuccessfulEvent e)
-		{
-            
+		{          
 			Debug.Log("Login Successful, Populating WorldMap");
 			foreach (KeyValuePair<string, StarModel> starEntry in e.starsList) 
 			{

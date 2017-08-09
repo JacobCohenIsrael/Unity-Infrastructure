@@ -16,7 +16,8 @@ namespace Infrastructure.Core.Network
 
         public JSONObject ToJson()
         {
-            return new JSONObject(JsonConvert.SerializeObject(body));
+            string json = JsonConvert.SerializeObject(body);
+            return new JSONObject(json);
         }
     }
 }

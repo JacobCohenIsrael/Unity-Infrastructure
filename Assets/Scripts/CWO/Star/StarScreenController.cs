@@ -57,7 +57,7 @@ namespace CWO.Star
         void OnLand()
         {
             PlayerModel player = playerController.player;
-            playerService.landPlayerOnStar(player);
+            playerService.LandPlayerOnStar(player);
         }
 
 

@@ -5,7 +5,8 @@ using Infrastructure.Base.Event;
 using Infrastructure.Base.Config;
 using App = Infrastructure.Base.Application.Application;
 using Infrastructure.Core.Network;
-using SocketIO;
+using UnitySocketIO.Events;
+using UnitySocketIO;
 
 namespace CWO
 {
@@ -14,26 +15,23 @@ namespace CWO
         protected App application;
         protected MainServer mainServer;
 
+        public SocketIOController socketIO;
+
         void Awake()
         {
             Debug.Log("Awaking Setup");
             Config config = new Config();
-            config.set("servers.main", "ws://127.0.0.1:4567/socket.io/?EIO=4&transport=websocket");
             application = App.getInstance();
             application.serviceManager.setConfig(config);
             UnityEngine.Application.runInBackground = true;
+            mainServer = application.serviceManager.get<MainServer>() as MainServer;
+            mainServer.SetSocketIO(socketIO);
         }
 
         void Start()
         {
-            mainServer = application.serviceManager.get<MainServer>() as MainServer;
             mainServer.Connect();
             mainServer.On("connect", this.OnConnect);
-        }
-
-        void Update()
-        {
-            mainServer.Update();
         }
 
         void OnConnect(SocketIOEvent e)
