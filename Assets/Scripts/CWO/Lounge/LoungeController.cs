@@ -1,6 +1,5 @@
 ﻿using Implementation.Views.Screen;
 using Infrastructure.Base.Application.Events;
-using Infrastructure.Base.Event;
 using Infrastructure.Core.Player;
 using UnityEngine.UI;
 
@@ -9,6 +8,7 @@ namespace CWO.Market
     public class LoungeController : BaseUIObject 
     {
         public Button exitButton;
+
         public PlayerController playerController;
         protected PlayerService playerService;
 

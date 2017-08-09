@@ -1,19 +1,16 @@
-﻿using System.Collections;
-using Infrastructure.Base.Service;
-using Infrastructure.Base.Service.Contracts;
+﻿using Infrastructure.Base.Service;
 using Infrastructure.Core.Star;
 using Infrastructure.Core.Resource;
-using UnitySocketIO;
 using Infrastructure.Core.Network;
-using System.Threading;
 using UnityEngine;
-using System;
+using Infrastructure.Core.Chat;
 
 namespace Infrastructure.Core.Player
 {
     public class PlayerAdapter : Base.Service.Contracts.IServiceProvider
     {
         protected MainServer mainServer;
+        protected PlayerModel player;
 
         public PlayerAdapter(ServiceManager serviceManager)
         {
@@ -101,6 +98,14 @@ namespace Infrastructure.Core.Player
             msg.body.Add("player", player);
             mainServer.Emit("playerLeftLounge", msg.ToJson());
             return true;
+        }
+
+        public void LoungeChatSent(PlayerModel player, ChatMessageModel chatMessage)
+        {
+            Message msg = new Message();
+            msg.body.Add("player", player);
+            msg.body.Add("message", chatMessage);
+            mainServer.Emit("loungeChatSent", msg.ToJson());
         }
     }
 }

@@ -10,6 +10,7 @@ using UnityEngine;
 using Newtonsoft.Json;
 using UnitySocketIO.Events;
 using System;
+using Infrastructure.Core.Chat;
 
 namespace Infrastructure.Core.Player
 {
@@ -79,6 +80,12 @@ namespace Infrastructure.Core.Player
                 OrbitPlayerOnStar(player, star);
             }
 
+        }
+
+        public void LoungeChatSent(PlayerModel player, string chatMessage)
+        {
+            ChatMessageModel chatMessageModel = new ChatMessageModel { Message = chatMessage };
+            playerAdapter.LoungeChatSent(player, chatMessageModel);
         }
 
         public void EnterLounge(PlayerModel player)
