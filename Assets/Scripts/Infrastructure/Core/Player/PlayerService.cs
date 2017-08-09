@@ -10,6 +10,8 @@ using UnityEngine;
 using Newtonsoft.Json;
 using UnitySocketIO.Events;
 using System;
+using Infrastructure.Core.Chat;
+using Infrastructure.Core.Chat.Events;
 
 namespace Infrastructure.Core.Player
 {
@@ -50,6 +52,7 @@ namespace Infrastructure.Core.Player
             mainServer.On("playerSoldResource", this.OnPlayerSoldResource);
             mainServer.On("playerEnteredLounge", this.OnPlayerEnteredLounge);
             mainServer.On("playerLeftLounge", this.OnPlayerLeftLounge);
+            mainServer.On("chatMessageReceived", this.OnChatMessageReceived);
         }
 
         public void LoginAsGuest(string sessionId)
@@ -79,6 +82,12 @@ namespace Infrastructure.Core.Player
                 OrbitPlayerOnStar(player, star);
             }
 
+        }
+
+        public void SendChat(PlayerModel player, string chatMessage, string chatRoomKey)
+        {
+            ChatMessageModel chatMessageModel = new ChatMessageModel { Message = chatMessage, RoomKey = chatRoomKey };
+            playerAdapter.SendChat(player, chatMessageModel);
         }
 
         public void EnterLounge(PlayerModel player)
@@ -173,6 +182,12 @@ namespace Infrastructure.Core.Player
         {
             PlayerDepartFromStarEvent pde = JsonConvert.DeserializeObject<PlayerDepartFromStarEvent>(e.data);
             eventManager.DispatchEvent<PlayerDepartFromStarEvent>(pde);
+        }
+
+        protected void OnChatMessageReceived(SocketIOEvent e)
+        {
+            ChatMessageReceivedEvent cmre = JsonConvert.DeserializeObject<ChatMessageReceivedEvent>(e.data);
+            eventManager.DispatchEvent<ChatMessageReceivedEvent>(cmre);
         }
     }
 }

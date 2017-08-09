@@ -12,4 +12,3 @@ namespace Infrastructure.Core.Player.Events
         }
     }
 }
-
