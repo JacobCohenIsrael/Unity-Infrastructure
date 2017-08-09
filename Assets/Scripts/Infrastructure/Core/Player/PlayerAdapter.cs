@@ -100,12 +100,12 @@ namespace Infrastructure.Core.Player
             return true;
         }
 
-        public void LoungeChatSent(PlayerModel player, ChatMessageModel chatMessage)
+        public void SendChat(PlayerModel player, ChatMessageModel chatMessage)
         {
             Message msg = new Message();
             msg.body.Add("player", player);
             msg.body.Add("message", chatMessage);
-            mainServer.Emit("loungeChatSent", msg.ToJson());
+            mainServer.Emit("chatSent", msg.ToJson());
         }
     }
 }

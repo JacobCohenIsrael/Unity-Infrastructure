@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 using Infrastructure.Base.Application.Events;
-using System;
 using Infrastructure.Core.Player;
 using CWO;
+using Infrastructure.Core.Chat.Events;
 
 namespace Implementation.Features.Chat
 {
@@ -12,6 +11,9 @@ namespace Implementation.Features.Chat
     {
         public Button chatSendButton;
         public InputField chatInputField;
+        public Text chatTextField;
+
+        public string chatRoomKey;
 
         protected PlayerService playerService;
         public PlayerController playerController;
@@ -23,19 +25,25 @@ namespace Implementation.Features.Chat
         protected override void SubscribeToEvents(SubscribeEvent e)
         {
             chatSendButton.onClick.AddListener(() => { this.OnChatSendButtonClicked(); });
+            eventManager.AddListener<ChatMessageReceivedEvent>(this.OnChatMessageReceived);
         }
 
         protected void OnChatSendButtonClicked()
         {
             if (chatInputField.text.Length > 0)
             {
-                playerService.LoungeChatSent(playerController.player, chatInputField.text);
+                playerService.SendChat(playerController.player, chatInputField.text, chatRoomKey);
                 chatInputField.text = "";
             }
             else
             {
                 throw new UnityEngine.UnityException("Must enter text!");
             }
+        }
+
+        protected void OnChatMessageReceived(ChatMessageReceivedEvent e)
+        {
+            chatTextField.text += e.PlayerName + ": " + e.ChatMessage + "\n\r";
         }
     }
 }
