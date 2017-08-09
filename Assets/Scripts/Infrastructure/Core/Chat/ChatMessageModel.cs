@@ -9,5 +9,8 @@ namespace Infrastructure.Core.Chat
     {
         [JsonProperty("message")]
         public string Message;
+
+        [JsonProperty("roomKey")]
+        public string RoomKey;
     }
 }
