@@ -1,7 +1,4 @@
-﻿using System;
-using Infrastructure.Core.Resource;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace Infrastructure.Core.Star.Events

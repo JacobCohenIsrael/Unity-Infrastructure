@@ -6,6 +6,7 @@ using Infrastructure.Core.Login;
 using Infrastructure.Core.Player.Events;
 using Infrastructure.Core.Player;
 using Infrastructure.Base.Application.Events;
+using Infrastructure.Core.Node;
 
 namespace CWO.Star
 {
@@ -15,11 +16,13 @@ namespace CWO.Star
         public Button landButton;
         public PlayerController playerController;
 
+        protected NodeService nodeService;
         protected PlayerService playerService;
 
         void Start()
         {
             playerService = application.serviceManager.get<PlayerService>() as PlayerService;
+            nodeService = application.serviceManager.get<NodeService>() as NodeService;
             Hide();
         }
 

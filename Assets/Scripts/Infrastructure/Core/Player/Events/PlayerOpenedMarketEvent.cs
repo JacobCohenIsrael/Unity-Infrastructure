@@ -1,6 +1,4 @@
-﻿using System;
-using Infrastructure.Core.Player;
-using Infrastructure.Core.Star;
+﻿using Infrastructure.Core.Star;
 
 namespace Infrastructure.Core.Player.Events
 {

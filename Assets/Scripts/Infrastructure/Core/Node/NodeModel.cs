@@ -4,7 +4,7 @@ using Infrastructure.Core.Resource;
 using System;
 using Newtonsoft.Json;
 
-namespace Infrastructure.Core.Star
+namespace Infrastructure.Core.Node
 {
     [Serializable]
     public class NodeModel : Infrastructure.Base.Model.Model

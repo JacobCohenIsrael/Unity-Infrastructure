@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Infrastructure.Core.Resource;
 using System;
+using Infrastructure.Core.Node;
 
 namespace Infrastructure.Core.Star
 {
