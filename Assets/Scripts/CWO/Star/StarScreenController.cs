@@ -36,12 +36,34 @@ namespace CWO.Star
 
         protected override void SubscribeToEvents(SubscribeEvent e)
         {
-            eventManager.AddListener<PlayerOrbitStarEvent>(this.OnPlayerEnterStar);
-            eventManager.AddListener<ShipEnteredNodeEvent>(this.OnShipEnteredNode);
-            eventManager.AddListener<PlayerDepartFromStarEvent>(this.OnShipDeparted);
-            eventManager.AddListener<PlayerLandOnStarEvent>(this.OnShipLanded);
-            jumpButton.onClick.AddListener(() => { this.OnJump(); });
-            landButton.onClick.AddListener(() => { this.OnLand(); });
+            eventManager.AddListener<PlayerOrbitStarEvent>(this.onPlayerEnterStar);
+            eventManager.AddListener<ShipEnteredNodeEvent>(this.onShipEnteredNode);
+            eventManager.AddListener<ShipLeftNodeEvent>(this.onShipLeftNode);
+            eventManager.AddListener<PlayerDepartFromStarEvent>(this.onShipDeparted);
+            eventManager.AddListener<PlayerLandOnStarEvent>(this.onShipLanded);
+            eventManager.AddListener<PlayerJumpedToStarEvent>(this.onPlayerJumpToStar);
+
+            jumpButton.onClick.AddListener(() => { this.onJump(); });
+            landButton.onClick.AddListener(() => { this.onLand(); });
+        }
+
+        private void onPlayerJumpToStar(PlayerJumpedToStarEvent e)
+        {
+            cleanShipGrid();
+        }
+
+        private void onShipLeftNode(ShipLeftNodeEvent e)
+        {
+            foreach (RectTransform child in shipsGrid)
+            {
+                ShipInSpaceController shipInSpaceController = child.gameObject.GetComponent<ShipInSpaceController>();
+                if (shipInSpaceController.PlayerId == e.PlayerId)
+                {
+                    GameObject.Destroy(child.gameObject);
+                }
+
+
+            }
         }
 
         private void cleanShipGrid()
@@ -52,36 +74,36 @@ namespace CWO.Star
             }
         }
 
-        private void OnShipLanded(PlayerLandOnStarEvent obj)
+        private void onShipLanded(PlayerLandOnStarEvent obj)
         {
             cleanShipGrid();
         }
 
-        private void OnShipDeparted(PlayerDepartFromStarEvent e)
+        private void onShipDeparted(PlayerDepartFromStarEvent e)
         {
             foreach (KeyValuePair<int, ShipModel> entry in e.NodeSpace.ships)
             {
                 GameObject instantiatedShip;
                 instantiatedShip = Instantiate(shipPrefab, shipsGrid);
                 ShipInSpaceController shipInSpaceController = instantiatedShip.GetComponent<ShipInSpaceController>();
-                shipInSpaceController.playerId = entry.Key;
+                shipInSpaceController.PlayerId = entry.Key;
             }
         }
 
-        private void OnShipEnteredNode(ShipEnteredNodeEvent e)
+        private void onShipEnteredNode(ShipEnteredNodeEvent e)
         {
             GameObject instantiatedShip;
             instantiatedShip = Instantiate(shipPrefab, shipsGrid);
             ShipInSpaceController shipInSpaceController = instantiatedShip.GetComponent<ShipInSpaceController>();
-            shipInSpaceController.playerId = e.PlayerId;
+            shipInSpaceController.PlayerId = e.PlayerId;
         }
 
-        void OnPlayerEnterStar(PlayerOrbitStarEvent e)
+        private void onPlayerEnterStar(PlayerOrbitStarEvent e)
         {
 
         }
 
-        void OnJump()
+        private void onJump()
         {
             PlayerModel player = playerController.player;
             if (null == player.getActiveShip())
@@ -99,7 +121,7 @@ namespace CWO.Star
             }
         }
 
-        void OnLand()
+        private void onLand()
         {
             PlayerModel player = playerController.player;
             playerService.LandPlayerOnStar(player);

@@ -6,7 +6,7 @@ namespace CWO.Ship
 {
     public class ShipInSpaceController : BaseUIObject
     {
-        public int playerId;
+        public int PlayerId;
         protected override void SubscribeToEvents(SubscribeEvent e)
         {
             
