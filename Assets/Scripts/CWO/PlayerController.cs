@@ -65,7 +65,7 @@ namespace CWO
 
         protected void OnPlayerDepartFromStar(PlayerDepartFromStarEvent e)
         {
-            player.isLanded = e.player.isLanded;
+            player.isLanded = e.Player.isLanded;
         }
 
         protected void ShipRegen()

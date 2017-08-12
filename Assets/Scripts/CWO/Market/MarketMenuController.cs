@@ -57,6 +57,7 @@ namespace CWO.Market
         protected void OnExit()
         {
             playerService.ExitMarket(playerController.player);
+            DisableMarketButtons();
         }
 
 
