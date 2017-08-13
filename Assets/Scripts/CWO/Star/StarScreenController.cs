@@ -86,7 +86,10 @@ namespace CWO.Star
                 GameObject instantiatedShip;
                 instantiatedShip = Instantiate(shipPrefab, shipsGrid);
                 ShipInSpaceController shipInSpaceController = instantiatedShip.GetComponent<ShipInSpaceController>();
+                Texture2D texture = UnityEngine.Resources.Load("Sprites/Ships/" + entry.Value.GetShipType() + "/" + entry.Value.GetShipClass()) as Texture2D;
+                Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
                 shipInSpaceController.PlayerId = entry.Key;
+                shipInSpaceController.ShipImage.sprite = sprite;
             }
         }
 
@@ -95,6 +98,10 @@ namespace CWO.Star
             GameObject instantiatedShip;
             instantiatedShip = Instantiate(shipPrefab, shipsGrid);
             ShipInSpaceController shipInSpaceController = instantiatedShip.GetComponent<ShipInSpaceController>();
+            Texture2D texture = UnityEngine.Resources.Load("Sprites/Ships/" + e.ShipModel.GetShipType() + "/" + e.ShipModel.GetShipClass()) as Texture2D;
+            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            shipInSpaceController.PlayerId = e.PlayerId;
+            shipInSpaceController.ShipImage.sprite = sprite;
             shipInSpaceController.PlayerId = e.PlayerId;
         }
 
@@ -110,7 +117,7 @@ namespace CWO.Star
             {
                 throw new UnityException("Player must have a ship to jump");
             }
-            if (player.getActiveShip().currentHullAmount > 0)
+            if (player.getActiveShip().GetCurrentHullAmount() > 0)
             {
                 PlayerJumpEvent playerJumpEvent = new PlayerJumpEvent(player);
                 application.eventManager.DispatchEvent<PlayerJumpEvent>(playerJumpEvent);

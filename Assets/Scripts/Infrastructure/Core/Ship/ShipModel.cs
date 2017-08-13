@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Infrastructure.Core.Resource;
 using System.Linq;
 using System.Collections;
+using Newtonsoft.Json;
 
 namespace Infrastructure.Core.Ship
 {
@@ -11,7 +12,14 @@ namespace Infrastructure.Core.Ship
     {
         public int id;
 
-        public int currentHullAmount;
+        [JsonProperty("shipType")]
+        protected string shipType;
+        
+        [JsonProperty("shipClass")]
+        protected string shipClass;
+
+        [JsonProperty("currentHullAmount")]
+        private int currentHullAmount;
         public int currentShieldAmount;
         public float currentEnergyAmount;
 
@@ -67,6 +75,21 @@ namespace Infrastructure.Core.Ship
         public int getShipJumpDistance()
         {
             return  cachedShipStats.JumpDistance;
+        }
+
+        public int GetCurrentHullAmount()
+        {
+            return currentHullAmount;
+        }
+
+        public string GetShipType()
+        {
+            return shipType;
+        }
+
+        public string GetShipClass()
+        {
+            return shipClass;
         }
     }
 }
