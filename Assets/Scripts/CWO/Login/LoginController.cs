@@ -33,8 +33,8 @@ namespace CWO.Login
 
         void OnLoginSuccessful(LoginSuccessfulEvent e)
         {
-            PlayerPrefs.SetString(loginSessionId, e.player.sessionId);
-            PlayerPrefs.SetInt("playerId", e.player.id);
+            PlayerPrefs.SetString(loginSessionId, e.Player.token);
+            PlayerPrefs.SetInt("playerId", e.Player.id);
             PlayerPrefs.Save();
         }
     }

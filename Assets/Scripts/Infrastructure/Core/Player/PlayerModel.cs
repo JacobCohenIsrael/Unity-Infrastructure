@@ -10,7 +10,7 @@ namespace Infrastructure.Core.Player
         public int id;
         public string firstName;
         public string lastName;
-        public string sessionId;
+        public string token;
 
 		public string currentNodeName;
         public int activeShipIndex;

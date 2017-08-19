@@ -30,16 +30,16 @@ namespace CWO.Market
 
         protected override void SubscribeToEvents(SubscribeEvent e)
         {
-            application.eventManager.AddListener<PlayerOpenedMarketEvent>(this.OnMarketOpen);
+            application.eventManager.AddListener<PlayerEnteredMarketEvent>(this.OnMarketOpen);
             exitButton.onClick.AddListener(() => { this.OnExit(); });
             buyButton.onClick.AddListener(() => { this.OnBuyResourceClicked(); });
             sellButton.onClick.AddListener(() => { this.OnSellResourceClicked(); });
             playerService = application.serviceManager.get<PlayerService>() as PlayerService;
         }
 
-        protected void OnMarketOpen(PlayerOpenedMarketEvent e)
+        protected void OnMarketOpen(PlayerEnteredMarketEvent e)
         {
-            foreach (KeyValuePair<string, ResourceSlotModel> resourceSlot in e.star.resourceList)
+            foreach (KeyValuePair<string, ResourceSlotModel> resourceSlot in e.ResourceSlotList)
             {
                 Texture2D texture = UnityEngine.Resources.Load("Sprites/" + resourceSlot.Value.name) as Texture2D;
                 Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));

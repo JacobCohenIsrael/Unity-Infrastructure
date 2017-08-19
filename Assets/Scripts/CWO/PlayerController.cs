@@ -49,7 +49,7 @@ namespace CWO
             
         protected void OnLoginSuccessful(LoginSuccessfulEvent e)
         {
-            player = e.player;
+            player = e.Player;
             playerLoaded = true;
         }
 

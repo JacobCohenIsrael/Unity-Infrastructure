@@ -7,18 +7,13 @@ namespace Infrastructure.Core.Login.Events
 {
     public class LoginSuccessfulEvent : Infrastructure.Base.Event.Event
     {
-        public PlayerModel player;
+        [JsonProperty("player")]
+        private PlayerModel m_player;
 
-        [JsonProperty("success")]
-        public bool isSuccessful;
-
-        public Dictionary<string, StarModel> starsList;
-
-        public LoginSuccessfulEvent(PlayerModel player, Dictionary<string, StarModel> starsList)
-        {
-            this.player = player;
-            this.starsList = starsList;
-        }   
+        public PlayerModel Player {
+            get { return this.m_player; }
+            set { this.m_player = value; }
+        }
     }
 }
 

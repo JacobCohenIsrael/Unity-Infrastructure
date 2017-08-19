@@ -45,9 +45,7 @@ namespace Infrastructure.Core.Login
         public void OnLogin(SocketIOEvent e)
         {
             LoginSuccessfulEvent loginSuccessfulEvent = JsonConvert.DeserializeObject<LoginSuccessfulEvent>(e.data);
-            PlayerModel player = loginSuccessfulEvent.player;
-            Dictionary<string, StarModel> starsList = loginSuccessfulEvent.starsList;
-            eventManager.DispatchEvent<Events.LoginSuccessfulEvent>(new Events.LoginSuccessfulEvent(player, starsList));
+            eventManager.DispatchEvent<Events.LoginSuccessfulEvent>(loginSuccessfulEvent);
         }
     }
 }

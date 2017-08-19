@@ -8,6 +8,7 @@ using UnitySocketIO.Events;
 using Infrastructure.Core.Chat;
 using Infrastructure.Core.Chat.Events;
 using Infrastructure.Core.Star;
+using NUnit.Framework;
 
 namespace Infrastructure.Core.Player
 {
@@ -49,6 +50,13 @@ namespace Infrastructure.Core.Player
             mainServer.On("playerEnteredLounge", this.OnPlayerEnteredLounge);
             mainServer.On("playerLeftLounge", this.OnPlayerLeftLounge);
             mainServer.On("chatMessageReceived", this.OnChatMessageReceived);
+            mainServer.On("playerEnteredMarket", this.OnPlayerEnteredMarket);
+        }
+
+        private void OnPlayerEnteredMarket(SocketIOEvent e)
+        {
+            PlayerEnteredMarketEvent peme = JsonConvert.DeserializeObject<PlayerEnteredMarketEvent>(e.data);
+            eventManager.DispatchEvent<PlayerEnteredMarketEvent>(peme);
         }
 
         public void LoginAsGuest(string sessionId)
@@ -107,13 +115,11 @@ namespace Infrastructure.Core.Player
             }
         }
 
-        public void OpenMarket(PlayerModel player)
+        public void EnterMarket(PlayerModel player)
         {
-            StarModel star = starService.GetStarByName(player.currentNodeName);
-            PlayerOpenedMarketEvent playerOpenedMarketEvent = new PlayerOpenedMarketEvent(player, star);
-            eventManager.DispatchEvent<PlayerOpenedMarketEvent>(playerOpenedMarketEvent);
+            this.playerAdapter.EnterMarket(player);
         }
-
+            
         public void ExitMarket(PlayerModel player)
         {
             PlayerExitMarketEvent playerExitMarketEvent = new PlayerExitMarketEvent(player);

@@ -52,7 +52,7 @@ namespace CWO.Star
         protected void OpenMarket()
         {
             PlayerModel player = playerController.player;
-            playerService.OpenMarket(player);
+            playerService.EnterMarket(player);
         }
 
         protected void EnterLounge()
@@ -63,9 +63,7 @@ namespace CWO.Star
 
         protected void OnLoginSuccessful(LoginSuccessfulEvent e)
         {
-            StarService starService = application.serviceManager.get<StarService>() as StarService;
-            StarModel currentStar = starService.GetStarByName(e.player.currentNodeName);
-            welcomeText.text = "Welcome to " + currentStar.name;
+            welcomeText.text = "Welcome to " + e.Player.currentNodeName;
         }
 
         protected void OnPlayerLandOnStar(PlayerLandOnStarEvent e)

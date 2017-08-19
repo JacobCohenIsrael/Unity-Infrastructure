@@ -50,7 +50,7 @@ namespace CWO
             eventManager.AddListener<PlayerJumpEvent>(this.OnPlayerJump);
             eventManager.AddListener<PlayerLandOnStarEvent>(this.OnPlayerLandOnStar);
             eventManager.AddListener<PlayerDepartFromStarEvent>(this.OnPlayerExitStarMenu);
-            eventManager.AddListener<PlayerOpenedMarketEvent>(this.OnPlayerOpenMarket);
+            eventManager.AddListener<PlayerEnteredMarketEvent>(this.OnPlayerEnteredMarket);
             eventManager.AddListener<PlayerExitMarketEvent>(this.OnPlayerExitMarket);
             eventManager.AddListener<PlayerEnteredLoungeEvent>(this.OnPlayerEnteredLounge);
             eventManager.AddListener<PlayerLeftLoungeEvent>(this.OnPlayerLeftLounge);
@@ -139,7 +139,7 @@ namespace CWO
             ChangeState(GameState.StarOrbit);
         }
 
-        void OnPlayerOpenMarket(PlayerOpenedMarketEvent e)
+        void OnPlayerEnteredMarket(PlayerEnteredMarketEvent e)
         {
             ChangeState(GameState.MarketMenu);
         }

@@ -107,6 +107,13 @@ namespace Infrastructure.Core.Player
             msg.body.Add("message", chatMessage);
             mainServer.Emit("chatSent", msg.ToJson());
         }
+
+        public void EnterMarket(PlayerModel player)
+        {
+            Message msg = new Message();
+            msg.body.Add("player", player);
+            mainServer.Emit("playerEnterMarket", msg.ToJson());
+        }
     }
 }
 

@@ -26,7 +26,6 @@ namespace Infrastructure.Core.Star
             starsList = new Dictionary<string, StarModel>();
             mainServer.On("updateResourceAmount", this.OnUpdateResourceAmount);
             mainServer.On("updateStarsList", this.OnUpdateStarsList);
-            mainServer.On("loginResponse", this.OnLogin);
         }
 
 
@@ -53,13 +52,6 @@ namespace Infrastructure.Core.Star
         {
             UpdateStarsListEvent updateStarsListEvent = JsonConvert.DeserializeObject<UpdateStarsListEvent>(e.data.ToString());
             this.starsList = updateStarsListEvent.starsList;
-        }
-
-        protected void OnLogin(SocketIOEvent e)
-        {
-            //Debug.Log("LoginService: OnLogin() - Invoked");
-            LoginSuccessfulEvent loginSuccessfulEvent = JsonConvert.DeserializeObject<LoginSuccessfulEvent>(e.data);
-            this.starsList = loginSuccessfulEvent.starsList;
         }
     }
 }
