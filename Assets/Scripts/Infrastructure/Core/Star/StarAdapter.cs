@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Infrastructure.Core.Resource;
+﻿using System.Collections.Generic;
 using Infrastructure.Base.Service;
-using UnityEngine;
 using Infrastructure.Core.Network;
-using UnitySocketIO;
 using Infrastructure.Core.Star.Events;
 using Infrastructure.Base.Event;
 using Newtonsoft.Json;
 using UnitySocketIO.Events;
-using Infrastructure.Core.Login.Events;
 
 namespace Infrastructure.Core.Star
 {
@@ -43,8 +38,7 @@ namespace Infrastructure.Core.Star
 
         protected void OnUpdateResourceAmount(SocketIOEvent e)
         {
-            UpdateResourceAmountEvent updateResourceAmountEvent = JsonConvert.DeserializeObject<UpdateResourceAmountEvent>(e.data.ToString());
-            starsList[updateResourceAmountEvent.starName].resourceList[updateResourceAmountEvent.resourceName].amount = updateResourceAmountEvent.newAmount;
+            UpdateResourceAmountEvent updateResourceAmountEvent = JsonConvert.DeserializeObject<UpdateResourceAmountEvent>(e.data);
             eventManager.DispatchEvent<UpdateResourceAmountEvent>(updateResourceAmountEvent);
         }
 

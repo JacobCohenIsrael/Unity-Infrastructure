@@ -132,21 +132,17 @@ namespace Infrastructure.Core.Player
             eventManager.DispatchEvent<PlayerOrbitStarEvent>(playerOrbitStarEvent);
         }
 
-        public void BuyResource(PlayerModel player, string resourceName)
+        public void BuyResource(PlayerModel player, ResourceSlotModel resourceSlot)
         {
-            StarModel star = starService.GetStarByName(player.currentNodeName);
-            ResourceSlotModel resourceSlot = star.resourceList[resourceName];
             if (player.credits >= resourceSlot.buyPrice)
             {
                 playerAdapter.BuyResource(player, resourceSlot);
             }
         }
 
-        public void SellResource(PlayerModel player, string resourceName)
+        public void SellResource(PlayerModel player, ResourceSlotModel resourceSlot)
         {
-            StarModel star = starService.GetStarByName(player.currentNodeName);
-            ResourceSlotModel resourceSlot = star.resourceList[resourceName];
-            playerAdapter.SellResource(player, resourceSlot);
+            playerAdapter.SellResource(player, resourceSlot); 
         }
 
         protected void OnPlayerBoughtResource(SocketIOEvent e)

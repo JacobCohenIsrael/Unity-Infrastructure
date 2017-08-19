@@ -63,12 +63,12 @@ namespace CWO.Market
 
         protected void OnBuyResourceClicked()
         {
-            playerService.BuyResource(playerController.player, selectedResourceSlotRef.resourceSlot.name);
+            playerService.BuyResource(playerController.player, selectedResourceSlotRef.resourceSlot);
         }
 
         protected void OnSellResourceClicked()
         {
-            playerService.SellResource(playerController.player, selectedResourceSlotRef.resourceSlot.name);
+            playerService.SellResource(playerController.player, selectedResourceSlotRef.resourceSlot);
         }
 
         public void SetSelectedResourceSlot(ResourceSlotController resourceSlotRef)
