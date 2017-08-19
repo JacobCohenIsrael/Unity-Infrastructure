@@ -44,7 +44,6 @@ namespace Infrastructure.Core.Login
 
         public void OnLogin(SocketIOEvent e)
         {
-            //Debug.Log("LoginService: OnLogin() - Invoked");
             LoginSuccessfulEvent loginSuccessfulEvent = JsonConvert.DeserializeObject<LoginSuccessfulEvent>(e.data);
             PlayerModel player = loginSuccessfulEvent.player;
             Dictionary<string, StarModel> starsList = loginSuccessfulEvent.starsList;

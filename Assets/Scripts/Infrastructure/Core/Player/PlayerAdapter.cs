@@ -17,10 +17,10 @@ namespace Infrastructure.Core.Player
             mainServer = serviceManager.get<MainServer>() as MainServer;
         }
 
-        public void LoginAsGuest(string sessionId)
+        public void LoginAsGuest(string token)
         {
             Message msg = new Message();
-            msg.body.Add("player", new PlayerModel(){sessionId = sessionId});
+            msg.body.Add("request", new LoginRequestModel { Token = token });
             mainServer.Emit("login", msg.ToJson());
         }
 
