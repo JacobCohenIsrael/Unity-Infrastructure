@@ -1,14 +1,13 @@
-﻿using System;
-using Infrastructure.Core.Star;
+﻿using Infrastructure.Core.Node;
 
 namespace Infrastructure.Core.Player.Events
 {
-    public class PlayerOrbitStarEvent : Infrastructure.Base.Event.Event
+    public class PlayerOrbitStarEvent : Base.Event.Event
     {
-        public StarModel star;
-        public PlayerOrbitStarEvent(StarModel star)
+        public NodeModel node;
+        public PlayerOrbitStarEvent(NodeModel node)
         {
-            this.star = star;
+            this.node = node;
         }
     }
 }

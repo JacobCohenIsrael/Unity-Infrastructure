@@ -7,17 +7,18 @@ using Newtonsoft.Json;
 using UnitySocketIO.Events;
 using Infrastructure.Core.Chat;
 using Infrastructure.Core.Chat.Events;
+using Infrastructure.Core.Node;
 using Infrastructure.Core.Star;
-using NUnit.Framework;
 
 namespace Infrastructure.Core.Player
 {
     public class PlayerService : Base.Service.Contracts.IServiceProvider
     {
-        StarService starService;
-        PlayerAdapter playerAdapter;
-        EventManager eventManager;
-        MainServer mainServer;
+        protected StarService starService;
+        protected NodeService nodeService;
+        protected PlayerAdapter playerAdapter;
+        protected EventManager eventManager;
+        protected MainServer mainServer;
 
         public PlayerService(ServiceManager serviceManager)
         {
@@ -36,6 +37,7 @@ namespace Infrastructure.Core.Player
         protected void getDependencies(ServiceManager serviceManager)
         {
             starService = serviceManager.get<StarService>() as StarService;
+            nodeService = serviceManager.get <NodeService>() as NodeService;
             playerAdapter = serviceManager.get<PlayerAdapter>() as PlayerAdapter;
             eventManager = serviceManager.get<EventManager>() as EventManager;
             mainServer = serviceManager.get<MainServer>() as MainServer;
@@ -51,6 +53,7 @@ namespace Infrastructure.Core.Player
             mainServer.On("playerLeftLounge", this.OnPlayerLeftLounge);
             mainServer.On("chatMessageReceived", this.OnChatMessageReceived);
             mainServer.On("playerEnteredMarket", this.OnPlayerEnteredMarket);
+            mainServer.On("playerJumpedToNode", this.OnPlayerJumpedToNode);
         }
 
         private void OnPlayerEnteredMarket(SocketIOEvent e)
@@ -64,28 +67,9 @@ namespace Infrastructure.Core.Player
             playerAdapter.LoginAsGuest(sessionId);
         }
 
-        public void jumpPlayerToStar(PlayerModel player, StarModel star)
+        public void JumpPlayerToNode(PlayerModel player, NodeModel node)
         {
-            float distance = starService.CalculateDistanceBetweenStars(starService.GetStarByName(player.currentNodeName), star);
-            float engineJumpDistance = player.getActiveShip().getShipJumpDistance();
-            if (distance > engineJumpDistance)
-            {
-                throw new UnityEngine.UnityException("Player Engines are not strong enough to jump there directly");
-            }
-
-            if (player.getActiveShip().currentEnergyAmount < 10)
-            {
-                throw new UnityEngine.UnityException("Insufficient Energy for a jump");
-            }
-
-            if (playerAdapter.JumpPlayerToStar(player, star))
-            {
-                player.currentNodeName = star.name;
-                PlayerJumpedToStarEvent playerJumpedToStarEvent = new PlayerJumpedToStarEvent(player, star);
-                eventManager.DispatchEvent<PlayerJumpedToStarEvent>(playerJumpedToStarEvent);
-                OrbitPlayerOnStar(player, star);
-            }
-
+            playerAdapter.JumpPlayerToNode(player, node);
         }
 
         public void SendChat(PlayerModel player, string chatMessage, string chatRoomKey)
@@ -103,9 +87,7 @@ namespace Infrastructure.Core.Player
 
         public void LandPlayerOnStar(PlayerModel player)
         {
-            if (playerAdapter.LandPlayerOnStar(player))
-            {
-            }
+            playerAdapter.LandPlayerOnStar(player);
         }
 
         public void DepartPlayerFromStar(PlayerModel player)
@@ -126,9 +108,9 @@ namespace Infrastructure.Core.Player
             eventManager.DispatchEvent<PlayerExitMarketEvent>(playerExitMarketEvent);
         }
 
-        public void OrbitPlayerOnStar(PlayerModel player, StarModel star)
+        public void OrbitPlayerOnStar(PlayerModel player, NodeModel node)
         {
-            PlayerOrbitStarEvent playerOrbitStarEvent = new PlayerOrbitStarEvent(star);
+            PlayerOrbitStarEvent playerOrbitStarEvent = new PlayerOrbitStarEvent(node);
             eventManager.DispatchEvent<PlayerOrbitStarEvent>(playerOrbitStarEvent);
         }
 
@@ -186,6 +168,12 @@ namespace Infrastructure.Core.Player
         {
             ChatMessageReceivedEvent cmre = JsonConvert.DeserializeObject<ChatMessageReceivedEvent>(e.data);
             eventManager.DispatchEvent<ChatMessageReceivedEvent>(cmre);
+        }
+        
+        protected void OnPlayerJumpedToNode(SocketIOEvent e)
+        {
+            var pjtne = JsonConvert.DeserializeObject<PlayerJumpedToNodeEvent>(e.data);
+            eventManager.DispatchEvent(pjtne);
         }
     }
 }

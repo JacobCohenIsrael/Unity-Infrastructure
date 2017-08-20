@@ -5,6 +5,7 @@ using UnitySocketIO.Events;
 using Infrastructure.Core.Player.Events;
 using Newtonsoft.Json;
 using System;
+using UnityEngine;
 
 namespace Infrastructure.Core.Node
 {
@@ -36,6 +37,11 @@ namespace Infrastructure.Core.Node
         {
             ShipEnteredNodeEvent sene = JsonConvert.DeserializeObject<ShipEnteredNodeEvent>(e.data);
             eventManager.DispatchEvent<ShipEnteredNodeEvent>(sene);
+        }
+        
+        public float CalculateDistanceBetweenNodes(NodeModel from, NodeModel to)
+        {
+            return Mathf.Round((Mathf.Sqrt(Mathf.Pow(Mathf.Abs(from.coordX - to.coordX), 2) + Mathf.Pow(Mathf.Abs(from.coordY - to.coordY), 2) )));
         }
     }
 }

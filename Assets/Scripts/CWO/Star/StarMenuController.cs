@@ -68,9 +68,8 @@ namespace CWO.Star
 
         protected void OnPlayerLandOnStar(PlayerLandOnStarEvent e)
         {
-            StarModel star = starService.GetStarByName(e.player.currentNodeName);
-            welcomeText.text = "Welcome to " + star.name;
-            if (e.player.homePlanetName == star.name)
+            welcomeText.text = "Welcome to " + e.player.currentNodeName;
+            if (e.player.homePlanetName == e.player.currentNodeName)
             {
                 hangerButton.gameObject.SetActive(true);
             }

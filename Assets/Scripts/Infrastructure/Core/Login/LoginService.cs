@@ -38,14 +38,14 @@ namespace Infrastructure.Core.Login
 
         public void Logout()
         {
-            eventManager.DispatchEvent<Events.LogoutSuccessfulEvent>(new Events.LogoutSuccessfulEvent());
+            eventManager.DispatchEvent(new LogoutSuccessfulEvent());
         }
 
 
         public void OnLogin(SocketIOEvent e)
         {
             LoginSuccessfulEvent loginSuccessfulEvent = JsonConvert.DeserializeObject<LoginSuccessfulEvent>(e.data);
-            eventManager.DispatchEvent<Events.LoginSuccessfulEvent>(loginSuccessfulEvent);
+            eventManager.DispatchEvent(loginSuccessfulEvent);
         }
     }
 }

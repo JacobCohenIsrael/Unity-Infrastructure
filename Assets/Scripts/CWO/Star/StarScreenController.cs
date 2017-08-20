@@ -41,13 +41,13 @@ namespace CWO.Star
             eventManager.AddListener<ShipLeftNodeEvent>(this.onShipLeftNode);
             eventManager.AddListener<PlayerDepartFromStarEvent>(this.onShipDeparted);
             eventManager.AddListener<PlayerLandOnStarEvent>(this.onShipLanded);
-            eventManager.AddListener<PlayerJumpedToStarEvent>(this.onPlayerJumpToStar);
+            eventManager.AddListener<PlayerJumpedToNodeEvent>(this.onPlayerJumpToStar);
 
             jumpButton.onClick.AddListener(() => { this.onJump(); });
             landButton.onClick.AddListener(() => { this.onLand(); });
         }
 
-        private void onPlayerJumpToStar(PlayerJumpedToStarEvent e)
+        private void onPlayerJumpToStar(PlayerJumpedToNodeEvent e)
         {
             cleanShipGrid();
         }

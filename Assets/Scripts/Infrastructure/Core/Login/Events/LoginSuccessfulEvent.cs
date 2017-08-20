@@ -1,19 +1,26 @@
-﻿using Infrastructure.Core.Player;
-using Infrastructure.Core.Star;
+﻿using System.Collections.Generic;
+using Infrastructure.Core.Node;
+using Infrastructure.Core.Player;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace Infrastructure.Core.Login.Events
 {
-    public class LoginSuccessfulEvent : Infrastructure.Base.Event.Event
+    public class LoginSuccessfulEvent : Base.Event.Event
     {
         [JsonProperty("player")]
-        private PlayerModel m_player;
+        private PlayerModel _player;
 
-        public PlayerModel Player {
-            get { return this.m_player; }
-            set { this.m_player = value; }
+        public PlayerModel Player 
+        {
+            get { return _player; }
+            set { _player = value; }
         }
+
+        [JsonProperty("node")]
+        public NodeModel Node;
+
+        [JsonProperty("nodesCoords")]
+        public Dictionary<string, NodeModel> NodesCoords;
     }
 }
 

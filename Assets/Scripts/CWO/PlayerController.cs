@@ -25,7 +25,7 @@ namespace CWO
             application = App.getInstance();
             EventManager eventManager = application.eventManager;
             eventManager.AddListener<LoginSuccessfulEvent>(this.OnLoginSuccessful);
-            eventManager.AddListener<PlayerJumpedToStarEvent>(this.OnPlayJumpToStar);
+            eventManager.AddListener<PlayerJumpedToNodeEvent>(this.OnPlayJumpToNode);
             eventManager.AddListener<PlayerLandOnStarEvent>(this.OnPlayLandOnStar);
             eventManager.AddListener<PlayerDepartFromStarEvent>(this.OnPlayerDepartFromStar);
             eventManager.AddListener<PlayerBoughtResourceEvent>(this.OnPlayerBoughtResource);
@@ -53,9 +53,9 @@ namespace CWO
             playerLoaded = true;
         }
 
-        protected void OnPlayJumpToStar(PlayerJumpedToStarEvent e)
+        protected void OnPlayJumpToNode(PlayerJumpedToNodeEvent e)
         {
-            player.currentNodeName = e.star.name;
+            player.currentNodeName = e.node.name;
         }
 
         protected void OnPlayLandOnStar(PlayerLandOnStarEvent e)

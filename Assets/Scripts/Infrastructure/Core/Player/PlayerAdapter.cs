@@ -3,6 +3,7 @@ using Infrastructure.Core.Resource;
 using Infrastructure.Core.Network;
 using UnityEngine;
 using Infrastructure.Core.Chat;
+using Infrastructure.Core.Node;
 using Infrastructure.Core.Star;
 
 namespace Infrastructure.Core.Player
@@ -24,23 +25,22 @@ namespace Infrastructure.Core.Player
             mainServer.Emit("login", msg.ToJson());
         }
 
-        public bool JumpPlayerToStar(PlayerModel player, StarModel star)
+        public void JumpPlayerToNode(PlayerModel player, NodeModel node)
         {
-            if (player.currentNodeName == star.name)
+            if (player.currentNodeName != node.name)
             {
-                return false;
+                Message msg = new Message();
+                msg.body.Add("player", player);
+                msg.body.Add("node", node);
+                mainServer.Emit("jumpPlayerToNode", msg.ToJson());
             }
-            Message msg = new Message();
-            msg.body.Add("player", player);
-            msg.body.Add("star", star);
-            mainServer.Emit("jumpPlayerToStar", msg.ToJson());
-            return true;
         }
 
-        public bool LandPlayerOnStar(PlayerModel player)
+        public void LandPlayerOnStar(PlayerModel player)
         {
-            mainServer.Emit("landPlayerOnStar", new JSONObject(JsonUtility.ToJson(player)));
-            return true;
+            Message msg = new Message();
+            msg.body.Add("player", player);
+            mainServer.Emit("landPlayerOnStar", msg.ToJson());
         }
 
         public bool DepartPlayerFromStar(PlayerModel player)
