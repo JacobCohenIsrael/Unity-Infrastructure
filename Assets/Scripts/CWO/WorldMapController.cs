@@ -14,9 +14,6 @@ namespace CWO
 	public class WorldMapController : BaseUIObject 
 	{
 		[SerializeField]
-		private GameObject _starPrefab;
-		
-		[SerializeField]
 		private GameObject _nodePrefab;
 		
 		[SerializeField]
@@ -51,8 +48,11 @@ namespace CWO
 		{
 			foreach(var entry in e.NodesCoords)
 			{
-				var nodePosition = new Vector3(entry.Value.coordX, entry.Value.coordY, 0);
-				var instantiatedPrefab = Instantiate(entry.Value.HasStar() ? _starPrefab : _nodePrefab, _nodeSpawn);
+                Texture2D texture = UnityEngine.Resources.Load("Sprites/Nodes/" + entry.Value.Sprite) as Texture2D;
+                Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                var nodePosition = new Vector3(entry.Value.coordX, entry.Value.coordY, 0);
+				var instantiatedPrefab = Instantiate(_nodePrefab, _nodeSpawn);
+                instantiatedPrefab.GetComponent<SpriteRenderer>().sprite = sprite;
 				var nodeController = instantiatedPrefab.GetComponent<NodeController>();
 				nodeController.transform.position = nodePosition;
 				nodeController.Node = entry.Value;

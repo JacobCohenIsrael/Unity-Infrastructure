@@ -13,6 +13,9 @@ namespace Infrastructure.Core.Node
         public float coordX;
         public float coordY;
 
+        [JsonProperty("sprite")]
+        public string Sprite;
+
         [JsonProperty("star")]
         public StarModel star;
 
