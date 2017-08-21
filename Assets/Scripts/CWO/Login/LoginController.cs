@@ -10,9 +10,9 @@ namespace CWO.Login
     public class LoginController : BaseUIObject
     {
         #if UNITY_EDITOR 
-        public const string loginSessionId = "editorSessionId";
+        public const string loginToken = "editorToken";
         #else
-        public const string loginSessionId = "sessionId";
+        public const string loginSessionId = "token";
         #endif
         public Button loginSubmitButton;
 
@@ -20,8 +20,8 @@ namespace CWO.Login
 
         protected override void SubscribeToEvents(SubscribeEvent e)
         {
-            application.eventManager.AddListener<LoginSuccessfulEvent>(this.OnLoginSuccessful);
-            loginSubmitButton.onClick.AddListener(() => { this.OnSubmit(); });
+            application.eventManager.AddListener<LoginSuccessfulEvent>(OnLoginSuccessful);
+            loginSubmitButton.onClick.AddListener(OnSubmit);
             loginService = application.serviceManager.get<LoginService>() as LoginService;
             Hide();
         }
@@ -33,7 +33,7 @@ namespace CWO.Login
 
         void OnLoginSuccessful(LoginSuccessfulEvent e)
         {
-            PlayerPrefs.SetString(loginSessionId, e.Player.token);
+            PlayerPrefs.SetString(loginToken, e.Player.token);
             PlayerPrefs.SetInt("playerId", e.Player.id);
             PlayerPrefs.Save();
         }

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Infrastructure.Core.Login.Events;
 using Implementation.Views.Screen;
 using UnityEngine.UI;
 using Infrastructure.Core.Player.Events;
@@ -9,7 +8,6 @@ using Infrastructure.Core.Node;
 using Infrastructure.Core.Ship;
 using System.Collections.Generic;
 using CWO.Ship;
-using System;
 
 namespace CWO.Star
 {
@@ -27,7 +25,7 @@ namespace CWO.Star
 
         protected Dictionary<int, ShipModel> shipsInSpace;
 
-        void Start()
+        private void Start()
         {
             playerService = application.serviceManager.get<PlayerService>() as PlayerService;
             nodeService = application.serviceManager.get<NodeService>() as NodeService;
@@ -36,15 +34,15 @@ namespace CWO.Star
 
         protected override void SubscribeToEvents(SubscribeEvent e)
         {
-            eventManager.AddListener<PlayerOrbitStarEvent>(this.onPlayerEnterStar);
-            eventManager.AddListener<ShipEnteredNodeEvent>(this.onShipEnteredNode);
-            eventManager.AddListener<ShipLeftNodeEvent>(this.onShipLeftNode);
-            eventManager.AddListener<PlayerDepartFromStarEvent>(this.onShipDeparted);
-            eventManager.AddListener<PlayerLandOnStarEvent>(this.onShipLanded);
-            eventManager.AddListener<PlayerJumpedToNodeEvent>(this.onPlayerJumpToStar);
+            eventManager.AddListener<PlayerEnteredNodeSpaceEvent>(onPlayerEnterNodeSpace);
+            eventManager.AddListener<ShipEnteredNodeEvent>(onShipEnteredNode);
+            eventManager.AddListener<ShipLeftNodeEvent>(onShipLeftNode);
+            eventManager.AddListener<PlayerDepartFromStarEvent>(onShipDeparted);
+            eventManager.AddListener<PlayerLandOnStarEvent>(onShipLanded);
+            eventManager.AddListener<PlayerJumpedToNodeEvent>(onPlayerJumpToStar);
 
-            jumpButton.onClick.AddListener(() => { this.onJump(); });
-            landButton.onClick.AddListener(() => { this.onLand(); });
+            jumpButton.onClick.AddListener(onJump);
+            landButton.onClick.AddListener(onLand);
         }
 
         private void onPlayerJumpToStar(PlayerJumpedToNodeEvent e)
@@ -56,10 +54,10 @@ namespace CWO.Star
         {
             foreach (RectTransform child in shipsGrid)
             {
-                ShipInSpaceController shipInSpaceController = child.gameObject.GetComponent<ShipInSpaceController>();
+                var shipInSpaceController = child.gameObject.GetComponent<ShipInSpaceController>();
                 if (shipInSpaceController.PlayerId == e.PlayerId)
                 {
-                    GameObject.Destroy(child.gameObject);
+                    Destroy(child.gameObject);
                 }
 
 
@@ -70,7 +68,7 @@ namespace CWO.Star
         {
             foreach (RectTransform child in shipsGrid)
             {
-                GameObject.Destroy(child.gameObject);
+                Destroy(child.gameObject);
             }
         }
 
@@ -81,13 +79,12 @@ namespace CWO.Star
 
         private void onShipDeparted(PlayerDepartFromStarEvent e)
         {
-            foreach (KeyValuePair<int, ShipModel> entry in e.NodeSpace.ships)
+            foreach (var entry in e.NodeSpace.ships)
             {
-                GameObject instantiatedShip;
-                instantiatedShip = Instantiate(shipPrefab, shipsGrid);
-                ShipInSpaceController shipInSpaceController = instantiatedShip.GetComponent<ShipInSpaceController>();
-                Texture2D texture = UnityEngine.Resources.Load("Sprites/Ships/" + entry.Value.GetShipType() + "/" + entry.Value.GetShipClass()) as Texture2D;
-                Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                var instantiatedShip = Instantiate(shipPrefab, shipsGrid);
+                var shipInSpaceController = instantiatedShip.GetComponent<ShipInSpaceController>();
+                var texture = UnityEngine.Resources.Load("Sprites/Ships/" + entry.Value.GetShipType() + "/" + entry.Value.GetShipClass()) as Texture2D;
+                var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
                 shipInSpaceController.PlayerId = entry.Key;
                 shipInSpaceController.ShipImage.sprite = sprite;
             }
@@ -95,32 +92,31 @@ namespace CWO.Star
 
         private void onShipEnteredNode(ShipEnteredNodeEvent e)
         {
-            GameObject instantiatedShip;
-            instantiatedShip = Instantiate(shipPrefab, shipsGrid);
-            ShipInSpaceController shipInSpaceController = instantiatedShip.GetComponent<ShipInSpaceController>();
-            Texture2D texture = UnityEngine.Resources.Load("Sprites/Ships/" + e.ShipModel.GetShipType() + "/" + e.ShipModel.GetShipClass()) as Texture2D;
-            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            var instantiatedShip = Instantiate(shipPrefab, shipsGrid);
+            var shipInSpaceController = instantiatedShip.GetComponent<ShipInSpaceController>();
+            var texture = UnityEngine.Resources.Load("Sprites/Ships/" + e.ShipModel.GetShipType() + "/" + e.ShipModel.GetShipClass()) as Texture2D;
+            var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
             shipInSpaceController.PlayerId = e.PlayerId;
             shipInSpaceController.ShipImage.sprite = sprite;
             shipInSpaceController.PlayerId = e.PlayerId;
         }
 
-        private void onPlayerEnterStar(PlayerOrbitStarEvent e)
+        private void onPlayerEnterNodeSpace(PlayerEnteredNodeSpaceEvent e)
         {
 
         }
 
         private void onJump()
         {
-            PlayerModel player = playerController.player;
+            var player = playerController.player;
             if (null == player.getActiveShip())
             {
                 throw new UnityException("Player must have a ship to jump");
             }
             if (player.getActiveShip().GetCurrentHullAmount() > 0)
             {
-                PlayerJumpEvent playerJumpEvent = new PlayerJumpEvent(player);
-                application.eventManager.DispatchEvent<PlayerJumpEvent>(playerJumpEvent);
+                var playerJumpEvent = new PlayerJumpEvent(player);
+                application.eventManager.DispatchEvent(playerJumpEvent);
             }
             else
             {
@@ -130,7 +126,7 @@ namespace CWO.Star
 
         private void onLand()
         {
-            PlayerModel player = playerController.player;
+            var player = playerController.player;
             playerService.LandPlayerOnStar(player);
         }
 

@@ -29,10 +29,10 @@ namespace CWO
         {
             EntryMenu,
             WorldMap,
-            StarOrbit,
+            NodeSpace,
             StarMenu,
             MarketMenu,
-            Lounge,
+            Lounge
         }
 
         protected App application;
@@ -46,7 +46,7 @@ namespace CWO
             eventManager.AddListener<ApplicationFinishedLoadingEvent>(this.OnApplicationReady);
             eventManager.AddListener<LoginSuccessfulEvent>(this.OnLoginSuccessful);
             eventManager.AddListener<LogoutSuccessfulEvent>(this.OnLogoutSuccessful);
-            eventManager.AddListener<PlayerOrbitStarEvent>(this.OnPlayerOrbitStar);
+            eventManager.AddListener<PlayerEnteredNodeSpaceEvent>(this.OnPlayerEnterNodeSpace);
             eventManager.AddListener<PlayerJumpEvent>(this.OnPlayerJump);
             eventManager.AddListener<PlayerLandOnStarEvent>(this.OnPlayerLandOnStar);
             eventManager.AddListener<PlayerDepartFromStarEvent>(this.OnPlayerExitStarMenu);
@@ -59,11 +59,11 @@ namespace CWO
         void OnApplicationReady(ApplicationFinishedLoadingEvent e) 
         {
             ChangeState(GameState.EntryMenu);
-            if ( PlayerPrefs.HasKey(LoginController.loginSessionId) )
+            if ( PlayerPrefs.HasKey(LoginController.loginToken) )
             {
                 Debug.Log("Session Id Found");
                 LoginService loginService =  application.serviceManager.get<LoginService>() as LoginService;
-                loginService.LoginAsGuest(PlayerPrefs.GetString(LoginController.loginSessionId));
+                loginService.LoginAsGuest(PlayerPrefs.GetString(LoginController.loginToken));
             }
         }
 
@@ -78,7 +78,7 @@ namespace CWO
             worldMapController.Show();
         }
 
-        void StarOrbitState()
+        void NodeSpaceState()
         {
             hudController.Show();
             starScreenController.Show();
@@ -119,9 +119,9 @@ namespace CWO
             ChangeState(GameState.EntryMenu);
         }
 
-        void OnPlayerOrbitStar(PlayerOrbitStarEvent e)
+        void OnPlayerEnterNodeSpace(PlayerEnteredNodeSpaceEvent e)
         {
-            ChangeState(GameState.StarOrbit);
+            ChangeState(GameState.NodeSpace);
         }
 
         void OnPlayerJump(PlayerJumpEvent e)
@@ -136,7 +136,7 @@ namespace CWO
 
         void OnPlayerExitStarMenu(PlayerDepartFromStarEvent e)
         {
-            ChangeState(GameState.StarOrbit);
+            ChangeState(GameState.NodeSpace);
         }
 
         void OnPlayerEnteredMarket(PlayerEnteredMarketEvent e)

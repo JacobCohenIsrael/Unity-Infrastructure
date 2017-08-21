@@ -2,10 +2,10 @@
 
 namespace Infrastructure.Core.Player.Events
 {
-    public class PlayerOrbitStarEvent : Base.Event.Event
+    public class PlayerEnteredNodeSpaceEvent : Base.Event.Event
     {
         public NodeModel node;
-        public PlayerOrbitStarEvent(NodeModel node)
+        public PlayerEnteredNodeSpaceEvent(NodeModel node)
         {
             this.node = node;
         }

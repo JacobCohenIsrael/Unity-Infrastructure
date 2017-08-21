@@ -5,11 +5,11 @@ namespace Infrastructure.Core.Star
 {
     public class StarService : IServiceProvider
 	{
-        StarAdapter starAdapter;
+        private StarAdapter _starAdapter;
 
 		public StarService(ServiceManager serviceManager)
 		{
-            starAdapter = serviceManager.get<StarAdapter>() as StarAdapter;
+            _starAdapter = serviceManager.get<StarAdapter>() as StarAdapter;
 		}
 	}
 }

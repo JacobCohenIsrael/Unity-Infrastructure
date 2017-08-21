@@ -110,8 +110,8 @@ namespace Infrastructure.Core.Player
 
         public void OrbitPlayerOnStar(PlayerModel player, NodeModel node)
         {
-            PlayerOrbitStarEvent playerOrbitStarEvent = new PlayerOrbitStarEvent(node);
-            eventManager.DispatchEvent<PlayerOrbitStarEvent>(playerOrbitStarEvent);
+            PlayerEnteredNodeSpaceEvent playerEnteredNodeSpaceEvent = new PlayerEnteredNodeSpaceEvent(node);
+            eventManager.DispatchEvent<PlayerEnteredNodeSpaceEvent>(playerEnteredNodeSpaceEvent);
         }
 
         public void BuyResource(PlayerModel player, ResourceSlotModel resourceSlot)
