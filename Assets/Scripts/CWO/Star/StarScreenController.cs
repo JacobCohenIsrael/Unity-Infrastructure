@@ -115,7 +115,7 @@ namespace CWO.Star
             }
             if (player.getActiveShip().GetCurrentHullAmount() > 0)
             {
-                var playerJumpEvent = new PlayerJumpEvent(player);
+                var playerJumpEvent = new PlayerOpenedWorldMap(player);
                 application.eventManager.DispatchEvent(playerJumpEvent);
             }
             else

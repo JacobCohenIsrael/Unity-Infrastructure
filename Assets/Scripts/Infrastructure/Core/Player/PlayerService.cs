@@ -99,19 +99,19 @@ namespace Infrastructure.Core.Player
 
         public void EnterMarket(PlayerModel player)
         {
-            this.playerAdapter.EnterMarket(player);
+            playerAdapter.EnterMarket(player);
         }
             
         public void ExitMarket(PlayerModel player)
         {
             PlayerExitMarketEvent playerExitMarketEvent = new PlayerExitMarketEvent(player);
-            eventManager.DispatchEvent<PlayerExitMarketEvent>(playerExitMarketEvent);
+            eventManager.DispatchEvent(playerExitMarketEvent);
         }
 
-        public void OrbitPlayerOnStar(PlayerModel player, NodeModel node)
+        public void PlayerClosedWorldMap(PlayerModel player, NodeModel node)
         {
             PlayerEnteredNodeSpaceEvent playerEnteredNodeSpaceEvent = new PlayerEnteredNodeSpaceEvent(node);
-            eventManager.DispatchEvent<PlayerEnteredNodeSpaceEvent>(playerEnteredNodeSpaceEvent);
+            eventManager.DispatchEvent(playerEnteredNodeSpaceEvent);
         }
 
         public void BuyResource(PlayerModel player, ResourceSlotModel resourceSlot)

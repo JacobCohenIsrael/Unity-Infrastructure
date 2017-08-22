@@ -47,13 +47,14 @@ namespace CWO
             eventManager.AddListener<LoginSuccessfulEvent>(this.OnLoginSuccessful);
             eventManager.AddListener<LogoutSuccessfulEvent>(this.OnLogoutSuccessful);
             eventManager.AddListener<PlayerEnteredNodeSpaceEvent>(this.OnPlayerEnterNodeSpace);
-            eventManager.AddListener<PlayerJumpEvent>(this.OnPlayerJump);
+            eventManager.AddListener<PlayerOpenedWorldMap>(this.OnPlayerOpenedWorldMap);
             eventManager.AddListener<PlayerLandOnStarEvent>(this.OnPlayerLandOnStar);
             eventManager.AddListener<PlayerDepartFromStarEvent>(this.OnPlayerExitStarMenu);
             eventManager.AddListener<PlayerEnteredMarketEvent>(this.OnPlayerEnteredMarket);
             eventManager.AddListener<PlayerExitMarketEvent>(this.OnPlayerExitMarket);
             eventManager.AddListener<PlayerEnteredLoungeEvent>(this.OnPlayerEnteredLounge);
             eventManager.AddListener<PlayerLeftLoungeEvent>(this.OnPlayerLeftLounge);
+            eventManager.AddListener<PlayerJumpedToNodeEvent>(OnPlayerJumpedToNode);
         }
 
         void OnApplicationReady(ApplicationFinishedLoadingEvent e) 
@@ -74,7 +75,6 @@ namespace CWO
 
         void WorldMapState()
         {
-            hudController.Show();
             worldMapController.Show();
         }
 
@@ -124,7 +124,7 @@ namespace CWO
             ChangeState(GameState.NodeSpace);
         }
 
-        void OnPlayerJump(PlayerJumpEvent e)
+        void OnPlayerOpenedWorldMap(PlayerOpenedWorldMap e)
         {
             ChangeState(GameState.WorldMap);
         }
@@ -157,6 +157,11 @@ namespace CWO
         void OnPlayerLeftLounge(PlayerLeftLoungeEvent e)
         {
             ChangeState(GameState.StarMenu);
+        }
+               
+        private void OnPlayerJumpedToNode(PlayerJumpedToNodeEvent e)
+        {
+            ChangeState(GameState.NodeSpace);
         }
 
         void HideAll()

@@ -21,6 +21,9 @@ namespace Infrastructure.Core.Node
 
         public MarketModel market;
 
+        [JsonProperty("connectedNodes")]
+        public string[] ConnectedNodes;
+
         public bool HasStar()
         {
             return star != null;
