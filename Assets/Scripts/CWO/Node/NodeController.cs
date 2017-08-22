@@ -9,11 +9,16 @@ namespace CWO.Node
 	public class NodeController : BaseUIObject
 	{
 		public Infrastructure.Core.Node.NodeModel Node;
+		
+		public SpriteRenderer ReachableIndicator;
+		
 		private PlayerController _playerController;
 		private PlayerService _playerService;
 		
 		[SerializeField]
 		private Behaviour _halo;
+
+		
 
 		private void Start()
 		{
@@ -28,6 +33,7 @@ namespace CWO.Node
 		{
 			_halo.enabled = Node.name == e.node.name;
 			GetComponent<LineRenderer>().enabled = false;
+			ReachableIndicator.enabled = false;
 		}
 
 		protected override void SubscribeToEvents(SubscribeEvent e)

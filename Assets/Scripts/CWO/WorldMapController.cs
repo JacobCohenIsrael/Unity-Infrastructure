@@ -38,7 +38,16 @@ namespace CWO
         {
 	        eventManager.AddListener<LoginSuccessfulEvent>(onLoginSuccessful);
 	        eventManager.AddListener<PlayerOpenedWorldMap>(OnPlayerJump);
+	        eventManager.AddListener<LogoutSuccessfulEvent>(OnLogoutSuccessful);
         }
+
+		private void OnLogoutSuccessful(LogoutSuccessfulEvent e)
+		{
+			foreach (Transform child in _nodeSpawn)
+			{
+				Destroy(child.gameObject);
+			}
+		}
 
 		private void OnPlayerJump(PlayerOpenedWorldMap e)
 		{
@@ -66,6 +75,7 @@ namespace CWO
 			lineRenderer.enabled = true;
 			lineRenderer.SetPosition(0, new Vector3(connectedNode.coordX, connectedNode.coordY, connectedNodePrefab.transform.position.z));
 			lineRenderer.SetPosition(1, new Vector3(currentNode.coordX, currentNode.coordY, connectedNodePrefab.transform.position.z));
+			connectedNodePrefab.GetComponent<NodeController>().ReachableIndicator.enabled = true;
 		}
 
 		private void onLoginSuccessful(LoginSuccessfulEvent e)
@@ -80,11 +90,8 @@ namespace CWO
 				var nodeController = instantiatedPrefab.GetComponent<NodeController>();
 				nodeController.transform.position = nodePosition;
 				nodeController.Node = entry.Value;
-				_nodesPrefabsReference.Add(entry.Value.name, instantiatedPrefab);
+				_nodesPrefabsReference[entry.Value.name] = instantiatedPrefab;
 			}
 		}
-		
-		
-		
 	}
 }
