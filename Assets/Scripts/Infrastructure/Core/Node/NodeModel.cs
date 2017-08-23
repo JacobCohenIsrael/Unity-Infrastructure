@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Infrastructure.Core.Market;
 using Infrastructure.Core.Star;
 using Newtonsoft.Json;
@@ -22,7 +23,7 @@ namespace Infrastructure.Core.Node
         public MarketModel market;
 
         [JsonProperty("connectedNodes")]
-        public string[] ConnectedNodes;
+        public Dictionary<string, ConnectedNodeModel> ConnectedNodes;
 
         public bool HasStar()
         {

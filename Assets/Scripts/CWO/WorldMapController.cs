@@ -55,9 +55,9 @@ namespace CWO
 			setCameraPosition(playerNode.coordX, playerNode.coordY);
 			if (playerNode.ConnectedNodes != null)
 			{
-				foreach (string connectedNodeName in playerNode.ConnectedNodes)
+				foreach (var connectedNode in playerNode.ConnectedNodes)
 				{
-					DrawLineBetweenTwoNodes(_nodeService.GetNodeByName(connectedNodeName), playerNode);
+					DrawLineBetweenTwoNodes(_nodeService.GetNodeByName(connectedNode.Key), playerNode);
 				}
 			}
 		}

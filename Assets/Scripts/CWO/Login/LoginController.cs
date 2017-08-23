@@ -12,7 +12,7 @@ namespace CWO.Login
         #if UNITY_EDITOR 
         public const string loginToken = "editorToken";
         #else
-        public const string loginSessionId = "token";
+        public const string loginToken = "token";
         #endif
         public Button loginSubmitButton;
 
