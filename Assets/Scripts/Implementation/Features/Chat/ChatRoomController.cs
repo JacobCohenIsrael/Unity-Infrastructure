@@ -24,8 +24,8 @@ namespace Implementation.Features.Chat
         }
         protected override void SubscribeToEvents(SubscribeEvent e)
         {
-            chatSendButton.onClick.AddListener(() => { this.OnChatSendButtonClicked(); });
-            eventManager.AddListener<ChatMessageReceivedEvent>(this.OnChatMessageReceived);
+            chatSendButton.onClick.AddListener(OnChatSendButtonClicked);
+            eventManager.AddListener<ChatMessageReceivedEvent>(OnChatMessageReceived);
         }
 
         protected void OnChatSendButtonClicked()
@@ -37,7 +37,7 @@ namespace Implementation.Features.Chat
             }
             else
             {
-                throw new UnityEngine.UnityException("Must enter text!");
+                throw new UnityException("Must enter text!");
             }
         }
 

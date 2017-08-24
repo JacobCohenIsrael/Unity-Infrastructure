@@ -19,7 +19,7 @@ namespace CWO
         public LoginController loginController;
         public HudController hudController;
         public WorldMapController worldMapController;
-        public StarScreenController starScreenController;
+        public NodeSpaceController NodeSpaceController;
         public StarMenuController starMenuController;
         public MarketMenuController marketMenuController;
         public LoungeController loungeController;
@@ -43,17 +43,17 @@ namespace CWO
         {
             application = App.getInstance();
             eventManager = application.eventManager;
-            eventManager.AddListener<ApplicationFinishedLoadingEvent>(this.OnApplicationReady);
-            eventManager.AddListener<LoginSuccessfulEvent>(this.OnLoginSuccessful);
-            eventManager.AddListener<LogoutSuccessfulEvent>(this.OnLogoutSuccessful);
-            eventManager.AddListener<PlayerEnteredNodeSpaceEvent>(this.OnPlayerEnterNodeSpace);
-            eventManager.AddListener<PlayerOpenedWorldMap>(this.OnPlayerOpenedWorldMap);
-            eventManager.AddListener<PlayerLandOnStarEvent>(this.OnPlayerLandOnStar);
-            eventManager.AddListener<PlayerDepartFromStarEvent>(this.OnPlayerExitStarMenu);
-            eventManager.AddListener<PlayerEnteredMarketEvent>(this.OnPlayerEnteredMarket);
-            eventManager.AddListener<PlayerExitMarketEvent>(this.OnPlayerExitMarket);
-            eventManager.AddListener<PlayerEnteredLoungeEvent>(this.OnPlayerEnteredLounge);
-            eventManager.AddListener<PlayerLeftLoungeEvent>(this.OnPlayerLeftLounge);
+            eventManager.AddListener<ApplicationFinishedLoadingEvent>(OnApplicationReady);
+            eventManager.AddListener<LoginSuccessfulEvent>(OnLoginSuccessful);
+            eventManager.AddListener<LogoutSuccessfulEvent>(OnLogoutSuccessful);
+            eventManager.AddListener<PlayerEnteredNodeSpaceEvent>(OnPlayerEnterNodeSpace);
+            eventManager.AddListener<PlayerOpenedWorldMap>(OnPlayerOpenedWorldMap);
+            eventManager.AddListener<PlayerLandOnStarEvent>(OnPlayerLandOnStar);
+            eventManager.AddListener<PlayerDepartFromStarEvent>(OnPlayerExitStarMenu);
+            eventManager.AddListener<PlayerEnteredMarketEvent>(OnPlayerEnteredMarket);
+            eventManager.AddListener<PlayerExitMarketEvent>(OnPlayerExitMarket);
+            eventManager.AddListener<PlayerEnteredLoungeEvent>(OnPlayerEnteredLounge);
+            eventManager.AddListener<PlayerLeftLoungeEvent>(OnPlayerLeftLounge);
             eventManager.AddListener<PlayerJumpedToNodeEvent>(OnPlayerJumpedToNode);
         }
 
@@ -62,7 +62,7 @@ namespace CWO
             ChangeState(GameState.EntryMenu);
             if ( PlayerPrefs.HasKey(LoginController.loginToken) )
             {
-                Debug.Log("Session Id Found");
+                Debug.Log("Login Token Found");
                 LoginService loginService =  application.serviceManager.get<LoginService>() as LoginService;
                 loginService.LoginAsGuest(PlayerPrefs.GetString(LoginController.loginToken));
             }
@@ -81,7 +81,7 @@ namespace CWO
         void NodeSpaceState()
         {
             hudController.Show();
-            starScreenController.Show();
+            NodeSpaceController.Show();
         }
 
         public void StarMenuState()
@@ -111,7 +111,14 @@ namespace CWO
 
         void OnLoginSuccessful(LoginSuccessfulEvent e)
         {
-            ChangeState(GameState.StarMenu);
+            if (e.Player.isLanded)
+            {
+                ChangeState(GameState.StarMenu);
+            }
+            else
+            {
+                ChangeState(GameState.NodeSpace);
+            } 
         }
 
         void OnLogoutSuccessful(LogoutSuccessfulEvent e)
@@ -169,7 +176,7 @@ namespace CWO
             loginController.Hide();
             worldMapController.Hide();
             hudController.Hide();
-            starScreenController.Hide();
+            NodeSpaceController.Hide();
             starMenuController.Hide();
             marketMenuController.Hide();
             loungeController.Hide();

@@ -13,7 +13,7 @@ namespace CWO.Ship
         public Image ShipImage;
         public Image BackgroundImage;
         public Button SelectShip;
-        public StarScreenController StarScreenController;
+        public NodeSpaceController NodeSpaceController;
 
         protected bool isSelected = false;
 

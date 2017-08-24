@@ -8,6 +8,7 @@ using UnitySocketIO.Events;
 using Infrastructure.Core.Chat;
 using Infrastructure.Core.Chat.Events;
 using Infrastructure.Core.Node;
+using Infrastructure.Core.Notification.Events;
 using Infrastructure.Core.Star;
 
 namespace Infrastructure.Core.Player
@@ -52,8 +53,15 @@ namespace Infrastructure.Core.Player
             mainServer.On("playerEnteredLounge", this.OnPlayerEnteredLounge);
             mainServer.On("playerLeftLounge", this.OnPlayerLeftLounge);
             mainServer.On("chatMessageReceived", this.OnChatMessageReceived);
+            mainServer.On("notificationReceived", OnNotificationReceived);
             mainServer.On("playerEnteredMarket", this.OnPlayerEnteredMarket);
             mainServer.On("playerJumpedToNode", this.OnPlayerJumpedToNode);
+        }
+
+        private void OnNotificationReceived(SocketIOEvent e)
+        {
+            NotificationEvent nre = JsonConvert.DeserializeObject<NotificationEvent>(e.data);
+            eventManager.DispatchEvent(nre);
         }
 
         private void OnPlayerEnteredMarket(SocketIOEvent e)
@@ -119,6 +127,9 @@ namespace Infrastructure.Core.Player
             if (player.credits >= resourceSlot.buyPrice)
             {
                 playerAdapter.BuyResource(player, resourceSlot);
+            }
+            {
+                eventManager.DispatchEvent(new NotificationEvent{ NotificationText = "Not Enough Credits"});
             }
         }
 

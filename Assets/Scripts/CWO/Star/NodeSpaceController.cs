@@ -8,10 +8,11 @@ using Infrastructure.Core.Node;
 using Infrastructure.Core.Ship;
 using System.Collections.Generic;
 using CWO.Ship;
+using Infrastructure.Core.Login.Events;
 
 namespace CWO.Star
 {
-    public class StarScreenController : BaseUIObject {
+    public class NodeSpaceController : BaseUIObject {
 
         public Button jumpButton;
         public Button landButton;
@@ -32,22 +33,45 @@ namespace CWO.Star
             Hide();
         }
 
+        private void PrepareScreen()
+        {
+            if (playerController.player != null && nodeService != null)
+            {
+                if (nodeService.GetNodeByName(playerController.player.currentNodeName).HasStar())
+                {
+                    SetBackground("Sprites/orbitbg");
+                    landButton.gameObject.SetActive(true);
+                }
+                else
+                {
+                    SetBackground("Sprites/emptyNodeBg");
+                    landButton.gameObject.SetActive(false);
+                }
+            }
+        }
+
         protected override void SubscribeToEvents(SubscribeEvent e)
         {
-            eventManager.AddListener<PlayerEnteredNodeSpaceEvent>(onPlayerEnterNodeSpace);
             eventManager.AddListener<ShipEnteredNodeEvent>(onShipEnteredNode);
             eventManager.AddListener<ShipLeftNodeEvent>(onShipLeftNode);
             eventManager.AddListener<PlayerDepartFromStarEvent>(onShipDeparted);
             eventManager.AddListener<PlayerLandOnStarEvent>(onShipLanded);
             eventManager.AddListener<PlayerJumpedToNodeEvent>(onPlayerJumpToStar);
+            eventManager.AddListener<LoginSuccessfulEvent>(OnLoginSuccessful);
 
             jumpButton.onClick.AddListener(onJump);
             landButton.onClick.AddListener(onLand);
         }
 
+        private void OnLoginSuccessful(LoginSuccessfulEvent e)
+        {
+            PrepareScreen();
+        }
+
         private void onPlayerJumpToStar(PlayerJumpedToNodeEvent e)
         {
             cleanShipGrid();
+            PrepareScreen();
         }
 
         private void onShipLeftNode(ShipLeftNodeEvent e)
@@ -79,6 +103,7 @@ namespace CWO.Star
 
         private void onShipDeparted(PlayerDepartFromStarEvent e)
         {
+            PrepareScreen();
             foreach (var entry in e.NodeSpace.ships)
             {
                 var instantiatedShip = Instantiate(shipPrefab, shipsGrid);
@@ -99,11 +124,6 @@ namespace CWO.Star
             shipInSpaceController.PlayerId = e.PlayerId;
             shipInSpaceController.ShipImage.sprite = sprite;
             shipInSpaceController.PlayerId = e.PlayerId;
-        }
-
-        private void onPlayerEnterNodeSpace(PlayerEnteredNodeSpaceEvent e)
-        {
-
         }
 
         private void onJump()
