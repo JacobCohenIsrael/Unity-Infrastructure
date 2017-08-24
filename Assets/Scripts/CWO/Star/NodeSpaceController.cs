@@ -23,6 +23,8 @@ namespace CWO.Star
         protected NodeService nodeService;
         protected PlayerService playerService;
 
+        [SerializeField]
+        private Image _starImage;
 
         protected Dictionary<int, ShipModel> shipsInSpace;
 
@@ -39,13 +41,15 @@ namespace CWO.Star
             {
                 if (nodeService.GetNodeByName(playerController.player.currentNodeName).HasStar())
                 {
-                    SetBackground("Sprites/orbitbg");
-                    landButton.gameObject.SetActive(true);
+                    var node = nodeService.GetNodeByName(playerController.player.currentNodeName);
+                    var texture = UnityEngine.Resources.Load("Sprites/Nodes/" + node.Sprite) as Texture2D;
+                    var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                    _starImage.sprite = sprite;
+                    _starImage.gameObject.SetActive(true);
                 }
                 else
                 {
-                    SetBackground("Sprites/emptyNodeBg");
-                    landButton.gameObject.SetActive(false);
+                    _starImage.gameObject.SetActive(false);
                 }
             }
         }

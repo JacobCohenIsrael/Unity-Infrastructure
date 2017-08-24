@@ -1,17 +1,13 @@
-﻿using System;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
 using Infrastructure.Core.Resource;
-using Implementation.Views.Screen;
-using Infrastructure.Core.Login.Events;
-using Infrastructure.Core.Player.Events;
 using Infrastructure.Core.Player;
 using Infrastructure.Base.Application.Events;
 using Infrastructure.Core.Star.Events;
+using Implementation;
 
 namespace CWO.Market
 {
-    public class ResourceSlotController : BaseUIObject
+    public class ResourceSlotController : InstantiatedMonoBehaviour
     {
         public Text amountText;
         public Text nameText;
@@ -26,40 +22,13 @@ namespace CWO.Market
         void Start()
         {
             playerService = application.serviceManager.get<PlayerService>() as PlayerService;
-            application.eventManager.AddListener<LogoutSuccessfulEvent>(this.OnLogoutSuccessful);
-            application.eventManager.AddListener<PlayerExitMarketEvent>(this.OnPlayerExitMarket);
-            application.eventManager.AddListener<UpdateResourceAmountEvent>(this.OnUpdateResourceAmount);
-            selectResource.onClick.AddListener(() => { this.OnResourceSelected(); });
-        }
-
-        protected override void SubscribeToEvents(SubscribeEvent e)
-        {
-
+            application.eventManager.AddListener<UpdateResourceAmountEvent>(OnUpdateResourceAmount);
+            selectResource.onClick.AddListener(OnResourceSelected);
         }
 
         void OnResourceSelected()
         {
             marketMenuController.SetSelectedResourceSlot(this);
-        }
-            
-        void OnLogoutSuccessful(LogoutSuccessfulEvent e)
-        {
-            Debug.Log("Logout Successful, Destroying Resource Slot");
-            SelfDestruct();
-        }
-
-        void OnPlayerExitMarket(PlayerExitMarketEvent e)
-        {
-            Debug.Log("Exiting Market, Destroying Resource Slot");
-            SelfDestruct();
-        }
-
-        protected void SelfDestruct()
-        {
-            application.eventManager.RemoveListener<LogoutSuccessfulEvent>(this.OnLogoutSuccessful);
-            application.eventManager.RemoveListener<PlayerExitMarketEvent>(this.OnPlayerExitMarket);
-            application.eventManager.RemoveListener<UpdateResourceAmountEvent>(this.OnUpdateResourceAmount);
-            Destroy (gameObject);
         }
 
         protected void OnUpdateResourceAmount(UpdateResourceAmountEvent e)
@@ -69,6 +38,11 @@ namespace CWO.Market
                 resourceSlot.amount = e.newAmount;
                 amountText.text = e.newAmount.ToString();
             }
+        }
+
+        private void OnDestroy()
+        {
+            application.eventManager.RemoveListener<UpdateResourceAmountEvent>(OnUpdateResourceAmount);
         }
     }
 }

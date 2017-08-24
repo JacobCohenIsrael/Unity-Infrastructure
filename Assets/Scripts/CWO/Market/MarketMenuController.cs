@@ -7,6 +7,8 @@ using Infrastructure.Core.Resource;
 using UnityEngine.UI;
 using Infrastructure.Core.Player;
 using Infrastructure.Base.Application.Events;
+using Infrastructure.Core.Login.Events;
+using System;
 
 namespace CWO.Market 
 {
@@ -35,6 +37,12 @@ namespace CWO.Market
             buyButton.onClick.AddListener(OnBuyResourceClicked);
             sellButton.onClick.AddListener(OnSellResourceClicked);
             playerService = application.serviceManager.get<PlayerService>() as PlayerService;
+            eventManager.AddListener<LogoutSuccessfulEvent>(OnLogoutSuccessful);
+        }
+
+        private void OnLogoutSuccessful(LogoutSuccessfulEvent e)
+        {
+            ClearResourceList();
         }
 
         protected void OnMarketOpen(PlayerEnteredMarketEvent e)
@@ -57,7 +65,16 @@ namespace CWO.Market
         protected void OnExit()
         {
             playerService.ExitMarket(playerController.player);
-            DisableMarketButtons();
+            ClearResourceList();
+        }
+
+        private void ClearResourceList()
+        {
+            foreach (Transform child in resourcesPanel)
+            {
+                Destroy(child.gameObject);
+                DisableMarketButtons();
+            }
         }
 
 
