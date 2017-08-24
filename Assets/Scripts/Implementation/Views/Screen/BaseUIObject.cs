@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace Implementation.Views.Screen
 {
-    public abstract class BaseUIObject : BaseMonoBehaviour
+    public abstract class BaseUIObject : HierarchyMonoBehaviour
     {
         public virtual void Show()
         {

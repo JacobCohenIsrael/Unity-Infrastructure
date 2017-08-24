@@ -1,4 +1,5 @@
-﻿using Implementation.Views.Screen;
+﻿using Implementation;
+using Implementation.Views.Screen;
 using Infrastructure.Base.Application.Events;
 using Infrastructure.Core.Player;
 using Infrastructure.Core.Player.Events;
@@ -6,7 +7,7 @@ using UnityEngine;
 
 namespace CWO.Node
 {
-	public class NodeController : BaseUIObject
+	public class NodeController : InstantiatedMonoBehaviour
 	{
 		public Infrastructure.Core.Node.NodeModel Node;
 		
@@ -18,7 +19,17 @@ namespace CWO.Node
 		[SerializeField]
 		private Behaviour _halo;
 
-		
+		void Update () {
+			// Code for OnMouseDown in the iPhone. Unquote to test.
+			RaycastHit hit = new RaycastHit();
+			for (int i = 0; i < Input.touchCount; ++i)
+				if (Input.GetTouch(i).phase.Equals(TouchPhase.Began)) {
+					// Construct a ray from the current touch coordinates
+					Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(i).position);
+					if (Physics.Raycast(ray, out hit))
+						hit.transform.gameObject.SendMessage("OnMouseUp");
+				}
+		}
 
 		private void Start()
 		{
@@ -35,11 +46,6 @@ namespace CWO.Node
 			GetComponent<LineRenderer>().enabled = false;
 			ReachableIndicator.enabled = false;
 		}
-
-		protected override void SubscribeToEvents(SubscribeEvent e)
-        {
-	        
-        }
 
 		private void OnMouseUp()
 		{

@@ -126,7 +126,14 @@ namespace Infrastructure.Core.Player
         {
             if (player.credits >= resourceSlot.buyPrice)
             {
-                playerAdapter.BuyResource(player, resourceSlot);
+                if (resourceSlot.amount > 0)
+                {
+                    playerAdapter.BuyResource(player, resourceSlot);
+                }
+                else
+                {
+                    eventManager.DispatchEvent(new NotificationEvent{ NotificationText = "Resource Depleted"});
+                }
             }
             else
             {
