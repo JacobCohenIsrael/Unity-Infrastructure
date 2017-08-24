@@ -72,7 +72,7 @@ namespace Infrastructure.Core.Player
             {
                 Message msg = new Message();
                 msg.body.Add("player", player);
-                msg.body.Add("resource", new SellResourceModel() { name = resourceSlot.name, amount = 1 });
+                msg.body.Add("resource", new SellResourceModel { name = resourceSlot.name, amount = 1 });
                 mainServer.Emit("playerSellResource", msg.ToJson());
                 return true;
             }

@@ -128,6 +128,7 @@ namespace Infrastructure.Core.Player
             {
                 playerAdapter.BuyResource(player, resourceSlot);
             }
+            else
             {
                 eventManager.DispatchEvent(new NotificationEvent{ NotificationText = "Not Enough Credits"});
             }
@@ -141,44 +142,44 @@ namespace Infrastructure.Core.Player
         protected void OnPlayerBoughtResource(SocketIOEvent e)
         {
             PlayerBoughtResourceEvent pbre = JsonConvert.DeserializeObject<PlayerBoughtResourceEvent>(e.data);
-            eventManager.DispatchEvent<PlayerBoughtResourceEvent>(pbre);
+            eventManager.DispatchEvent(pbre);
         }
 
         protected void OnPlayerSoldResource(SocketIOEvent e)
         {
             PlayerSoldResourceEvent psre = JsonConvert.DeserializeObject<PlayerSoldResourceEvent>(e.data);
-            eventManager.DispatchEvent<PlayerSoldResourceEvent>(psre);
+            eventManager.DispatchEvent(psre);
         }
 
 
         protected void OnPlayerEnteredLounge(SocketIOEvent e)
         {
             PlayerEnteredLoungeEvent pele = JsonConvert.DeserializeObject<PlayerEnteredLoungeEvent>(e.data);
-            eventManager.DispatchEvent<PlayerEnteredLoungeEvent>(pele);
+            eventManager.DispatchEvent(pele);
         }
 
         protected void OnPlayerLeftLounge(SocketIOEvent e)
         {
             PlayerLeftLoungeEvent plle = JsonConvert.DeserializeObject<PlayerLeftLoungeEvent>(e.data);
-            eventManager.DispatchEvent<PlayerLeftLoungeEvent>(plle);
+            eventManager.DispatchEvent(plle);
         }
 
         protected void OnPlayerLanded(SocketIOEvent e)
         {
             PlayerLandOnStarEvent plose = JsonConvert.DeserializeObject<PlayerLandOnStarEvent>(e.data);
-            eventManager.DispatchEvent<PlayerLandOnStarEvent>(plose);
+            eventManager.DispatchEvent(plose);
         }
 
         protected void OnPlayerDepart(SocketIOEvent e)
         {
             PlayerDepartFromStarEvent pde = JsonConvert.DeserializeObject<PlayerDepartFromStarEvent>(e.data);
-            eventManager.DispatchEvent<PlayerDepartFromStarEvent>(pde);
+            eventManager.DispatchEvent(pde);
         }
 
         protected void OnChatMessageReceived(SocketIOEvent e)
         {
             ChatMessageReceivedEvent cmre = JsonConvert.DeserializeObject<ChatMessageReceivedEvent>(e.data);
-            eventManager.DispatchEvent<ChatMessageReceivedEvent>(cmre);
+            eventManager.DispatchEvent(cmre);
         }
         
         protected void OnPlayerJumpedToNode(SocketIOEvent e)

@@ -39,7 +39,7 @@ namespace CWO
         protected EventManager eventManager;
         protected MainServer mainServer;
 
-        void Awake()
+        private void Awake()
         {
             application = App.getInstance();
             eventManager = application.eventManager;
@@ -57,13 +57,13 @@ namespace CWO
             eventManager.AddListener<PlayerJumpedToNodeEvent>(OnPlayerJumpedToNode);
         }
 
-        void OnApplicationReady(ApplicationFinishedLoadingEvent e) 
+        private void OnApplicationReady(ApplicationFinishedLoadingEvent e) 
         {
             ChangeState(GameState.EntryMenu);
             if ( PlayerPrefs.HasKey(LoginController.loginToken) )
             {
                 Debug.Log("Login Token Found");
-                LoginService loginService =  application.serviceManager.get<LoginService>() as LoginService;
+                var loginService =  application.serviceManager.get<LoginService>() as LoginService;
                 loginService.LoginAsGuest(PlayerPrefs.GetString(LoginController.loginToken));
             }
         }

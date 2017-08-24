@@ -17,18 +17,19 @@ namespace CWO
 
         public SocketIOController socketIO;
 
-        void Awake()
+        private void Awake()
         {
+            Screen.orientation = ScreenOrientation.LandscapeLeft;
             Debug.Log("Awaking Setup");
-            Config config = new Config();
+            var config = new Config();
             application = App.getInstance();
             application.serviceManager.setConfig(config);
-            UnityEngine.Application.runInBackground = true;
+            Application.runInBackground = true;
             mainServer = application.serviceManager.get<MainServer>() as MainServer;
             mainServer.SetSocketIO(socketIO);
         }
 
-        void Start()
+        private void Start()
         {
             mainServer.Connect();
             mainServer.On("connect", this.OnConnect);

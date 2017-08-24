@@ -19,21 +19,21 @@ namespace Infrastructure.Core.Login
 
         public LoginService(ServiceManager serviceManager)
         {
-            this.eventManager = serviceManager.get<EventManager>() as EventManager;
-            this.playerService = serviceManager.get<PlayerService>() as PlayerService;
+            eventManager = serviceManager.get<EventManager>() as EventManager;
+            playerService = serviceManager.get<PlayerService>() as PlayerService;
             mainServer = serviceManager.get<MainServer>() as MainServer;
-            mainServer.On("loginResponse", this.OnLogin);
+            mainServer.On("loginResponse", OnLogin);
         }
 
         public void LoginAsGuest()
         {
-            Guid g = Guid.NewGuid();
+            var g = Guid.NewGuid();
             playerService.LoginAsGuest(g.ToString());
         }
 
-        public void LoginAsGuest(string sessionId)
+        public void LoginAsGuest(string token)
         {
-            playerService.LoginAsGuest(sessionId);
+            playerService.LoginAsGuest(token);
         }
 
         public void Logout()

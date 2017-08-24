@@ -30,10 +30,10 @@ namespace CWO.Market
 
         protected override void SubscribeToEvents(SubscribeEvent e)
         {
-            application.eventManager.AddListener<PlayerEnteredMarketEvent>(this.OnMarketOpen);
-            exitButton.onClick.AddListener(() => { this.OnExit(); });
-            buyButton.onClick.AddListener(() => { this.OnBuyResourceClicked(); });
-            sellButton.onClick.AddListener(() => { this.OnSellResourceClicked(); });
+            application.eventManager.AddListener<PlayerEnteredMarketEvent>(OnMarketOpen);
+            exitButton.onClick.AddListener(OnExit);
+            buyButton.onClick.AddListener(OnBuyResourceClicked);
+            sellButton.onClick.AddListener(OnSellResourceClicked);
             playerService = application.serviceManager.get<PlayerService>() as PlayerService;
         }
 
