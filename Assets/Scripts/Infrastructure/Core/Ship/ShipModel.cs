@@ -91,6 +91,16 @@ namespace Infrastructure.Core.Ship
         {
             return shipClass;
         }
+
+        public int GetShipCargoCapacity()
+        {
+            return cachedShipStats.CargoCapacity;
+        }
+
+        public int GetShipCargoHold()
+        {
+            return shipCargo.Sum(x => x.Value);
+        }
     }
 }
 

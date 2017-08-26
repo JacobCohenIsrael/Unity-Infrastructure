@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Infrastructure.Core.Login.Events;
 using Implementation.Views.Screen;
 using UnityEngine.UI;
 using Infrastructure.Core.Login;

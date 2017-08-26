@@ -122,18 +122,11 @@ namespace Infrastructure.Core.Player
             eventManager.DispatchEvent(playerEnteredNodeSpaceEvent);
         }
 
-        public void BuyResource(PlayerModel player, ResourceSlotModel resourceSlot)
+        public void BuyResource(PlayerModel player, ResourceSlotModel resourceSlot, int amount)
         {
             if (player.credits >= resourceSlot.buyPrice)
             {
-                if (resourceSlot.amount > 0)
-                {
-                    playerAdapter.BuyResource(player, resourceSlot);
-                }
-                else
-                {
-                    eventManager.DispatchEvent(new NotificationEvent{ NotificationText = "Resource Depleted"});
-                }
+                playerAdapter.BuyResource(player, resourceSlot, amount);
             }
             else
             {
@@ -141,9 +134,9 @@ namespace Infrastructure.Core.Player
             }
         }
 
-        public void SellResource(PlayerModel player, ResourceSlotModel resourceSlot)
+        public void SellResource(PlayerModel player, ResourceSlotModel resourceSlot, int amount)
         {
-            playerAdapter.SellResource(player, resourceSlot); 
+            playerAdapter.SellResource(player, resourceSlot, amount); 
         }
 
         protected void OnPlayerBoughtResource(SocketIOEvent e)

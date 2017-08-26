@@ -55,7 +55,6 @@ namespace CWO.Market
                 ResourceSlotController resourceSlotController = instantiatedResourceSlot.GetComponent<ResourceSlotController>();
                 resourceSlotController.resourceSlot = resourceSlot.Value;
                 resourceSlotController.nameText.text = resourceSlot.Value.name;
-                resourceSlotController.amountText.text = resourceSlot.Value.amount.ToString();
                 resourceSlotController.resourceImage.color = Color.white;
                 resourceSlotController.resourceImage.sprite = sprite;
                 resourceSlotController.marketMenuController = this;
@@ -80,12 +79,12 @@ namespace CWO.Market
 
         protected void OnBuyResourceClicked()
         {
-            playerService.BuyResource(playerController.player, selectedResourceSlotRef.resourceSlot);
+            playerService.BuyResource(playerController.player, selectedResourceSlotRef.resourceSlot, 1);
         }
 
         protected void OnSellResourceClicked()
         {
-            playerService.SellResource(playerController.player, selectedResourceSlotRef.resourceSlot);
+            playerService.SellResource(playerController.player, selectedResourceSlotRef.resourceSlot, 1);
         }
 
         public void SetSelectedResourceSlot(ResourceSlotController resourceSlotRef)

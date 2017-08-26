@@ -15,6 +15,7 @@ namespace CWO
         public Slider energyBar;
         public Text creditsText;
         public Text cargo;
+        public Text cargoCapacity;
         protected PlayerService playerService;
         protected App application;
         protected float lastRegen;
@@ -44,6 +45,7 @@ namespace CWO
                 ShipRegen();
                 UpdateCredits();
                 UpdateCargo();
+                UpdateCargoCapacity();
             }
         }
             
@@ -92,6 +94,11 @@ namespace CWO
         protected void UpdateCargo()
         {
             cargo.text = "Cagro: " + JsonConvert.SerializeObject(player.getActiveShip().shipCargo);
+        }
+
+        private void UpdateCargoCapacity()
+        {
+            cargoCapacity.text = "Cargo Capacity: " + player.getActiveShip().GetShipCargoHold() + "/" + player.getActiveShip().GetShipCargoCapacity();
         }
 
         protected void OnPlayerBoughtResource(PlayerBoughtResourceEvent e)

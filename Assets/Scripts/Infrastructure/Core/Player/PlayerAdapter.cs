@@ -55,24 +55,24 @@ namespace Infrastructure.Core.Player
             return true;
         }
 
-        public void BuyResource(PlayerModel player, ResourceSlotModel resourceSlot)
+        public void BuyResource(PlayerModel player, ResourceSlotModel resourceSlot, int amount)
         {
             if (player.getActiveShip().AddResource(resourceSlot.name, 1))
             {
                 Message msg = new Message();
                 msg.body.Add("player", player);
-                msg.body.Add("resource", new BuyResourceModel(){name = resourceSlot.name, amount = 1});
+                msg.body.Add("resource", new BuyResourceModel(){name = resourceSlot.name, amount = amount});
                 mainServer.Emit("playerBuyResource", msg.ToJson());
             }
         }
 
-        public bool SellResource(PlayerModel player, ResourceSlotModel resourceSlot)
+        public bool SellResource(PlayerModel player, ResourceSlotModel resourceSlot, int amount)
         {
             if (player.getActiveShip().RemoveResource(resourceSlot.name, 1))
             {
                 Message msg = new Message();
                 msg.body.Add("player", player);
-                msg.body.Add("resource", new SellResourceModel { name = resourceSlot.name, amount = 1 });
+                msg.body.Add("resource", new SellResourceModel { name = resourceSlot.name, amount = amount });
                 mainServer.Emit("playerSellResource", msg.ToJson());
                 return true;
             }
