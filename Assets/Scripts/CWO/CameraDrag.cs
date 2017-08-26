@@ -25,10 +25,10 @@ namespace CWO
 		void Update()
 		{
 			// Zoom
-			float size = Camera.main.orthographicSize;
-			size -= Input.GetAxis("Mouse ScrollWheel") * boundries.sensitivity;
-			size = Mathf.Clamp(size, boundries.minSize, boundries.maxSize);
-			Camera.main.orthographicSize = size;
+			//float size = Camera.main.orthographicSize;
+			//size -= Input.GetAxis("Mouse ScrollWheel") * boundries.sensitivity;
+			//size = Mathf.Clamp(size, boundries.minSize, boundries.maxSize);
+			//Camera.main.orthographicSize = size;
 
 			// Camera Move
 			if(Input.GetMouseButtonDown(0)){
