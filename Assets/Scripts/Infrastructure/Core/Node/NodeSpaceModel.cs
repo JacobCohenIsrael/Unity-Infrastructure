@@ -1,13 +1,17 @@
-﻿using System.Collections;
-using Infrastructure.Core.Ship;
+﻿using Infrastructure.Core.Ship;
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Infrastructure.Core.Player
 {
     [Serializable]
-    public class NodeSpaceModel : Infrastructure.Base.Model.Model
+    public class NodeSpaceModel : Base.Model.Model
     {
-        public Dictionary<int, ShipModel> ships;
+        [JsonProperty("name")]
+        public string Name;
+        
+        [JsonProperty("ships")]
+        public Dictionary<int, ShipModel> Ships;
     }
 }

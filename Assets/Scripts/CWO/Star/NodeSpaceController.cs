@@ -76,6 +76,15 @@ namespace CWO.Star
         {
             cleanShipGrid();
             PrepareScreen();
+            foreach (var entry in e.NodeSpace.Ships)
+            {
+                var instantiatedShip = Instantiate(shipPrefab, shipsGrid);
+                var shipInSpaceController = instantiatedShip.GetComponent<ShipInSpaceController>();
+                var texture = Resources.Load("Sprites/Ships/" + entry.Value.GetShipType() + "/" + entry.Value.GetShipClass()) as Texture2D;
+                var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                shipInSpaceController.PlayerId = entry.Key;
+                shipInSpaceController.ShipImage.sprite = sprite;
+            }
         }
 
         private void onShipLeftNode(ShipLeftNodeEvent e)
@@ -109,7 +118,7 @@ namespace CWO.Star
         {
             PrepareScreen();
             cleanShipGrid();
-            foreach (var entry in e.NodeSpace.ships)
+            foreach (var entry in e.NodeSpace.Ships)
             {
                 var instantiatedShip = Instantiate(shipPrefab, shipsGrid);
                 var shipInSpaceController = instantiatedShip.GetComponent<ShipInSpaceController>();

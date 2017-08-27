@@ -42,7 +42,7 @@ namespace CWO.Node
 
 		private void OnPlayerJumpedToNode(PlayerJumpedToNodeEvent e)
 		{
-			_halo.enabled = Node.name == e.node.name;
+			_halo.enabled = Node.name == e.NodeSpace.Name;
 			GetComponent<LineRenderer>().enabled = false;
 			ReachableIndicator.enabled = false;
 		}

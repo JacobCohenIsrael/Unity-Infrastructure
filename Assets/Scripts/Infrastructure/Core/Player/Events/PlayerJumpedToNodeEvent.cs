@@ -1,15 +1,19 @@
-﻿using Infrastructure.Core.Node;
+﻿using Newtonsoft.Json;
 
 namespace Infrastructure.Core.Player.Events
 {
     public class PlayerJumpedToNodeEvent : Base.Event.Event
     {
-        public PlayerModel player;
-        public NodeModel node;
-        public PlayerJumpedToNodeEvent(PlayerModel player, NodeModel node)
+        [JsonProperty("player")]
+        public PlayerModel Player;
+        
+        [JsonProperty("node")]
+        public NodeSpaceModel NodeSpace;
+        
+        public PlayerJumpedToNodeEvent(PlayerModel player, NodeSpaceModel nodeSpace)
         {
-            this.player = player;
-            this.node = node;
+            Player = player;
+            NodeSpace = nodeSpace;
         }
     }
 }

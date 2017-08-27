@@ -57,7 +57,7 @@ namespace CWO
 
         protected void OnPlayJumpToNode(PlayerJumpedToNodeEvent e)
         {
-            player.currentNodeName = e.node.name;
+            player.currentNodeName = e.NodeSpace.Name;
         }
 
         protected void OnPlayLandOnStar(PlayerLandOnStarEvent e)
