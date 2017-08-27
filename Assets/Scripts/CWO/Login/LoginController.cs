@@ -28,9 +28,18 @@ namespace CWO.Login
 
         public void OnSubmit()
         {
-            string guid = loginService.LoginAsGuest();
-            PlayerPrefs.SetString(loginToken, guid);
-            PlayerPrefs.Save();
+            if (PlayerPrefs.HasKey(LoginController.loginToken))
+            {
+                string token = PlayerPrefs.GetString(LoginController.loginToken);
+                loginService.LoginAsGuest(token);
+            }
+            else
+            {
+                string guid = loginService.LoginAsGuest();
+                PlayerPrefs.SetString(loginToken, guid);
+                PlayerPrefs.Save();
+            }
+
         }
 
         void OnLoginSuccessful(LoginSuccessfulEvent e)
