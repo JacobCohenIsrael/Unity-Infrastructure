@@ -37,7 +37,12 @@ namespace Infrastructure.Core.Network
 
         public bool isConnected()
         {
-            return socketIO.isConnected();
+            return socketIO.IsConnected();
+        }
+
+        public void Init()
+        {
+            socketIO.Init();
         }
     }
 }

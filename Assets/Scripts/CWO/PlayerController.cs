@@ -40,7 +40,7 @@ namespace CWO
 
         void Update()
         {
-            if (application.hasStarted && playerLoaded)
+            if (application.HasStarted && playerLoaded)
             {
                 ShipRegen();
                 UpdateCredits();

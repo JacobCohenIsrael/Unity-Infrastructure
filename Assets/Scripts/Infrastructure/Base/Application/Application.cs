@@ -11,19 +11,19 @@ namespace Infrastructure.Base.Application
     {
         public ServiceManager serviceManager;
         public EventManager eventManager;
-        private static Application localInstance;
-        public bool hasStarted = false;
+        private static Application _localInstance;
+        public bool HasStarted;
 
         public static Application getInstance()
         {
-            if (localInstance == null)
+            if (_localInstance == null)
             {
-                localInstance = new Application();
-                localInstance.serviceManager = new ServiceManager();
-                localInstance.eventManager = new EventManager(localInstance.serviceManager);
-                localInstance.serviceManager.set<EventManager>(localInstance.eventManager);
+                _localInstance = new Application();
+                _localInstance.serviceManager = new ServiceManager();
+                _localInstance.eventManager = new EventManager(_localInstance.serviceManager);
+                _localInstance.serviceManager.set(_localInstance.eventManager);
             }
-            return localInstance;
+            return _localInstance;
         }
 
         public void run()
@@ -32,7 +32,7 @@ namespace Infrastructure.Base.Application
             eventManager.DispatchEvent(new SetAppConfigEvent());
             eventManager.DispatchEvent(new SubscribeEvent());
             eventManager.DispatchEvent(new ApplicationFinishedLoadingEvent(this));
-            hasStarted = true;
+            HasStarted = true;
         }
     }
 }

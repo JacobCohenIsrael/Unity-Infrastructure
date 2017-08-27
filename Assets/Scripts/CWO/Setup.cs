@@ -1,7 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
-using Infrastructure.Base.Service;
-using Infrastructure.Base.Event;
+﻿using Implementation;
+using UnityEngine;
 using Infrastructure.Base.Config;
 using App = Infrastructure.Base.Application.Application;
 using Infrastructure.Core.Network;
@@ -10,9 +8,8 @@ using UnitySocketIO;
 
 namespace CWO
 {
-    public class Setup : MonoBehaviour
+    public class Setup : BaseMonoBehaviour
     {
-        protected App application;
         protected MainServer mainServer;
 
         public SocketIOController socketIO;
@@ -22,7 +19,6 @@ namespace CWO
             Screen.orientation = ScreenOrientation.LandscapeLeft;
             Debug.Log("Awaking Setup");
             var config = new Config();
-            application = App.getInstance();
             application.serviceManager.setConfig(config);
             Application.runInBackground = true;
             mainServer = application.serviceManager.get<MainServer>() as MainServer;
