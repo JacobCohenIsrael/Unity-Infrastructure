@@ -43,6 +43,11 @@ namespace CWO
 
 		private void OnLogoutSuccessful(LogoutSuccessfulEvent e)
 		{
+			CleanWorldMap();
+		}
+
+		private void CleanWorldMap()
+		{
 			foreach (Transform child in _nodeSpawn)
 			{
 				Destroy(child.gameObject);
@@ -80,9 +85,10 @@ namespace CWO
 
 		private void onLoginSuccessful(LoginSuccessfulEvent e)
 		{
+			CleanWorldMap();
 			foreach(var entry in e.NodesCoords)
 			{
-                var texture = UnityEngine.Resources.Load("Sprites/Nodes/" + entry.Value.Sprite) as Texture2D;
+                var texture = Resources.Load("Sprites/Nodes/" + entry.Value.Sprite) as Texture2D;
                 var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
                 var nodePosition = new Vector3(entry.Value.coordX, entry.Value.coordY, 0);
 				var instantiatedPrefab = Instantiate(_nodePrefab, _nodeSpawn);

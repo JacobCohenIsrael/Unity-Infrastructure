@@ -42,7 +42,7 @@ namespace CWO.Star
                 if (nodeService.GetNodeByName(playerController.player.currentNodeName).HasStar())
                 {
                     var node = nodeService.GetNodeByName(playerController.player.currentNodeName);
-                    var texture = UnityEngine.Resources.Load("Sprites/Nodes/" + node.Sprite) as Texture2D;
+                    var texture = Resources.Load("Sprites/Nodes/" + node.Sprite) as Texture2D;
                     var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
                     _starImage.sprite = sprite;
                     _starImage.gameObject.SetActive(true);
@@ -108,11 +108,12 @@ namespace CWO.Star
         private void onShipDeparted(PlayerDepartFromStarEvent e)
         {
             PrepareScreen();
+            cleanShipGrid();
             foreach (var entry in e.NodeSpace.ships)
             {
                 var instantiatedShip = Instantiate(shipPrefab, shipsGrid);
                 var shipInSpaceController = instantiatedShip.GetComponent<ShipInSpaceController>();
-                var texture = UnityEngine.Resources.Load("Sprites/Ships/" + entry.Value.GetShipType() + "/" + entry.Value.GetShipClass()) as Texture2D;
+                var texture = Resources.Load("Sprites/Ships/" + entry.Value.GetShipType() + "/" + entry.Value.GetShipClass()) as Texture2D;
                 var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
                 shipInSpaceController.PlayerId = entry.Key;
                 shipInSpaceController.ShipImage.sprite = sprite;
@@ -123,7 +124,7 @@ namespace CWO.Star
         {
             var instantiatedShip = Instantiate(shipPrefab, shipsGrid);
             var shipInSpaceController = instantiatedShip.GetComponent<ShipInSpaceController>();
-            var texture = UnityEngine.Resources.Load("Sprites/Ships/" + e.ShipModel.GetShipType() + "/" + e.ShipModel.GetShipClass()) as Texture2D;
+            var texture = Resources.Load("Sprites/Ships/" + e.ShipModel.GetShipType() + "/" + e.ShipModel.GetShipClass()) as Texture2D;
             var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
             shipInSpaceController.PlayerId = e.PlayerId;
             shipInSpaceController.ShipImage.sprite = sprite;

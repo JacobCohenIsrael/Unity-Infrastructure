@@ -32,7 +32,13 @@ namespace CWO
         private void Start()
         {
             mainServer.Connect();
-            mainServer.On("connect", this.OnConnect);
+            mainServer.On("connect", OnConnect);
+            mainServer.On("disconnect", OnDisconnect);
+        }
+
+        private void OnDisconnect(SocketIOEvent e)
+        {
+            Application.Quit();
         }
 
         void OnConnect(SocketIOEvent e)
