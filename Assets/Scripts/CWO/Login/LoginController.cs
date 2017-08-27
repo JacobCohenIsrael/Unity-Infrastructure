@@ -28,12 +28,13 @@ namespace CWO.Login
 
         public void OnSubmit()
         {
-            loginService.LoginAsGuest();
+            string guid = loginService.LoginAsGuest();
+            PlayerPrefs.SetString(loginToken, guid);
+            PlayerPrefs.Save();
         }
 
         void OnLoginSuccessful(LoginSuccessfulEvent e)
         {
-            PlayerPrefs.SetString(loginToken, e.Player.token);
             PlayerPrefs.SetInt("playerId", e.Player.id);
             PlayerPrefs.Save();
         }
