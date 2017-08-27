@@ -72,7 +72,7 @@ namespace CWO.Star
             PrepareScreen();
             foreach (var entry in e.Node.Ships)
             {
-                if (entry.Key == e.Player.id) return;
+                if (entry.Key == e.Player.id) continue;
                 var instantiatedShip = Instantiate(shipPrefab, shipsGrid);
                 var shipInSpaceController = instantiatedShip.GetComponent<ShipInSpaceController>();
                 var texture = Resources.Load("Sprites/Ships/" + entry.Value.GetShipType() + "/" + entry.Value.GetShipClass()) as Texture2D;
