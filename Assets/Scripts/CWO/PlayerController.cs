@@ -25,12 +25,12 @@ namespace CWO
         {
             application = App.getInstance();
             EventManager eventManager = application.eventManager;
-            eventManager.AddListener<LoginSuccessfulEvent>(this.OnLoginSuccessful);
-            eventManager.AddListener<PlayerJumpedToNodeEvent>(this.OnPlayJumpToNode);
-            eventManager.AddListener<PlayerLandOnStarEvent>(this.OnPlayLandOnStar);
-            eventManager.AddListener<PlayerDepartFromStarEvent>(this.OnPlayerDepartFromStar);
-            eventManager.AddListener<PlayerBoughtResourceEvent>(this.OnPlayerBoughtResource);
-            eventManager.AddListener<PlayerSoldResourceEvent>(this.OnPlayerSoldResource);
+            eventManager.AddListener<LoginSuccessfulEvent>(OnLoginSuccessful);
+            eventManager.AddListener<PlayerJumpedToNodeEvent>(OnPlayJumpToNode);
+            eventManager.AddListener<PlayerLandOnStarEvent>(OnPlayLandOnStar);
+            eventManager.AddListener<PlayerDepartFromStarEvent>(OnPlayerDepartFromStar);
+            eventManager.AddListener<PlayerBoughtResourceEvent>(OnPlayerBoughtResource);
+            eventManager.AddListener<PlayerSoldResourceEvent>(OnPlayerSoldResource);
         }
 
         void Start()
@@ -57,7 +57,7 @@ namespace CWO
 
         protected void OnPlayJumpToNode(PlayerJumpedToNodeEvent e)
         {
-            player.currentNodeName = e.NodeSpace.Name;
+            player.currentNodeName = e.NodeSpace.name;
         }
 
         protected void OnPlayLandOnStar(PlayerLandOnStarEvent e)
@@ -93,7 +93,7 @@ namespace CWO
 
         protected void UpdateCargo()
         {
-            cargo.text = "Cagro: " + JsonConvert.SerializeObject(player.getActiveShip().shipCargo);
+            cargo.text = "Cagro:\n" + JsonConvert.SerializeObject(player.getActiveShip().shipCargo).Replace("{","").Replace("}", "").Replace(",", "\n\r");
         }
 
         private void UpdateCargoCapacity()

@@ -70,6 +70,16 @@ namespace CWO.Star
         private void OnLoginSuccessful(LoginSuccessfulEvent e)
         {
             PrepareScreen();
+            foreach (var entry in e.Node.Ships)
+            {
+                if (entry.Key == e.Player.id) return;
+                var instantiatedShip = Instantiate(shipPrefab, shipsGrid);
+                var shipInSpaceController = instantiatedShip.GetComponent<ShipInSpaceController>();
+                var texture = Resources.Load("Sprites/Ships/" + entry.Value.GetShipType() + "/" + entry.Value.GetShipClass()) as Texture2D;
+                var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                shipInSpaceController.PlayerId = entry.Key;
+                shipInSpaceController.ShipImage.sprite = sprite;
+            }
         }
 
         private void onPlayerJumpToStar(PlayerJumpedToNodeEvent e)
@@ -109,7 +119,7 @@ namespace CWO.Star
             }
         }
 
-        private void onShipLanded(PlayerLandOnStarEvent obj)
+        private void onShipLanded(PlayerLandOnStarEvent e)
         {
             cleanShipGrid();
         }

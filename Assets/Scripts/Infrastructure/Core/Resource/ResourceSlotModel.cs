@@ -5,11 +5,10 @@ using System;
 namespace Infrastructure.Core.Resource
 {
     [Serializable]
-    public class ResourceSlotModel : Infrastructure.Base.Model.Model
+    public class ResourceSlotModel : Base.Model.Model
     {
-        public string name;
-        public int amount;
-        public int buyPrice;
-        public int sellPrice;
+        public string Name;
+        public int BuyPrice;
+        public int SellPrice;
     }
 }

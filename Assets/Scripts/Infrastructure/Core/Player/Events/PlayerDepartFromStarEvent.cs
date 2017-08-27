@@ -1,20 +1,15 @@
 ﻿using Newtonsoft.Json;
-using System;
+using Infrastructure.Core.Node;
 
 namespace Infrastructure.Core.Player.Events
 {
     public class PlayerDepartFromStarEvent
     {
         [JsonProperty("player")]
-        public Player.PlayerModel Player;
+        public PlayerModel Player;
 
         [JsonProperty("node")]
-        public NodeSpaceModel NodeSpace;
-
-        public PlayerDepartFromStarEvent(Player.PlayerModel player)
-        {
-            this.Player = player;
-        }
+        public NodeModel NodeSpace;
     }
 }
 

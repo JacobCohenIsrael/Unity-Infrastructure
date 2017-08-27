@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Infrastructure.Core.Node;
+using Newtonsoft.Json;
 
 namespace Infrastructure.Core.Player.Events
 {
@@ -8,9 +9,9 @@ namespace Infrastructure.Core.Player.Events
         public PlayerModel Player;
         
         [JsonProperty("node")]
-        public NodeSpaceModel NodeSpace;
+        public NodeModel NodeSpace;
         
-        public PlayerJumpedToNodeEvent(PlayerModel player, NodeSpaceModel nodeSpace)
+        public PlayerJumpedToNodeEvent(PlayerModel player, NodeModel nodeSpace)
         {
             Player = player;
             NodeSpace = nodeSpace;

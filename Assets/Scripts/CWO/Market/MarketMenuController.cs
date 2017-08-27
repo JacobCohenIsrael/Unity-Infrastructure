@@ -49,12 +49,12 @@ namespace CWO.Market
         {
             foreach (KeyValuePair<string, ResourceSlotModel> resourceSlot in e.ResourceSlotList)
             {
-                Texture2D texture = UnityEngine.Resources.Load("Sprites/" + resourceSlot.Value.name) as Texture2D;
-                Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-                GameObject instantiatedResourceSlot = Instantiate(resourceSlotPrefab, resourcesPanel) as GameObject;
-                ResourceSlotController resourceSlotController = instantiatedResourceSlot.GetComponent<ResourceSlotController>();
+                var texture = UnityEngine.Resources.Load("Sprites/" + resourceSlot.Value.Name) as Texture2D;
+                var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                var instantiatedResourceSlot = Instantiate(resourceSlotPrefab, resourcesPanel);
+                var resourceSlotController = instantiatedResourceSlot.GetComponent<ResourceSlotController>();
                 resourceSlotController.resourceSlot = resourceSlot.Value;
-                resourceSlotController.nameText.text = resourceSlot.Value.name;
+                resourceSlotController.nameText.text = resourceSlot.Value.Name;
                 resourceSlotController.resourceImage.color = Color.white;
                 resourceSlotController.resourceImage.sprite = sprite;
                 resourceSlotController.marketMenuController = this;
@@ -101,8 +101,8 @@ namespace CWO.Market
                 return;
             }
             selectedResourceSlotRef = resourceSlotRef;
-            buyButton.GetComponentInChildren<Text>().text = "Buy for " + resourceSlotRef.resourceSlot.buyPrice.ToString("C0");
-            sellButton.GetComponentInChildren<Text>().text = "Sell for " + resourceSlotRef.resourceSlot.sellPrice.ToString("C0");
+            buyButton.GetComponentInChildren<Text>().text = "Buy for " + resourceSlotRef.resourceSlot.BuyPrice.ToString("C0");
+            sellButton.GetComponentInChildren<Text>().text = "Sell for " + resourceSlotRef.resourceSlot.SellPrice.ToString("C0");
             EnableMarketButtons();
 
         }

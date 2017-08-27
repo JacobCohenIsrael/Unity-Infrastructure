@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Infrastructure.Core.Market;
+using Infrastructure.Core.Ship;
 using Infrastructure.Core.Star;
 using Newtonsoft.Json;
 
@@ -21,6 +22,9 @@ namespace Infrastructure.Core.Node
         public StarModel star;
 
         public MarketModel market;
+        
+        [JsonProperty("ships")]
+        public Dictionary<int, ShipModel> Ships;
 
         [JsonProperty("connectedNodes")]
         public Dictionary<string, ConnectedNodeModel> ConnectedNodes;

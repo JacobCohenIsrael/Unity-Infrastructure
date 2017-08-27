@@ -124,7 +124,7 @@ namespace Infrastructure.Core.Player
 
         public void BuyResource(PlayerModel player, ResourceSlotModel resourceSlot, int amount)
         {
-            if (player.credits >= resourceSlot.buyPrice)
+            if (player.credits >= resourceSlot.BuyPrice)
             {
                 playerAdapter.BuyResource(player, resourceSlot, amount);
             }
