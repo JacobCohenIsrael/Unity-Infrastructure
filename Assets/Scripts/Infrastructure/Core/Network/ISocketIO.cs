@@ -10,8 +10,6 @@ namespace Infrastructure.Core.Network
 
         void On(string eventName, System.Action<SocketIOEvent> callback);
 
-        bool IsConnected();
-
-        void Init();
+        bool isConnected();
     }
 }
