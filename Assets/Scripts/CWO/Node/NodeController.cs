@@ -36,8 +36,8 @@ namespace CWO.Node
 			GameObject player = GameObject.FindGameObjectWithTag("Player");	
 			_playerController = player.GetComponent<PlayerController>();
 			_playerService = application.serviceManager.get<PlayerService>() as PlayerService;
-			eventManager.AddListener<PlayerJumpedToNodeEvent>(OnPlayerJumpedToNode);
 			_halo.enabled = _playerController.player.currentNodeName == Node.name;
+			eventManager.AddListener<PlayerJumpedToNodeEvent>(OnPlayerJumpedToNode);
 		}
 
 		private void OnPlayerJumpedToNode(PlayerJumpedToNodeEvent e)
@@ -58,6 +58,11 @@ namespace CWO.Node
 			{
 				_playerService.JumpPlayerToNode(player, Node);
 			}
+		}
+
+		private void OnDestroy()
+		{
+			eventManager.RemoveListener<PlayerJumpedToNodeEvent>(OnPlayerJumpedToNode);
 		}
 	}
 }

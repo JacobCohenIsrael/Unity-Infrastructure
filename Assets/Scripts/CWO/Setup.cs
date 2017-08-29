@@ -21,6 +21,7 @@ namespace CWO
             var config = new Config();
             application.serviceManager.setConfig(config);
             Application.runInBackground = true;
+            socketIO.Init();
             mainServer = application.serviceManager.get<MainServer>() as MainServer;
             mainServer.SetSocketIO(socketIO);
         }

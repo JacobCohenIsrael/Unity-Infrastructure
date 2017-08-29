@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using Infrastructure.Base.Application.Events;
 using Infrastructure.Core.Login.Events;
 using UnityEngine.UI;
@@ -10,9 +11,9 @@ namespace CWO.Login
     public class LoginController : BaseUIObject
     {
         #if UNITY_EDITOR 
-        public const string loginToken = "editorToken";
+        public const string guestLoginToken = "editorToken";
         #else
-        public const string loginToken = "token";
+        public const string guestLoginToken = "token";
         #endif
         public Button loginSubmitButton;
 
@@ -28,15 +29,16 @@ namespace CWO.Login
 
         public void OnSubmit()
         {
-            if (PlayerPrefs.HasKey(LoginController.loginToken))
+            if (PlayerPrefs.HasKey(guestLoginToken))
             {
-                string token = PlayerPrefs.GetString(LoginController.loginToken);
+                string token = PlayerPrefs.GetString(guestLoginToken);
                 loginService.LoginAsGuest(token);
             }
             else
             {
-                string guid = loginService.LoginAsGuest();
-                PlayerPrefs.SetString(loginToken, guid);
+                var guid = Guid.NewGuid().ToString();
+                loginService.LoginAsGuest(guid);
+                PlayerPrefs.SetString(guestLoginToken, guid);
                 PlayerPrefs.Save();
             }
 

@@ -13,13 +13,13 @@ namespace UnitySocketIO {
 
         public string SocketID { get { return socketIO.SocketID; } }
 
-        void Awake() {
+        public void Init() {
             if(Application.platform == RuntimePlatform.WebGLPlayer) {
                 Debug.Log("Using WebGL SocketIO");
                 socketIO = gameObject.AddComponent<WebGLSocketIO>();
             }
             else {
-                Debug.Log("Using Navtive SocketIO");
+                Debug.Log("Using Native SocketIO");
                 socketIO = gameObject.AddComponent<NativeSocketIO>();
             }
             

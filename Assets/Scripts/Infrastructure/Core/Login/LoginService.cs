@@ -25,13 +25,6 @@ namespace Infrastructure.Core.Login
             mainServer.On("loginResponse", OnLogin);
         }
 
-        public string LoginAsGuest()
-        {
-            var guid = Guid.NewGuid();
-            playerService.LoginAsGuest(guid.ToString());
-            return guid.ToString();
-        }
-
         public void LoginAsGuest(string token)
         {
             playerService.LoginAsGuest(token);

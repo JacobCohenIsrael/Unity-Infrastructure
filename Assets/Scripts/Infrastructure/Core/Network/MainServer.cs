@@ -39,6 +39,11 @@ namespace Infrastructure.Core.Network
         {
             return socketIO.isConnected();
         }
+
+        public void Close()
+        {
+            socketIO.Close();
+        }
     }
 }
 
