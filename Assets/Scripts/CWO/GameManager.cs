@@ -59,12 +59,15 @@ namespace CWO
 
         private void OnApplicationReady(ApplicationFinishedLoadingEvent e) 
         {
-            ChangeState(GameState.EntryMenu);
             if ( PlayerPrefs.HasKey(LoginController.loginToken) )
             {
                 Debug.Log("Login Token Found");
                 var loginService =  application.serviceManager.get<LoginService>() as LoginService;
                 loginService.LoginAsGuest(PlayerPrefs.GetString(LoginController.loginToken));
+            }
+            else
+            {
+                ChangeState(GameState.EntryMenu);
             }
         }
 
