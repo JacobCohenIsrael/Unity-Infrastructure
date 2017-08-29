@@ -3,6 +3,7 @@ using Implementation.Views.Screen;
 using UnityEngine.UI;
 using Infrastructure.Core.Login;
 using Infrastructure.Base.Application.Events;
+using Infrastructure.Core.Login.Events;
 using Infrastructure.Core.Player;
 using Infrastructure.Core.Player.Events;
 using Newtonsoft.Json;
@@ -30,20 +31,28 @@ namespace CWO.Hud
             _logoutButton.onClick.AddListener(OnLogout);
             eventManager.AddListener<PlayerBoughtResourceEvent>(OnPlayerBoughtResource);
             eventManager.AddListener<PlayerSoldResourceEvent>(OnPlayerSoldResource);
+            eventManager.AddListener<LoginSuccessfulEvent>(OnLoginSuccessful);
+        }
+
+        private void OnLoginSuccessful(LoginSuccessfulEvent e)
+        {
+            UpdateCredits(e.Player);
+            UpdateCargoCapacity(e.Player);
+            UpdateCargo(e.Player);
         }
 
         private void OnPlayerBoughtResource(PlayerBoughtResourceEvent e)
         {
-            UpdateCargo(e.player);
-            UpdateCargoCapacity(e.player);
-            UpdateCargo(e.player);
+            UpdateCredits(e.Player);
+            UpdateCargoCapacity(e.Player);
+            UpdateCargo(e.Player);
         }
 
         private void OnPlayerSoldResource(PlayerSoldResourceEvent e)
         {
-            UpdateCargo(e.player);
-            UpdateCargoCapacity(e.player);
-            UpdateCargo(e.player);
+            UpdateCargo(e.Player);
+            UpdateCargoCapacity(e.Player);
+            UpdateCargo(e.Player);
         }
 
         protected void UpdateCredits(PlayerModel player)

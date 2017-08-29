@@ -1,15 +1,11 @@
-﻿using System;
-using Infrastructure.Core.Resource;
+﻿using Newtonsoft.Json;
 
 namespace Infrastructure.Core.Player.Events
 {
     public class PlayerSoldResourceEvent
     {
-        public Player.PlayerModel player;
-        public PlayerSoldResourceEvent(Player.PlayerModel player)
-        {
-            this.player = player;
-        }
+        [JsonProperty("player")]
+        public PlayerModel Player;
     }
 }
 

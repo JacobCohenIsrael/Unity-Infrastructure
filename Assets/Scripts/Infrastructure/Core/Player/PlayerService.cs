@@ -15,7 +15,6 @@ namespace Infrastructure.Core.Player
 {
     public class PlayerService : Base.Service.Contracts.IServiceProvider
     {
-        protected StarService starService;
         protected NodeService nodeService;
         protected PlayerAdapter playerAdapter;
         protected EventManager eventManager;
@@ -37,7 +36,6 @@ namespace Infrastructure.Core.Player
 
         protected void getDependencies(ServiceManager serviceManager)
         {
-            starService = serviceManager.get<StarService>() as StarService;
             nodeService = serviceManager.get <NodeService>() as NodeService;
             playerAdapter = serviceManager.get<PlayerAdapter>() as PlayerAdapter;
             eventManager = serviceManager.get<EventManager>() as EventManager;

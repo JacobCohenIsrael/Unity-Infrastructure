@@ -54,12 +54,12 @@ namespace CWO
         
         protected void OnPlayerBoughtResource(PlayerBoughtResourceEvent e)
         {
-            player.credits = e.player.credits;
+            player.credits = e.Player.credits;
         }
 
         protected void OnPlayerSoldResource(PlayerSoldResourceEvent e)
         {
-            player.credits = e.player.credits;
+            player.credits = e.Player.credits;
         }
             
         protected void OnLoginSuccessful(LoginSuccessfulEvent e)

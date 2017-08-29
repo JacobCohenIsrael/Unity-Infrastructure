@@ -21,12 +21,10 @@ namespace CWO.Star
         public PlayerController playerController;
 
         protected PlayerService playerService;
-        protected StarService starService;
 
         void Start () 
         {
             playerService = application.serviceManager.get <PlayerService>() as PlayerService;
-            starService = application.serviceManager.get <StarService>() as StarService;
             Hide();
         }
 
