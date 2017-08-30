@@ -22,6 +22,12 @@ namespace Implementation.Features.Chat
         {
             playerService = application.serviceManager.get<PlayerService>() as PlayerService;
         }
+
+        private void OnEnable()
+        {
+            chatTextField.text = "";
+        }
+
         protected override void SubscribeToEvents(SubscribeEvent e)
         {
             chatSendButton.onClick.AddListener(OnChatSendButtonClicked);

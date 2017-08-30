@@ -38,6 +38,12 @@ namespace CWO.Market
             sellButton.onClick.AddListener(OnSellResourceClicked);
             playerService = application.serviceManager.get<PlayerService>() as PlayerService;
             eventManager.AddListener<LogoutSuccessfulEvent>(OnLogoutSuccessful);
+            eventManager.AddListener<LoginSuccessfulEvent>(OnLoginSuccessful);
+        }
+
+        private void OnLoginSuccessful(LoginSuccessfulEvent obj)
+        {
+            ClearResourceList();
         }
 
         private void OnLogoutSuccessful(LogoutSuccessfulEvent e)
@@ -47,6 +53,7 @@ namespace CWO.Market
 
         protected void OnMarketOpen(PlayerEnteredMarketEvent e)
         {
+            Debug.Log("Marked opened");
             foreach (KeyValuePair<string, ResourceSlotModel> resourceSlot in e.ResourceSlotList)
             {
                 var texture = UnityEngine.Resources.Load("Sprites/" + resourceSlot.Value.Name) as Texture2D;

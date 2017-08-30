@@ -4,7 +4,7 @@ using UnitySocketIO.SocketIO;
 using UnitySocketIO.Events;
 using Infrastructure.Core.Network;
 
-namespace UnitySocketIO {
+namespace CWO {
     public class SocketIOController : MonoBehaviour, ISocketIO {
         
         public SocketIOSettings settings;

@@ -44,28 +44,28 @@ namespace Infrastructure.Core.Player
 
         protected void subscribeListeners()
         {
-            mainServer.On("playerDeparted", this.OnPlayerDepart);
-            mainServer.On("playerLanded", this.OnPlayerLanded);
-            mainServer.On("playerBoughtResource", this.OnPlayerBoughtResource);
-            mainServer.On("playerSoldResource", this.OnPlayerSoldResource);
-            mainServer.On("playerEnteredLounge", this.OnPlayerEnteredLounge);
-            mainServer.On("playerLeftLounge", this.OnPlayerLeftLounge);
-            mainServer.On("chatMessageReceived", this.OnChatMessageReceived);
+            mainServer.On("playerDeparted", OnPlayerDepart);
+            mainServer.On("playerLanded", OnPlayerLanded);
+            mainServer.On("playerBoughtResource", OnPlayerBoughtResource);
+            mainServer.On("playerSoldResource", OnPlayerSoldResource);
+            mainServer.On("playerEnteredLounge", OnPlayerEnteredLounge);
+            mainServer.On("playerLeftLounge", OnPlayerLeftLounge);
+            mainServer.On("chatMessageReceived", OnChatMessageReceived);
             mainServer.On("notificationReceived", OnNotificationReceived);
-            mainServer.On("playerEnteredMarket", this.OnPlayerEnteredMarket);
-            mainServer.On("playerJumpedToNode", this.OnPlayerJumpedToNode);
+            mainServer.On("playerEnteredMarket", OnPlayerEnteredMarket);
+            mainServer.On("playerJumpedToNode", OnPlayerJumpedToNode);
         }
 
         private void OnNotificationReceived(SocketIOEvent e)
         {
-            NotificationEvent nre = JsonConvert.DeserializeObject<NotificationEvent>(e.data);
+            var nre = JsonConvert.DeserializeObject<NotificationEvent>(e.data);
             eventManager.DispatchEvent(nre);
         }
 
         private void OnPlayerEnteredMarket(SocketIOEvent e)
         {
-            PlayerEnteredMarketEvent peme = JsonConvert.DeserializeObject<PlayerEnteredMarketEvent>(e.data);
-            eventManager.DispatchEvent<PlayerEnteredMarketEvent>(peme);
+            var peme = JsonConvert.DeserializeObject<PlayerEnteredMarketEvent>(e.data);
+            eventManager.DispatchEvent(peme);
         }
 
         public void LoginAsGuest(string sessionId)
