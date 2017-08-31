@@ -86,7 +86,7 @@ namespace CWO
 		private void onLoginSuccessful(LoginSuccessfulEvent e)
 		{
 			CleanWorldMap();
-			foreach(var entry in e.NodesCoords)
+			foreach(var entry in e.WorldMap)
 			{
                 var texture = Resources.Load("Sprites/Nodes/" + entry.Value.Sprite) as Texture2D;
                 var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));

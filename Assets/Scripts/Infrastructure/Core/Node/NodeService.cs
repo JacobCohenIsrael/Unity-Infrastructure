@@ -32,7 +32,7 @@ namespace Infrastructure.Core.Node
 
         private void OnLoginSuccessful(LoginSuccessfulEvent e)
         {
-            _nodesCoords = e.NodesCoords;
+            _nodesCoords = e.WorldMap;
         }
 
         private void OnShipLeftNode(SocketIOEvent e)

@@ -5,9 +5,11 @@ namespace Implementation
 {
     public abstract class HierarchyMonoBehaviour : BaseMonoBehaviour
     {
+        protected bool _hasAwaken;
         private void Awake()
         {
             application.eventManager.AddListener<SubscribeEvent>(SubscribeToEvents);
+            _hasAwaken = true;
         }
 
         protected abstract void SubscribeToEvents(SubscribeEvent e);

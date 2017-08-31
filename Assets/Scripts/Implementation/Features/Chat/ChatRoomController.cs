@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿﻿using UnityEngine;
 using UnityEngine.UI;
 using Infrastructure.Base.Application.Events;
 using Infrastructure.Core.Player;
@@ -17,7 +17,7 @@ namespace Implementation.Features.Chat
 
         protected PlayerService playerService;
         public PlayerController playerController;
-
+        
         private void Start()
         {
             playerService = application.serviceManager.get<PlayerService>() as PlayerService;
@@ -25,16 +25,33 @@ namespace Implementation.Features.Chat
 
         private void OnEnable()
         {
-            chatTextField.text = "";
+            if (_hasAwaken)
+            {
+                chatTextField.text = "";
+            }
         }
 
         protected override void SubscribeToEvents(SubscribeEvent e)
         {
             chatSendButton.onClick.AddListener(OnChatSendButtonClicked);
+            chatInputField.onEndEdit.AddListener(OnEnterKeyPressed);
             eventManager.AddListener<ChatMessageReceivedEvent>(OnChatMessageReceived);
         }
 
-        protected void OnChatSendButtonClicked()
+        private void OnChatSendButtonClicked()
+        {
+            SendChatMessage();
+        }
+        
+        private void OnEnterKeyPressed(string text)
+        {
+            if (Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.KeypadEnter))
+            {
+                SendChatMessage();
+            }
+        }
+
+        protected void SendChatMessage()
         {
             if (chatInputField.text.Length > 0)
             {
@@ -51,5 +68,7 @@ namespace Implementation.Features.Chat
         {
             chatTextField.text += e.PlayerName + ": " + e.ChatMessage + "\n\r";
         }
+
+ 
     }
 }

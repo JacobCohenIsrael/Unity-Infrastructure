@@ -50,7 +50,7 @@ namespace CWO.Hud
 
         private void OnPlayerSoldResource(PlayerSoldResourceEvent e)
         {
-            UpdateCargo(e.Player);
+            UpdateCredits(e.Player);
             UpdateCargoCapacity(e.Player);
             UpdateCargo(e.Player);
         }

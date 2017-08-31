@@ -19,8 +19,8 @@ namespace Infrastructure.Core.Login.Events
         [JsonProperty("node")]
         public NodeModel Node;
 
-        [JsonProperty("nodesCoords")]
-        public Dictionary<string, NodeModel> NodesCoords;
+        [JsonProperty("worldMap")]
+        public Dictionary<string, NodeModel> WorldMap;
     }
 }
 
