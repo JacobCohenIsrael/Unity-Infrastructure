@@ -116,6 +116,7 @@ namespace CWO
         {
             if (e.Player.isLanded)
             {
+                starMenuController.ShouldShowHangerButton(e.Player.hasHangerInNode(e.Player.currentNodeName));
                 ChangeState(GameState.StarMenu);
             }
             else

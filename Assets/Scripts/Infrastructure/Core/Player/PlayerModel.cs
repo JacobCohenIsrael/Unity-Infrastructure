@@ -38,5 +38,10 @@ namespace Infrastructure.Core.Player
         {
             return getActiveShip().getShipJumpDistance();
         }
+
+        public bool hasHangerInNode(string nodeName)
+        {
+            return homePlanetName == nodeName;
+        }
     }
 }

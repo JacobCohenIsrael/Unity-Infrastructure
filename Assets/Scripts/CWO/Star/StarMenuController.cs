@@ -22,7 +22,7 @@ namespace CWO.Star
 
         protected PlayerService playerService;
 
-        void Start () 
+        private void Start () 
         {
             playerService = application.serviceManager.get <PlayerService>() as PlayerService;
             Hide();
@@ -30,16 +30,16 @@ namespace CWO.Star
 
         protected override void SubscribeToEvents(SubscribeEvent e)
         {
-            eventManager.AddListener<PlayerLandOnStarEvent>(this.OnPlayerLandOnStar);
-            eventManager.AddListener<LoginSuccessfulEvent>(this.OnLoginSuccessful);
-            departButton.onClick.AddListener(() => { this.OnDepart(); });
-            marketButton.onClick.AddListener(() => { this.OpenMarket(); });
-            loungeButton.onClick.AddListener(() => { this.EnterLounge(); });
+            eventManager.AddListener<PlayerLandOnStarEvent>(OnPlayerLandOnStar);
+            eventManager.AddListener<LoginSuccessfulEvent>(OnLoginSuccessful);
+            departButton.onClick.AddListener(OnDepart);
+            marketButton.onClick.AddListener(OpenMarket);
+            loungeButton.onClick.AddListener(EnterLounge);
         }
 
         protected void OnDepart()
         {
-            PlayerModel player = playerController.player;
+            var player = playerController.player;
             if (null == player.getActiveShip())
             {
                 throw new UnityException("Player must have an active ship");
@@ -49,13 +49,13 @@ namespace CWO.Star
 
         protected void OpenMarket()
         {
-            PlayerModel player = playerController.player;
+            var player = playerController.player;
             playerService.EnterMarket(player);
         }
 
         protected void EnterLounge()
         {
-            PlayerModel player = playerController.player;
+            var player = playerController.player;
             playerService.EnterLounge(player);
         }
 
@@ -67,15 +67,14 @@ namespace CWO.Star
         protected void OnPlayerLandOnStar(PlayerLandOnStarEvent e)
         {
             welcomeText.text = "Welcome to " + e.player.currentNodeName;
-            if (e.player.homePlanetName == e.player.currentNodeName)
-            {
-                hangerButton.gameObject.SetActive(true);
-            }
-            else
-            {
-                hangerButton.gameObject.SetActive(false);
-            }
+            ShouldShowHangerButton(e.player.hasHangerInNode(e.player.currentNodeName));
         }
+
+        public void ShouldShowHangerButton(bool shouldShow)
+        {
+            hangerButton.gameObject.SetActive(shouldShow);
+        }
+        
     }
 }
 
