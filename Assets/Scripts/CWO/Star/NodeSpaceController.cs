@@ -23,6 +23,8 @@ namespace CWO.Star
         protected NodeService nodeService;
         protected PlayerService playerService;
 
+        private ShipInSpaceController _selectedShipRef;
+
         [SerializeField]
         private Image _starImage;
 
@@ -56,15 +58,15 @@ namespace CWO.Star
 
         protected override void SubscribeToEvents(SubscribeEvent e)
         {
-            eventManager.AddListener<ShipEnteredNodeEvent>(onShipEnteredNode);
-            eventManager.AddListener<ShipLeftNodeEvent>(onShipLeftNode);
-            eventManager.AddListener<PlayerDepartFromStarEvent>(onShipDeparted);
-            eventManager.AddListener<PlayerLandOnStarEvent>(onShipLanded);
-            eventManager.AddListener<PlayerJumpedToNodeEvent>(onPlayerJumpToStar);
+            eventManager.AddListener<ShipEnteredNodeEvent>(OnShipEnteredNode);
+            eventManager.AddListener<ShipLeftNodeEvent>(OnShipLeftNode);
+            eventManager.AddListener<PlayerDepartFromStarEvent>(OnShipDeparted);
+            eventManager.AddListener<PlayerLandOnStarEvent>(OnShipLanded);
+            eventManager.AddListener<PlayerJumpedToNodeEvent>(OnPlayerJumpToStar);
             eventManager.AddListener<LoginSuccessfulEvent>(OnLoginSuccessful);
 
-            jumpButton.onClick.AddListener(onJump);
-            landButton.onClick.AddListener(onLand);
+            jumpButton.onClick.AddListener(OnJump);
+            landButton.onClick.AddListener(OnLand);
         }
 
         private void OnLoginSuccessful(LoginSuccessfulEvent e)
@@ -73,31 +75,21 @@ namespace CWO.Star
             foreach (var entry in e.Node.Ships)
             {
                 if (entry.Key == e.Player.id) continue;
-                var instantiatedShip = Instantiate(shipPrefab, shipsGrid);
-                var shipInSpaceController = instantiatedShip.GetComponent<ShipInSpaceController>();
-                var texture = Resources.Load("Sprites/Ships/" + entry.Value.GetShipType() + "/" + entry.Value.GetShipClass()) as Texture2D;
-                var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-                shipInSpaceController.PlayerId = entry.Key;
-                shipInSpaceController.ShipImage.sprite = sprite;
+                InstantiateShip(entry.Value, entry.Key);
             }
         }
 
-        private void onPlayerJumpToStar(PlayerJumpedToNodeEvent e)
+        private void OnPlayerJumpToStar(PlayerJumpedToNodeEvent e)
         {
-            cleanShipGrid();
+            CleanShipGrid();
             PrepareScreen();
             foreach (var entry in e.NodeSpace.Ships)
             {
-                var instantiatedShip = Instantiate(shipPrefab, shipsGrid);
-                var shipInSpaceController = instantiatedShip.GetComponent<ShipInSpaceController>();
-                var texture = Resources.Load("Sprites/Ships/" + entry.Value.GetShipType() + "/" + entry.Value.GetShipClass()) as Texture2D;
-                var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-                shipInSpaceController.PlayerId = entry.Key;
-                shipInSpaceController.ShipImage.sprite = sprite;
+                InstantiateShip(entry.Value, entry.Key);
             }
         }
 
-        private void onShipLeftNode(ShipLeftNodeEvent e)
+        private void OnShipLeftNode(ShipLeftNodeEvent e)
         {
             foreach (RectTransform child in shipsGrid)
             {
@@ -111,7 +103,7 @@ namespace CWO.Star
             }
         }
 
-        private void cleanShipGrid()
+        private void CleanShipGrid()
         {
             foreach (RectTransform child in shipsGrid)
             {
@@ -119,38 +111,39 @@ namespace CWO.Star
             }
         }
 
-        private void onShipLanded(PlayerLandOnStarEvent e)
+        private void OnShipLanded(PlayerLandOnStarEvent e)
         {
-            cleanShipGrid();
+            CleanShipGrid();
         }
 
-        private void onShipDeparted(PlayerDepartFromStarEvent e)
+        private void OnShipDeparted(PlayerDepartFromStarEvent e)
         {
             PrepareScreen();
-            cleanShipGrid();
+            CleanShipGrid();
             foreach (var entry in e.NodeSpace.Ships)
             {
-                var instantiatedShip = Instantiate(shipPrefab, shipsGrid);
-                var shipInSpaceController = instantiatedShip.GetComponent<ShipInSpaceController>();
-                var texture = Resources.Load("Sprites/Ships/" + entry.Value.GetShipType() + "/" + entry.Value.GetShipClass()) as Texture2D;
-                var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-                shipInSpaceController.PlayerId = entry.Key;
-                shipInSpaceController.ShipImage.sprite = sprite;
+                if (entry.Key == e.Player.id) continue;
+                InstantiateShip(entry.Value, entry.Key);
             }
         }
 
-        private void onShipEnteredNode(ShipEnteredNodeEvent e)
+        private void OnShipEnteredNode(ShipEnteredNodeEvent e)
+        {
+            InstantiateShip(e.ShipModel, e.PlayerId);
+        }
+
+        private void InstantiateShip(ShipModel ship, int playerId)
         {
             var instantiatedShip = Instantiate(shipPrefab, shipsGrid);
             var shipInSpaceController = instantiatedShip.GetComponent<ShipInSpaceController>();
-            var texture = Resources.Load("Sprites/Ships/" + e.ShipModel.GetShipType() + "/" + e.ShipModel.GetShipClass()) as Texture2D;
+            var texture = Resources.Load("Sprites/Ships/" + ship.GetShipType() + "/" + ship.GetShipClass()) as Texture2D;
             var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-            shipInSpaceController.PlayerId = e.PlayerId;
+            shipInSpaceController.PlayerId = playerId;
             shipInSpaceController.ShipImage.sprite = sprite;
-            shipInSpaceController.PlayerId = e.PlayerId;
+            shipInSpaceController.NodeSpaceController = this;
         }
 
-        private void onJump()
+        private void OnJump()
         {
             var player = playerController.player;
             if (null == player.getActiveShip())
@@ -168,10 +161,25 @@ namespace CWO.Star
             }
         }
 
-        private void onLand()
+        private void OnLand()
         {
             var player = playerController.player;
             playerService.LandPlayerOnStar(player);
+        }
+
+        public void SetSelectedShip(ShipInSpaceController shipRef)
+        {
+            shipRef.BackgroundImage.enabled = true;
+            if (_selectedShipRef != null)
+            {
+                _selectedShipRef.BackgroundImage.enabled = false;
+            }
+            if (_selectedShipRef == shipRef)
+            {
+                _selectedShipRef = null;
+                return;
+            }
+            _selectedShipRef = shipRef;
         }
 
 

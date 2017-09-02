@@ -4,7 +4,6 @@ using Infrastructure.Core.Player;
 using Infrastructure.Core.Login.Events;
 using Infrastructure.Core.Player.Events;
 using UnityEngine.UI;
-using App = Infrastructure.Base.Application.Application;
 
 namespace CWO
 {
@@ -13,7 +12,6 @@ namespace CWO
         public PlayerModel player;
         public Slider EnergyBar;
         public bool PlayerLoaded;
-        private PlayerService _playerService;
 
         private void Awake () 
         {
@@ -21,11 +19,6 @@ namespace CWO
             eventManager.AddListener<PlayerJumpedToNodeEvent>(OnPlayJumpToNode);
             eventManager.AddListener<PlayerLandOnStarEvent>(OnPlayLandOnStar);
             eventManager.AddListener<PlayerDepartFromStarEvent>(OnPlayerDepartFromStar);
-        }
-
-        private void Start()
-        {
-            _playerService = application.serviceManager.get<PlayerService>() as PlayerService;
         }
 
         private void Update()

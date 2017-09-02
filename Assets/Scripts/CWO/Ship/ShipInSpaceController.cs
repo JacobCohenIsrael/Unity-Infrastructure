@@ -28,22 +28,7 @@ namespace CWO.Ship
 
         private void OnShipClicked()
         {
-            if (!isSelected)
-            {
-                UnityEngine.Debug.Log("Selecting Ship");
-                UnityEngine.Color color = BackgroundImage.color;
-                color.a = 1.0f;
-                BackgroundImage.color = color;
-                isSelected = true;
-            }
-            else
-            {
-                UnityEngine.Debug.Log("Deselecting Ship");
-                UnityEngine.Color color = BackgroundImage.color;
-                color.a = 0.0f;
-                BackgroundImage.color = color;
-                isSelected = false;
-            }
+            NodeSpaceController.SetSelectedShip(this);
         }
     }
 }
