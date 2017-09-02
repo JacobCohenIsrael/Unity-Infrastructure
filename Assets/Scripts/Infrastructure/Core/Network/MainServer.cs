@@ -1,12 +1,9 @@
 ﻿using Infrastructure.Base.Service;
-using Infrastructure.Base.Service.Contracts;
-using Infrastructure.Base.Event;
-using Infrastructure.Core.Network.Events;
 using UnitySocketIO.Events;
 
 namespace Infrastructure.Core.Network
 {
-    public class MainServer : IServiceProvider
+    public class MainServer : Base.Service.Contracts.IServiceProvider
     {
         public ISocketIO socketIO;
 

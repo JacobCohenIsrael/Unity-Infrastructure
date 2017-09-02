@@ -107,7 +107,14 @@ namespace Infrastructure.Core.Player
         {
             Message msg = new Message();
             msg.body.Add("player", player);
-            mainServer.Emit("playerEnterMarket", msg.ToJson());
+            mainServer.Emit("playerEnteredMarket", msg.ToJson());
+        }
+
+        public void LeaveMarket(PlayerModel player)
+        {
+            Message msg = new Message();
+            msg.body.Add("player", player);
+            mainServer.Emit("playerLeftMarket", msg.ToJson());
         }
     }
 }

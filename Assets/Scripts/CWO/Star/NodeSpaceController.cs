@@ -23,6 +23,9 @@ namespace CWO.Star
         protected NodeService nodeService;
         protected PlayerService playerService;
 
+        [SerializeField]
+        private Text _selectedShipInfo;
+
         private ShipInSpaceController _selectedShipRef;
 
         [SerializeField]
@@ -98,8 +101,6 @@ namespace CWO.Star
                 {
                     Destroy(child.gameObject);
                 }
-
-
             }
         }
 
@@ -141,6 +142,7 @@ namespace CWO.Star
             shipInSpaceController.PlayerId = playerId;
             shipInSpaceController.ShipImage.sprite = sprite;
             shipInSpaceController.NodeSpaceController = this;
+            shipInSpaceController.Ship = ship;
         }
 
         private void OnJump()
@@ -170,6 +172,10 @@ namespace CWO.Star
         public void SetSelectedShip(ShipInSpaceController shipRef)
         {
             shipRef.BackgroundImage.enabled = true;
+            _selectedShipInfo.enabled = true;
+            _selectedShipInfo.text = "Player: " + shipRef.PlayerId +
+                "\nShip Race: " + shipRef.Ship.GetShipType() +
+                "\nShip Class: " + shipRef.Ship.GetShipClass(); 
             if (_selectedShipRef != null)
             {
                 _selectedShipRef.BackgroundImage.enabled = false;
@@ -177,6 +183,7 @@ namespace CWO.Star
             if (_selectedShipRef == shipRef)
             {
                 _selectedShipRef = null;
+                _selectedShipInfo.enabled = false;
                 return;
             }
             _selectedShipRef = shipRef;

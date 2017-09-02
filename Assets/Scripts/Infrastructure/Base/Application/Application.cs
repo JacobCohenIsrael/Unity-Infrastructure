@@ -28,9 +28,12 @@ namespace Infrastructure.Base.Application
 
         public void run()
         {
-            eventManager.DispatchEvent(new ApplicationStartedEvent(this));
-            eventManager.DispatchEvent(new SetAppConfigEvent());
-            eventManager.DispatchEvent(new SubscribeEvent());
+            if (!HasStarted)
+            {
+                eventManager.DispatchEvent(new ApplicationStartedEvent(this));
+                eventManager.DispatchEvent(new SetAppConfigEvent());
+                eventManager.DispatchEvent(new SubscribeEvent());
+            }
             eventManager.DispatchEvent(new ApplicationFinishedLoadingEvent(this));
             HasStarted = true;
         }

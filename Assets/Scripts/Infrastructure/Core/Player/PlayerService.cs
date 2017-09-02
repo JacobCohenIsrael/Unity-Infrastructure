@@ -10,6 +10,7 @@ using Infrastructure.Core.Chat.Events;
 using Infrastructure.Core.Node;
 using Infrastructure.Core.Notification.Events;
 using Infrastructure.Core.Star;
+using System;
 
 namespace Infrastructure.Core.Player
 {
@@ -53,6 +54,7 @@ namespace Infrastructure.Core.Player
             mainServer.On("chatMessageReceived", OnChatMessageReceived);
             mainServer.On("notificationReceived", OnNotificationReceived);
             mainServer.On("playerEnteredMarket", OnPlayerEnteredMarket);
+            mainServer.On("playerLeftMarket", OnPlayerLeftMarket);
             mainServer.On("playerJumpedToNode", OnPlayerJumpedToNode);
         }
 
@@ -66,6 +68,12 @@ namespace Infrastructure.Core.Player
         {
             var peme = JsonConvert.DeserializeObject<PlayerEnteredMarketEvent>(e.data);
             eventManager.DispatchEvent(peme);
+        }
+
+        private void OnPlayerLeftMarket(SocketIOEvent e)
+        {
+            var plme = JsonConvert.DeserializeObject<PlayerLeftMarketEvent>(e.data);
+            eventManager.DispatchEvent(plme);
         }
 
         public void LoginAsGuest(string sessionId)
@@ -110,8 +118,7 @@ namespace Infrastructure.Core.Player
             
         public void ExitMarket(PlayerModel player)
         {
-            PlayerExitMarketEvent playerExitMarketEvent = new PlayerExitMarketEvent(player);
-            eventManager.DispatchEvent(playerExitMarketEvent);
+            playerAdapter.LeaveMarket(player);
         }
 
         public void PlayerClosedWorldMap(PlayerModel player, NodeModel node)

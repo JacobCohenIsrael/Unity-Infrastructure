@@ -51,7 +51,7 @@ namespace CWO
             eventManager.AddListener<PlayerLandOnStarEvent>(OnPlayerLandOnStar);
             eventManager.AddListener<PlayerDepartFromStarEvent>(OnPlayerExitStarMenu);
             eventManager.AddListener<PlayerEnteredMarketEvent>(OnPlayerEnteredMarket);
-            eventManager.AddListener<PlayerExitMarketEvent>(OnPlayerExitMarket);
+            eventManager.AddListener<PlayerLeftMarketEvent>(OnPlayerExitMarket);
             eventManager.AddListener<PlayerEnteredLoungeEvent>(OnPlayerEnteredLounge);
             eventManager.AddListener<PlayerLeftLoungeEvent>(OnPlayerLeftLounge);
             eventManager.AddListener<PlayerJumpedToNodeEvent>(OnPlayerJumpedToNode);
@@ -155,7 +155,7 @@ namespace CWO
             ChangeState(GameState.MarketMenu);
         }
 
-        void OnPlayerExitMarket(PlayerExitMarketEvent e)
+        void OnPlayerExitMarket(PlayerLeftMarketEvent e)
         {
             ChangeState(GameState.StarMenu);
         }
