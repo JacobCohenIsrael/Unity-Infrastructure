@@ -118,7 +118,6 @@ namespace CWO.Market
 
         public void SetSelectedResourceSlot(ResourceSlotController resourceSlotRef)
         {
-
             resourceSlotRef.backgroundImage.color = Color.blue;
             
             if (_selectedResourceSlotRef != null)
@@ -131,9 +130,8 @@ namespace CWO.Market
                 DisableMarketButtons();
                 return;
             }
-            _selectedResourceSlotRef = resourceSlotRef;            
-            SetBuyButtonText(_buyAmountSlider.value);
-            SetSellButtonText(_sellAmountSlider.value);
+            _selectedResourceSlotRef = resourceSlotRef;
+            RecalculateSliders();
             EnableMarketButtons();
         }
 
