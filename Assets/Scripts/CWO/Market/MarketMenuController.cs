@@ -1,14 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Implementation.Views.Screen;
 using Infrastructure.Core.Player.Events;
-using Infrastructure.Core.Resource;
 using UnityEngine.UI;
 using Infrastructure.Core.Player;
 using Infrastructure.Base.Application.Events;
 using Infrastructure.Core.Login.Events;
-using System;
 
 namespace CWO.Market 
 {
@@ -21,10 +17,16 @@ namespace CWO.Market
         public Button sellButton;
         public PlayerController playerController;
 
-        protected ResourceSlotController selectedResourceSlotRef; 
-        protected PlayerService playerService;
+        private ResourceSlotController _selectedResourceSlotRef; 
+        private PlayerService _playerService;
 
-    	void Start() 
+        [SerializeField]
+        private Slider _buyAmountSlider;
+        
+        [SerializeField]
+        private Slider _sellAmountSlider;
+        
+    	private void Start() 
         {
             Hide();
             DisableMarketButtons();
@@ -36,12 +38,34 @@ namespace CWO.Market
             exitButton.onClick.AddListener(OnExit);
             buyButton.onClick.AddListener(OnBuyResourceClicked);
             sellButton.onClick.AddListener(OnSellResourceClicked);
-            playerService = application.serviceManager.get<PlayerService>() as PlayerService;
+            _playerService = application.serviceManager.get<PlayerService>() as PlayerService;
             eventManager.AddListener<LogoutSuccessfulEvent>(OnLogoutSuccessful);
             eventManager.AddListener<LoginSuccessfulEvent>(OnLoginSuccessful);
+            eventManager.AddListener<PlayerBoughtResourceEvent>(OnPlayerBoughtResource);
+            eventManager.AddListener<PlayerSoldResourceEvent>(OnPlayerSoldResource);
+            _buyAmountSlider.onValueChanged.AddListener(SetBuyButtonText);
+            _sellAmountSlider.onValueChanged.AddListener(SetSellButtonText);
         }
 
-        private void OnLoginSuccessful(LoginSuccessfulEvent obj)
+        private void OnPlayerSoldResource(PlayerSoldResourceEvent e)
+        {
+            RecalculateSliders();
+        }
+
+        private void OnPlayerBoughtResource(PlayerBoughtResourceEvent e)
+        {
+            RecalculateSliders();
+        }
+
+        private void RecalculateSliders()
+        {
+            _sellAmountSlider.value = 1;
+            _buyAmountSlider.value = 1;
+            SetBuyButtonText(_buyAmountSlider.value);
+            SetSellButtonText(_sellAmountSlider.value);
+        }
+        
+        private void OnLoginSuccessful(LoginSuccessfulEvent e)
         {
             ClearResourceList();
         }
@@ -53,10 +77,9 @@ namespace CWO.Market
 
         protected void OnMarketOpen(PlayerEnteredMarketEvent e)
         {
-            Debug.Log("Marked opened");
-            foreach (KeyValuePair<string, ResourceSlotModel> resourceSlot in e.ResourceSlotList)
+            foreach (var resourceSlot in e.ResourceSlotList)
             {
-                var texture = UnityEngine.Resources.Load("Sprites/" + resourceSlot.Value.Name) as Texture2D;
+                var texture = Resources.Load("Sprites/" + resourceSlot.Value.Name) as Texture2D;
                 var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
                 var instantiatedResourceSlot = Instantiate(resourceSlotPrefab, resourcesPanel);
                 var resourceSlotController = instantiatedResourceSlot.GetComponent<ResourceSlotController>();
@@ -70,7 +93,7 @@ namespace CWO.Market
 
         protected void OnExit()
         {
-            playerService.ExitMarket(playerController.player);
+            _playerService.ExitMarket(playerController.player);
             ClearResourceList();
         }
 
@@ -83,47 +106,89 @@ namespace CWO.Market
             }
         }
 
-
         protected void OnBuyResourceClicked()
         {
-            playerService.BuyResource(playerController.player, selectedResourceSlotRef.resourceSlot, 1);
+            _playerService.BuyResource(playerController.player, _selectedResourceSlotRef.resourceSlot, (int)_buyAmountSlider.value);
         }
 
         protected void OnSellResourceClicked()
         {
-            playerService.SellResource(playerController.player, selectedResourceSlotRef.resourceSlot, 1);
+            _playerService.SellResource(playerController.player, _selectedResourceSlotRef.resourceSlot, (int)_sellAmountSlider.value);
         }
 
         public void SetSelectedResourceSlot(ResourceSlotController resourceSlotRef)
         {
+
             resourceSlotRef.backgroundImage.color = Color.blue;
-            if (selectedResourceSlotRef != null)
+            
+            if (_selectedResourceSlotRef != null)
             {
-                selectedResourceSlotRef.backgroundImage.color = Color.white;
+                _selectedResourceSlotRef.backgroundImage.color = Color.white;
             }
-            if (selectedResourceSlotRef == resourceSlotRef)
+            if (_selectedResourceSlotRef == resourceSlotRef)
             {
-                selectedResourceSlotRef = null;
+                _selectedResourceSlotRef = null;
                 DisableMarketButtons();
                 return;
             }
-            selectedResourceSlotRef = resourceSlotRef;
-            buyButton.GetComponentInChildren<Text>().text = "Buy for " + resourceSlotRef.resourceSlot.BuyPrice.ToString("C0");
-            sellButton.GetComponentInChildren<Text>().text = "Sell for " + resourceSlotRef.resourceSlot.SellPrice.ToString("C0");
+            _selectedResourceSlotRef = resourceSlotRef;            
+            SetBuyButtonText(_buyAmountSlider.value);
+            SetSellButtonText(_sellAmountSlider.value);
             EnableMarketButtons();
+        }
 
+        private void SetBuyButtonText(float buyAmount)
+        {
+            var player = playerController.player;
+            var cargoCapacity = player.getActiveShip().GetCurrentCargo();
+            int possibleResourceBuyAmount = player.credits / _selectedResourceSlotRef.resourceSlot.BuyPrice;
+            int maxValue = Mathf.Min(cargoCapacity, possibleResourceBuyAmount);
+            if (maxValue < 1)
+            {
+                buyButton.interactable = false;
+                _buyAmountSlider.interactable = false;
+            }
+            else
+            {
+                buyButton.interactable = true;
+                _buyAmountSlider.interactable = true;
+                _buyAmountSlider.maxValue = maxValue;
+                buyButton.GetComponentInChildren<Text>().text = "Buy " + buyAmount  + " for " + (buyAmount * _selectedResourceSlotRef.resourceSlot.BuyPrice).ToString("C0");    
+            }  
+        }
+        
+        private void SetSellButtonText(float sellAmount)
+        {
+            var player = playerController.player;
+            int possibleResourceToSell = player.getActiveShip().GetResourceAmount(_selectedResourceSlotRef.resourceSlot.Name);
+            if (possibleResourceToSell < 1)
+            {
+                sellButton.interactable = false;
+                _sellAmountSlider.interactable = false;
+            }
+            else
+            {
+                sellButton.interactable = true;
+                _sellAmountSlider.interactable = true;
+                _sellAmountSlider.maxValue = possibleResourceToSell;
+                sellButton.GetComponentInChildren<Text>().text = "Sell " + sellAmount  + " for " + (sellAmount * _selectedResourceSlotRef.resourceSlot.SellPrice).ToString("C0");    
+            }  
         }
 
         private void EnableMarketButtons()
         {
             buyButton.gameObject.SetActive(true);
             sellButton.gameObject.SetActive(true);
+            _sellAmountSlider.gameObject.SetActive(true);
+            _buyAmountSlider.gameObject.SetActive(true);
         }
 
         private void DisableMarketButtons()
         {
             buyButton.gameObject.SetActive(false);
             sellButton.gameObject.SetActive(false);
+            _sellAmountSlider.gameObject.SetActive(false);
+            _buyAmountSlider.gameObject.SetActive(false);
         }
     }
 }

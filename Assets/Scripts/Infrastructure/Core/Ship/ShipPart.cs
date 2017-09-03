@@ -11,7 +11,7 @@ namespace Infrastructure.Core.Ship
         public string Name;
 
         [JsonProperty("partStats")]
-        public ShipStats PartStats;
+        public Stats PartStats;
     }
 }
 

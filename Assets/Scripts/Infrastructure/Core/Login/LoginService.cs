@@ -38,7 +38,7 @@ namespace Infrastructure.Core.Login
 
         public void OnLogin(SocketIOEvent e)
         {
-            LoginSuccessfulEvent loginSuccessfulEvent = JsonConvert.DeserializeObject<LoginSuccessfulEvent>(e.data);
+            var loginSuccessfulEvent = JsonConvert.DeserializeObject<LoginSuccessfulEvent>(e.data);
             eventManager.DispatchEvent(loginSuccessfulEvent);
         }
     }

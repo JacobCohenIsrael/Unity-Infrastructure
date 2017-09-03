@@ -5,22 +5,25 @@ using System.Collections.Generic;
 namespace Infrastructure.Core.Ship
 {
     [Serializable]
-    public class ShipStats
+    public class Stats
     {
-        [JsonProperty("hull")]
-        public int Hull = 0;
+        [JsonProperty("hull")] 
+        public int Hull;
 
-        public int ShieldRegen  = 0;
-        public int ShieldCapacity = 0;
+        [JsonProperty("shieldRegen")]
+        public int ShieldRegen;
+        
+        [JsonProperty("shieldCapacity")]
+        public int ShieldCapacity;
 
         [JsonProperty("energyRegen")]
-        public int EnergyRegen = 0;
+        public int EnergyRegen;
 
         [JsonProperty("energyCapacity")]
-        public int EnergyCapacity = 0;
+        public int EnergyCapacity;
 
         [JsonProperty("jumpDistance")]
-        public int JumpDistance = 0;
+        public int JumpDistance;
 
         [JsonProperty("cargoCapacity")]
         public int CargoCapacity;

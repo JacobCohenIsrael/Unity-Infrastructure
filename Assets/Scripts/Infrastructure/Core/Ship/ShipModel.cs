@@ -10,96 +10,115 @@ namespace Infrastructure.Core.Ship
     [Serializable]
     public class ShipModel : Infrastructure.Base.Model.Model
     {
-        public int id;
-
         [JsonProperty("shipType")]
-        protected string shipType;
+        private string _shipType;
         
         [JsonProperty("shipClass")]
-        protected string shipClass;
+        private string _shipClass;
 
-        [JsonProperty("currentHullAmount")]
-        private int currentHullAmount;
-        public int currentShieldAmount;
-        public float currentEnergyAmount;
+        [JsonProperty("currentStats")]
+        private CurrentStats _currentStats;
 
-        public ShipStats cachedShipStats;
+        [JsonProperty("baseStats")]
+        private Stats _baseStats;
+        
+        [JsonProperty("maxStats")]
+        private Stats _maxStats;
 
-        public ShipPart[] shipParts;
+        [JsonProperty("shipParts")]
+        private ShipPart[] _shipParts;
 
-        public Dictionary<string, int> shipCargo;
+        [JsonProperty("shipCargo")]
+        private Dictionary<string, int> _shipCargo;
 
-        public ShipModel()
-        {
-            cachedShipStats = new ShipStats();
-        }
+        [JsonProperty("shipSlots")]
+        private Dictionary<string, int> _shipSlots;
 
         public bool AddResource(string resourceName, int amount)
         {
-            int cargoHold = shipCargo.Sum (x => x.Value);
-            if (cargoHold < cachedShipStats.CargoCapacity)
+            var cargoHold = _shipCargo.Sum (x => x.Value);
+            if (cargoHold >= _maxStats.CargoCapacity) return false;
+            if (!_shipCargo.ContainsKey(resourceName))
             {
-                if (!shipCargo.ContainsKey(resourceName))
-                {
-                    shipCargo.Add(resourceName, amount);
-                }
-                else
-                {
-                    shipCargo[resourceName] += amount;
-                }
-                return true;
+                _shipCargo.Add(resourceName, amount);
             }
-            return false;
+            else
+            {
+                _shipCargo[resourceName] += amount;
+            }
+            return true;
         }
 
         public bool RemoveResource(string resourceName, int amount)
         {
-            if (shipCargo.ContainsKey(resourceName) && shipCargo[resourceName] >= amount )
-            {
-                shipCargo[resourceName]--;
-                return true;
-            }
-            return false;
+            if (!_shipCargo.ContainsKey(resourceName) || _shipCargo[resourceName] < amount) return false;
+            _shipCargo[resourceName]--;
+            return true;
         }
 
-        public int getMaxEnergyCapacity()
+        public int GetMaxEnergyCapacity()
         {
-            return cachedShipStats.EnergyCapacity;
+            return _maxStats.EnergyCapacity;
         }
 
-        public int getMaxEnergyRegen()
+        public int GetMaxEnergyRegen()
         {
-            return cachedShipStats.EnergyRegen;
+            return _maxStats.EnergyRegen;
         }
 
-        public int getShipJumpDistance()
+        public int GetShipJumpDistance()
         {
-            return  cachedShipStats.JumpDistance;
+            return  _maxStats.JumpDistance;
         }
 
         public int GetCurrentHullAmount()
         {
-            return currentHullAmount;
+            return _currentStats.Hull;
+        }
+
+        public int GetCurrentEnergy()
+        {
+            return _currentStats.Energy;
+        }
+
+        public int GetCurrentShield()
+        {
+            return _currentStats.Shield;
+        }
+        
+        public int GetCurrentCargo()
+        {
+            return _currentStats.Cargo;
         }
 
         public string GetShipType()
         {
-            return shipType;
+            return _shipType;
         }
 
         public string GetShipClass()
         {
-            return shipClass;
+            return _shipClass;
         }
 
-        public int GetShipCargoCapacity()
+        public int GetMaxCargoCapacity()
         {
-            return cachedShipStats.CargoCapacity;
+            return _maxStats.CargoCapacity;
         }
 
-        public int GetShipCargoHold()
+        public Dictionary<string, int> GetCargoHold()
         {
-            return shipCargo.Sum(x => x.Value);
+            return _shipCargo;
+        }
+
+        public int GetResourceAmount(string resourceName)
+        {
+            return _shipCargo.ContainsKey(resourceName) ? _shipCargo[resourceName] : 0;
+        }
+
+        public void SetCurrentEnergy(int newEnergy)
+        {
+            _currentStats.Energy = newEnergy;
         }
     }
 }

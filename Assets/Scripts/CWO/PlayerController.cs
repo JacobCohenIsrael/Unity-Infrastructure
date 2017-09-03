@@ -13,8 +13,10 @@ namespace CWO
         public Slider EnergyBar;
         public bool PlayerLoaded;
 
-        private void Awake () 
+        private void Awake ()
         {
+            eventManager.AddListener<PlayerBoughtResourceEvent>(OnPlayerBoughtResource);
+            eventManager.AddListener<PlayerSoldResourceEvent>(OnPlayerSoldResource);
             eventManager.AddListener<LoginSuccessfulEvent>(OnLoginSuccessful);
             eventManager.AddListener<PlayerJumpedToNodeEvent>(OnPlayJumpToNode);
             eventManager.AddListener<PlayerLandOnStarEvent>(OnPlayLandOnStar);
@@ -37,22 +39,22 @@ namespace CWO
 
         protected void ShipEnergyRegen()
         {
-            float energyRegen = player.getActiveShip().getMaxEnergyRegen();
-            float energyCapacity = player.getActiveShip().getMaxEnergyCapacity();
-            float newCurrentEnergyAmount = player.getActiveShip().currentEnergyAmount + energyRegen * Time.deltaTime;
-            player.getActiveShip().currentEnergyAmount = (newCurrentEnergyAmount > energyCapacity) ? energyCapacity : newCurrentEnergyAmount;
+            int energyRegen = player.getActiveShip().GetMaxEnergyRegen();
+            int energyCapacity = player.getActiveShip().GetMaxEnergyCapacity();
+            int newCurrentEnergyAmount = player.getActiveShip().GetCurrentEnergy() + (int)(energyRegen * Time.deltaTime);
+            player.getActiveShip().SetCurrentEnergy(newCurrentEnergyAmount > energyCapacity ? energyCapacity : newCurrentEnergyAmount);
             EnergyBar.maxValue = energyCapacity;
-            EnergyBar.value = player.getActiveShip().currentEnergyAmount;
+            EnergyBar.value = player.getActiveShip().GetCurrentEnergy();
         }
         
         protected void OnPlayerBoughtResource(PlayerBoughtResourceEvent e)
         {
-            player.credits = e.Player.credits;
+            player = e.Player;
         }
 
         protected void OnPlayerSoldResource(PlayerSoldResourceEvent e)
         {
-            player.credits = e.Player.credits;
+            player = e.Player;
         }
             
         protected void OnLoginSuccessful(LoginSuccessfulEvent e)

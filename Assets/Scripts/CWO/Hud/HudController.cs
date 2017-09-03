@@ -62,17 +62,17 @@ namespace CWO.Hud
 
         protected void UpdateCargo(PlayerModel player)
         {
-            _cargo.text = "Cagro:\n" + JsonConvert.SerializeObject(player.getActiveShip().shipCargo).Replace("{","").Replace("}", "").Replace(",", "\n\r");
+            _cargo.text = "Cagro:\n" + JsonConvert.SerializeObject(player.getActiveShip().GetCargoHold()).Replace("{","").Replace("}", "").Replace(",", "\n");
         }
 
         private void UpdateCargoCapacity(PlayerModel player)
         {
-            _cargoCapacity.text = "Cargo Capacity: " + player.getActiveShip().GetShipCargoHold() + "/" + player.getActiveShip().GetShipCargoCapacity();
+            _cargoCapacity.text = "Cargo Capacity: " + (player.getActiveShip().GetMaxCargoCapacity() - player.getActiveShip().GetCurrentCargo()) + "/" + player.getActiveShip().GetMaxCargoCapacity();
         }
 
         public void OnLogout()
         {
-            LoginService loginService = application.serviceManager.get<LoginService>() as LoginService;
+            var loginService = application.serviceManager.get<LoginService>() as LoginService;
             loginService.Logout();
         }
     }

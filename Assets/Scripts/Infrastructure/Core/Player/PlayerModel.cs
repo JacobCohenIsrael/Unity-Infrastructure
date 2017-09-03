@@ -36,7 +36,7 @@ namespace Infrastructure.Core.Player
 
         public float GetJumpDistance()
         {
-            return getActiveShip().getShipJumpDistance();
+            return getActiveShip().GetShipJumpDistance();
         }
 
         public bool hasHangerInNode(string nodeName)
