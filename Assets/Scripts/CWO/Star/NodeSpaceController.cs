@@ -44,6 +44,7 @@ namespace CWO.Star
         {
             if (playerController.player != null && nodeService != null)
             {
+                _selectedShipInfo.text = "";
                 if (nodeService.GetNodeByName(playerController.player.currentNodeName).HasStar())
                 {
                     var node = nodeService.GetNodeByName(playerController.player.currentNodeName);
