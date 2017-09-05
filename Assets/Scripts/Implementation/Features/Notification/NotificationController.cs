@@ -19,7 +19,7 @@ namespace Implementation.Features.Notification
 		{
 			_notificationTextField.text = e.NotificationText;
 			_notificationTextField.enabled = true;
-			StartCoroutine(FadeTextToZeroAlpha(2f, _notificationTextField));
+			StartCoroutine(FadeTextToZeroAlpha(e.NotificationLength, _notificationTextField));
 		}
 
 		private IEnumerator FadeTextToZeroAlpha(float t, Text i)

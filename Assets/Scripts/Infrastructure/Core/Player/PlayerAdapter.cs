@@ -87,12 +87,11 @@ namespace Infrastructure.Core.Player
             return true;
         }
 
-        public bool LeaveLounge(PlayerModel player)
+        public void LeaveLounge(PlayerModel player)
         {
             Message msg = new Message();
             msg.body.Add("player", player);
             mainServer.Emit("playerLeftLounge", msg.ToJson());
-            return true;
         }
 
         public void SendChat(PlayerModel player, ChatMessageModel chatMessage)

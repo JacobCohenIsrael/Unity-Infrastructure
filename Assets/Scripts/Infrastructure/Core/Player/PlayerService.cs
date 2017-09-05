@@ -11,6 +11,7 @@ using Infrastructure.Core.Node;
 using Infrastructure.Core.Notification.Events;
 using Infrastructure.Core.Star;
 using System;
+using Infrastructure.Core.Market;
 
 namespace Infrastructure.Core.Player
 {
@@ -29,10 +30,7 @@ namespace Infrastructure.Core.Player
 
         public void LeaveLounge(PlayerModel player)
         {
-            if (playerAdapter.LeaveLounge(player))
-            {
-
-            }
+            playerAdapter.LeaveLounge(player);
         }
 
         protected void getDependencies(ServiceManager serviceManager)
@@ -56,6 +54,13 @@ namespace Infrastructure.Core.Player
             mainServer.On("playerEnteredMarket", OnPlayerEnteredMarket);
             mainServer.On("playerLeftMarket", OnPlayerLeftMarket);
             mainServer.On("playerJumpedToNode", OnPlayerJumpedToNode);
+            mainServer.On("resourcePriceChanged", OnResourcePriceChanged);
+        }
+
+        private void OnResourcePriceChanged(SocketIOEvent e)
+        {
+            var rpce = JsonConvert.DeserializeObject<ResourcePriceChangedEvent>(e.data);
+            eventManager.DispatchEvent(rpce);
         }
 
         private void OnNotificationReceived(SocketIOEvent e)

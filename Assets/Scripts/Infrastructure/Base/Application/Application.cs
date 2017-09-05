@@ -2,7 +2,6 @@
 using Infrastructure.Base.Service;
 using Infrastructure.Base.Event;
 using Infrastructure.Base.Application.Events;
-using Infrastructure.Base.Config;
 
 
 namespace Infrastructure.Base.Application
@@ -36,6 +35,12 @@ namespace Infrastructure.Base.Application
             }
             eventManager.DispatchEvent(new ApplicationFinishedLoadingEvent(this));
             HasStarted = true;
+        }
+
+        public void Quit()
+        {
+            eventManager.DispatchEvent(new ApplicationQuitEvent(this));
+            HasStarted = false;
         }
     }
 }

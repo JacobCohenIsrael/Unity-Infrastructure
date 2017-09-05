@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using Infrastructure.Base.Application.Contracts;
-using Infrastructure.Base.Event;
+﻿using Infrastructure.Base.Application.Contracts;
 
 namespace Infrastructure.Base.Application.Events
 {
-    public class ApplicationFinishedLoadingEvent
+    public class ApplicationFinishedLoadingEvent : Event.Event
     {
         protected IApplication app;
 

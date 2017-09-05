@@ -1,10 +1,12 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using Implementation.Views.Screen;
 using Infrastructure.Core.Player.Events;
 using UnityEngine.UI;
 using Infrastructure.Core.Player;
 using Infrastructure.Base.Application.Events;
 using Infrastructure.Core.Login.Events;
+using Infrastructure.Core.Market;
 
 namespace CWO.Market 
 {
@@ -16,6 +18,8 @@ namespace CWO.Market
         public Button buyButton;
         public Button sellButton;
         public PlayerController playerController;
+
+        private Dictionary<string, ResourceSlotController> _resourceSlots;
 
         private ResourceSlotController _selectedResourceSlotRef; 
         private PlayerService _playerService;
@@ -30,21 +34,32 @@ namespace CWO.Market
         {
             Hide();
             DisableMarketButtons();
+            _resourceSlots = new Dictionary<string, ResourceSlotController>();
     	}
 
         protected override void SubscribeToEvents(SubscribeEvent e)
         {
-            application.eventManager.AddListener<PlayerEnteredMarketEvent>(OnMarketOpen);
-            exitButton.onClick.AddListener(OnExit);
-            buyButton.onClick.AddListener(OnBuyResourceClicked);
-            sellButton.onClick.AddListener(OnSellResourceClicked);
-            _playerService = application.serviceManager.get<PlayerService>() as PlayerService;
             eventManager.AddListener<LogoutSuccessfulEvent>(OnLogoutSuccessful);
             eventManager.AddListener<LoginSuccessfulEvent>(OnLoginSuccessful);
             eventManager.AddListener<PlayerBoughtResourceEvent>(OnPlayerBoughtResource);
             eventManager.AddListener<PlayerSoldResourceEvent>(OnPlayerSoldResource);
+            eventManager.AddListener<PlayerEnteredMarketEvent>(OnMarketOpen);
+            eventManager.AddListener<ResourcePriceChangedEvent>(OnResourcePriceChanged);
+            exitButton.onClick.AddListener(OnExit);
+            buyButton.onClick.AddListener(OnBuyResourceClicked);
+            sellButton.onClick.AddListener(OnSellResourceClicked);
+            _playerService = application.serviceManager.get<PlayerService>() as PlayerService;
+
             _buyAmountSlider.onValueChanged.AddListener(SetBuyButtonText);
             _sellAmountSlider.onValueChanged.AddListener(SetSellButtonText);
+        }
+
+        private void OnResourcePriceChanged(ResourcePriceChangedEvent e)
+        {
+            Debug.Log("price changed");
+            _resourceSlots[e.Resource.Name].resourceSlot = e.Resource;
+            SetBuyButtonText(1);
+            SetSellButtonText(1);
         }
 
         private void OnPlayerSoldResource(PlayerSoldResourceEvent e)
@@ -88,6 +103,7 @@ namespace CWO.Market
                 resourceSlotController.resourceImage.color = Color.white;
                 resourceSlotController.resourceImage.sprite = sprite;
                 resourceSlotController.marketMenuController = this;
+                _resourceSlots[resourceSlot.Value.Name] = resourceSlotController;
             }
         }
 
@@ -145,13 +161,14 @@ namespace CWO.Market
             {
                 buyButton.interactable = false;
                 _buyAmountSlider.interactable = false;
+                buyButton.GetComponentInChildren<Text>().text = "Sold for " + _selectedResourceSlotRef.resourceSlot.BuyPrice.ToString("C0");   
             }
             else
             {
                 buyButton.interactable = true;
                 _buyAmountSlider.interactable = true;
                 _buyAmountSlider.maxValue = maxValue;
-                buyButton.GetComponentInChildren<Text>().text = "Buy " + buyAmount  + " for " + (buyAmount * _selectedResourceSlotRef.resourceSlot.BuyPrice).ToString("C0");    
+                buyButton.GetComponentInChildren<Text>().text = "Buy " + buyAmount  + " for " + _selectedResourceSlotRef.resourceSlot.BuyPrice.ToString("C0");    
             }  
         }
         
@@ -163,6 +180,7 @@ namespace CWO.Market
             {
                 sellButton.interactable = false;
                 _sellAmountSlider.interactable = false;
+                sellButton.GetComponentInChildren<Text>().text = "Bought for " + _selectedResourceSlotRef.resourceSlot.SellPrice.ToString("C0");  
             }
             else
             {
