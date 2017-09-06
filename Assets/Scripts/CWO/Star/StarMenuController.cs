@@ -32,9 +32,20 @@ namespace CWO.Star
         {
             eventManager.AddListener<PlayerLandOnStarEvent>(OnPlayerLandOnStar);
             eventManager.AddListener<LoginSuccessfulEvent>(OnLoginSuccessful);
+            eventManager.AddListener<ApplicationQuitEvent>(OnAppQuit);
             departButton.onClick.AddListener(OnDepart);
             marketButton.onClick.AddListener(OpenMarket);
             loungeButton.onClick.AddListener(EnterLounge);
+        }
+
+        private void OnAppQuit(ApplicationQuitEvent obj)
+        {
+            eventManager.RemoveListener<PlayerLandOnStarEvent>(OnPlayerLandOnStar);
+            eventManager.RemoveListener<LoginSuccessfulEvent>(OnLoginSuccessful);
+            eventManager.RemoveListener<ApplicationQuitEvent>(OnAppQuit);
+            departButton.onClick.RemoveListener(OnDepart);
+            marketButton.onClick.RemoveListener(OpenMarket);
+            loungeButton.onClick.RemoveListener(EnterLounge);
         }
 
         protected void OnDepart()

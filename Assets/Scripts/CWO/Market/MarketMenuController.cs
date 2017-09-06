@@ -35,6 +35,7 @@ namespace CWO.Market
             Hide();
             DisableMarketButtons();
             _resourceSlots = new Dictionary<string, ResourceSlotController>();
+            _playerService = application.serviceManager.get<PlayerService>() as PlayerService;
     	}
 
         protected override void SubscribeToEvents(SubscribeEvent e)
@@ -45,13 +46,28 @@ namespace CWO.Market
             eventManager.AddListener<PlayerSoldResourceEvent>(OnPlayerSoldResource);
             eventManager.AddListener<PlayerEnteredMarketEvent>(OnMarketOpen);
             eventManager.AddListener<ResourcePriceChangedEvent>(OnResourcePriceChanged);
+            eventManager.AddListener<ApplicationQuitEvent>(OnAppQuit);
             exitButton.onClick.AddListener(OnExit);
             buyButton.onClick.AddListener(OnBuyResourceClicked);
             sellButton.onClick.AddListener(OnSellResourceClicked);
-            _playerService = application.serviceManager.get<PlayerService>() as PlayerService;
-
             _buyAmountSlider.onValueChanged.AddListener(SetBuyButtonText);
             _sellAmountSlider.onValueChanged.AddListener(SetSellButtonText);
+        }
+
+        private void OnAppQuit(ApplicationQuitEvent e)
+        {
+            eventManager.RemoveListener<LogoutSuccessfulEvent>(OnLogoutSuccessful);
+            eventManager.RemoveListener<LoginSuccessfulEvent>(OnLoginSuccessful);
+            eventManager.RemoveListener<PlayerBoughtResourceEvent>(OnPlayerBoughtResource);
+            eventManager.RemoveListener<PlayerSoldResourceEvent>(OnPlayerSoldResource);
+            eventManager.RemoveListener<PlayerEnteredMarketEvent>(OnMarketOpen);
+            eventManager.RemoveListener<ResourcePriceChangedEvent>(OnResourcePriceChanged);
+            eventManager.RemoveListener<ApplicationQuitEvent>(OnAppQuit);
+            exitButton.onClick.RemoveListener(OnExit);
+            buyButton.onClick.RemoveListener(OnBuyResourceClicked);
+            sellButton.onClick.RemoveListener(OnSellResourceClicked);
+            _buyAmountSlider.onValueChanged.RemoveListener(SetBuyButtonText);
+            _sellAmountSlider.onValueChanged.RemoveListener(SetSellButtonText);
         }
 
         private void OnResourcePriceChanged(ResourcePriceChangedEvent e)
