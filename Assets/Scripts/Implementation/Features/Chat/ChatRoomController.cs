@@ -36,6 +36,15 @@ namespace Implementation.Features.Chat
             chatSendButton.onClick.AddListener(OnChatSendButtonClicked);
             chatInputField.onEndEdit.AddListener(OnEnterKeyPressed);
             eventManager.AddListener<ChatMessageReceivedEvent>(OnChatMessageReceived);
+            eventManager.AddListener<ApplicationQuitEvent>(OnAppQuit);
+        }
+
+        private void OnAppQuit(ApplicationQuitEvent e)
+        {
+            chatSendButton.onClick.RemoveListener(OnChatSendButtonClicked);
+            chatInputField.onEndEdit.RemoveListener(OnEnterKeyPressed);
+            eventManager.RemoveListener<ChatMessageReceivedEvent>(OnChatMessageReceived);
+            eventManager.RemoveListener<ApplicationQuitEvent>(OnAppQuit);
         }
 
         private void OnChatSendButtonClicked()
