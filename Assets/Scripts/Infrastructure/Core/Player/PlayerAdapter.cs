@@ -22,7 +22,7 @@ namespace Infrastructure.Core.Player
         {
             Message msg = new Message();
             msg.body.Add("request", new LoginRequestModel { Token = token });
-            mainServer.Emit("/player/login", msg.ToJson());
+            mainServer.Emit("login", msg.ToJson());
         }
 
         public void JumpPlayerToNode(PlayerModel player, NodeModel node)
