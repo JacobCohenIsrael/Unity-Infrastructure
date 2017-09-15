@@ -79,6 +79,7 @@ namespace CWO
         void WorldMapState()
         {
             worldMapController.Show();
+            hudController.Show();
         }
 
         void NodeSpaceState()

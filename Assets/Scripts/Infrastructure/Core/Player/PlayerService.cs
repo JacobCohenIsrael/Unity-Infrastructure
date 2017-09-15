@@ -9,8 +9,6 @@ using Infrastructure.Core.Chat;
 using Infrastructure.Core.Chat.Events;
 using Infrastructure.Core.Node;
 using Infrastructure.Core.Notification.Events;
-using Infrastructure.Core.Star;
-using System;
 using Infrastructure.Core.Market;
 
 namespace Infrastructure.Core.Player

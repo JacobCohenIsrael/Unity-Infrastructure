@@ -13,6 +13,8 @@ namespace CWO
         public Slider EnergyBar;
         public bool PlayerLoaded;
 
+        private float lastRegenTime;
+
         private void Awake ()
         {
             eventManager.AddListener<PlayerBoughtResourceEvent>(OnPlayerBoughtResource);
@@ -21,6 +23,11 @@ namespace CWO
             eventManager.AddListener<PlayerJumpedToNodeEvent>(OnPlayJumpToNode);
             eventManager.AddListener<PlayerLandOnStarEvent>(OnPlayLandOnStar);
             eventManager.AddListener<PlayerDepartFromStarEvent>(OnPlayerDepartFromStar);
+        }
+
+        private void Start()
+        {
+            lastRegenTime = Time.time;
         }
 
         private void Update()
@@ -41,10 +48,15 @@ namespace CWO
         {
             int energyRegen = player.getActiveShip().GetMaxEnergyRegen();
             int energyCapacity = player.getActiveShip().GetMaxEnergyCapacity();
-            int newCurrentEnergyAmount = player.getActiveShip().GetCurrentEnergy() + (int)(energyRegen * Time.deltaTime);
-            player.getActiveShip().SetCurrentEnergy(newCurrentEnergyAmount > energyCapacity ? energyCapacity : newCurrentEnergyAmount);
-            EnergyBar.maxValue = energyCapacity;
-            EnergyBar.value = player.getActiveShip().GetCurrentEnergy();
+            int energyAddition = (int)(energyRegen * (Time.time - lastRegenTime));
+            if (energyAddition > 0)
+            {
+                lastRegenTime = Time.time;
+                int newCurrentEnergyAmount = player.getActiveShip().GetCurrentEnergy() + energyAddition;
+                player.getActiveShip().SetCurrentEnergy(newCurrentEnergyAmount > energyCapacity ? energyCapacity : newCurrentEnergyAmount);
+                EnergyBar.maxValue = energyCapacity;
+                EnergyBar.value = player.getActiveShip().GetCurrentEnergy();
+            }
         }
         
         protected void OnPlayerBoughtResource(PlayerBoughtResourceEvent e)
@@ -65,7 +77,7 @@ namespace CWO
 
         protected void OnPlayJumpToNode(PlayerJumpedToNodeEvent e)
         {
-            player.currentNodeName = e.NodeSpace.name;
+            player = e.Player;
         }
 
         protected void OnPlayLandOnStar(PlayerLandOnStarEvent e)
