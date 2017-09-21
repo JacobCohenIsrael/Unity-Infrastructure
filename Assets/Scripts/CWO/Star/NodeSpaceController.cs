@@ -9,6 +9,9 @@ using Infrastructure.Core.Ship;
 using System.Collections.Generic;
 using CWO.Ship;
 using Infrastructure.Core.Login.Events;
+using CWO.Asteroid;
+using Implementation;
+using System.Collections;
 
 namespace CWO.Star
 {
@@ -16,17 +19,25 @@ namespace CWO.Star
 
         public Button jumpButton;
         public Button landButton;
+
+        [SerializeField]
+        private Button _attackButton;
+
         public PlayerController playerController;
         public GameObject shipPrefab;
+        public GameObject ExplosionPrefab;
         public RectTransform shipsGrid;
+        public RectTransform asteroidsGrid;
+        public RectTransform weaponOrigin;
+        private bool _isAttacking;
 
         protected NodeService nodeService;
         protected PlayerService playerService;
 
         [SerializeField]
-        private Text _selectedShipInfo;
+        private Text _selectedEntityDescription;
 
-        private ShipInSpaceController _selectedShipRef;
+        private ISelectable _selectedEntity;
 
         [SerializeField]
         private Image _starImage;
@@ -44,7 +55,7 @@ namespace CWO.Star
         {
             if (playerController.player != null && nodeService != null)
             {
-                _selectedShipInfo.text = "";
+                _selectedEntityDescription.text = "";
                 if (nodeService.GetNodeByName(playerController.player.currentNodeName).HasStar())
                 {
                     var node = nodeService.GetNodeByName(playerController.player.currentNodeName);
@@ -71,6 +82,7 @@ namespace CWO.Star
 
             jumpButton.onClick.AddListener(OnJump);
             landButton.onClick.AddListener(OnLand);
+            _attackButton.onClick.AddListener(OnAttack);
         }
 
         private void OnLoginSuccessful(LoginSuccessfulEvent e)
@@ -172,24 +184,108 @@ namespace CWO.Star
 
         public void SetSelectedShip(ShipInSpaceController shipRef)
         {
-            shipRef.BackgroundImage.enabled = true;
-            _selectedShipInfo.enabled = true;
-            _selectedShipInfo.text = "Player: " + shipRef.PlayerId +
-                "\nShip Race: " + shipRef.Ship.GetShipType() +
-                "\nShip Class: " + shipRef.Ship.GetShipClass(); 
-            if (_selectedShipRef != null)
-            {
-                _selectedShipRef.BackgroundImage.enabled = false;
-            }
-            if (_selectedShipRef == shipRef)
-            {
-                _selectedShipRef = null;
-                _selectedShipInfo.enabled = false;
-                return;
-            }
-            _selectedShipRef = shipRef;
+            _selectedEntityDescription.enabled = true;
+            _selectedEntityDescription.text = shipRef.GetOnSelectedDescription();
+            SelectEntity(shipRef);
         }
 
+        public void SetSelectedAsteroid(AsteroidController asteroidRef)
+        {
+            _selectedEntityDescription.enabled = true;
+            _selectedEntityDescription.text = asteroidRef.GetOnSelectedDescription();
+            SelectEntity(asteroidRef);
+        }
 
+        private void SelectEntity(ISelectable entity)
+        {
+            if (entity is IAttackable)
+            {
+                _attackButton.gameObject.SetActive(true);
+            }
+            entity.ShowSelectedIndicator();
+            if (_selectedEntity != null)
+            {
+                _selectedEntity.HideSelectedIndicator();
+                if (!(entity is IAttackable))
+                {
+                    _attackButton.gameObject.SetActive(false);
+                }
+            }
+            if (_selectedEntity == entity)
+            {
+                _selectedEntity = null;
+                _selectedEntityDescription.enabled = false;
+                _attackButton.gameObject.SetActive(false);
+                return;
+            }
+            _selectedEntity = entity;
+            if (_isAttacking)
+            {
+                ColorBlock cb = _attackButton.colors;
+                cb.normalColor = Color.white;
+                _isAttacking = false;
+                CancelInvoke("AttackEntity");
+                _attackButton.colors = cb;
+            }
+        }
+        
+        private void OnAttack()
+        {
+            if (_selectedEntity is IAttackable)
+            {
+                ColorBlock cb = _attackButton.colors;
+                if (!_isAttacking)
+                {
+                    _isAttacking = true;
+                    cb.normalColor = Color.red;
+                    
+                    InvokeRepeating("AttackEntity", 0, 0.3f);
+                }
+                else
+                {
+                    cb.normalColor = Color.white;
+                    _isAttacking = false;
+                    CancelInvoke("AttackEntity");
+                }
+                _attackButton.colors = cb;
+            }
+        }
+
+        private IEnumerator WeaponsOff(float time)
+        {
+            yield return new WaitForSeconds(time);
+            weaponOrigin.gameObject.GetComponent<LineRenderer>().enabled = false;
+        }
+
+        private void AttackEntity()
+        {
+            IAttackable attackedEntity = _selectedEntity as IAttackable;
+            attackedEntity.TakeDamage(5);
+            if (attackedEntity.isDestroyed())
+            {
+                DeselectEntity();
+            }
+            else
+            {
+                _selectedEntityDescription.text = _selectedEntity.GetOnSelectedDescription();
+                var line = weaponOrigin.gameObject.GetComponent<LineRenderer>();
+                Vector3 originLocalPosition = weaponOrigin.transform.localPosition;
+                Vector3 targetLocalPosition = _selectedEntity.GetPosition();
+                line.SetPosition(1, targetLocalPosition - originLocalPosition);
+                line.enabled = true;
+                StartCoroutine(WeaponsOff(0.25f));
+            }
+        }
+
+        public void DeselectEntity()
+        {
+            _selectedEntity = null;
+            _selectedEntityDescription.enabled = false;
+            _isAttacking = false;
+            ColorBlock cb = _attackButton.colors;
+            cb.normalColor = Color.white;
+            _attackButton.colors = cb;
+            CancelInvoke("AttackEntity");
+        }
     } 
 }
